@@ -1,0 +1,6 @@
+@SystemBase_HostAddress = http://localhost:5259
+
+GET {{SystemBase_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
