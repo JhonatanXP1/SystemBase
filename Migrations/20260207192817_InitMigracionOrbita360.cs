@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SystemBase.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitMigracionOrbita360 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,6 +74,11 @@ namespace SystemBase.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "users",
+                columns: new[] { "id", "apm", "app", "created", "imageUser", "name", "password", "userName" },
+                values: new object[] { 1, "Mendez", "Diaz", new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)), null, "Jhonatan", "Jhonatan11+", "@adminDev" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_user_assignments_idRole",

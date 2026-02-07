@@ -128,6 +128,18 @@ namespace SystemBase.Migrations
                     b.HasKey("id");
 
                     b.ToTable("users");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            apm = "Mendez",
+                            app = "Diaz",
+                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            name = "Jhonatan",
+                            password = "Jhonatan11+",
+                            userName = "@adminDev"
+                        });
                 });
 
             modelBuilder.Entity("SystemBase.Models.user_assignments", b =>

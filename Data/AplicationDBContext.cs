@@ -29,6 +29,20 @@ public class AplicationDbContext : DbContext
             users.Property(u =>u.created).IsRequired();
             users.Property(u=>u.status).HasDefaultValue(true);
         });
+        modelBuilder.Entity<users>().HasData(
+            new
+            {
+                id= 1,
+                userName = "@adminDev",
+                password = "Jhonatan11+",
+                name = "Jhonatan",
+                app = "Diaz",
+                apm = "Mendez",
+                created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
+            }
+            );
+        
+        
         modelBuilder.Entity<roles>(roles =>
         {
             roles.HasKey(r=>r.id);
