@@ -3,8 +3,8 @@ namespace SystemBase.Services;
 public class ResponseService<T>
 {
     public bool Success { get; set; }
-    public string Error { get; set; }
-    public T Data { get; set; }
+    public string Error { get; set; } = string.Empty;
+    public T? Data { get; set; } 
 }
 public static class ResponseService
 {
