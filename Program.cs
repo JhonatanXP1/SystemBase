@@ -18,9 +18,16 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AplicationDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("conexionSqlServer")));
+
+//Mappers
 builder.Services.AddScoped<ILoginMapper, LoginMapper>();
-builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();
+
+//Servicios.
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+
+//Repositorios.
+builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();
 
 var app = builder.Build();
 

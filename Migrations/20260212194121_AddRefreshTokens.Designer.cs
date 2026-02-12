@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SystemBase.Data;
 
@@ -11,9 +12,11 @@ using SystemBase.Data;
 namespace SystemBase.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    partial class AplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260212194121_AddRefreshTokens")]
+    partial class AddRefreshTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,10 @@ namespace SystemBase.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("agentUserName")
+                    b.Property<string>("IPAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("agentUsername")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("createdAt")
@@ -41,9 +47,6 @@ namespace SystemBase.Migrations
 
                     b.Property<int>("idUser")
                         .HasColumnType("int");
-
-                    b.Property<string>("ipAddress")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("tokenHash")
                         .IsRequired()

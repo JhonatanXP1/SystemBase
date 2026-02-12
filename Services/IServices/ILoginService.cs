@@ -4,5 +4,5 @@ using SystemBase.Models.DTO;
 
 public interface ILoginService
 {
-    ResponseService<sessionStartedDTO> Login(logingDTO loginDto);
+    ResponseService<sessionStartedDTO> Login(logingDTO loginDto, string agentUserName, string ipAddress);
 }

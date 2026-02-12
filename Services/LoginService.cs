@@ -16,7 +16,7 @@ public class LoginService :ILoginService
         _tokenService = tokenService;
     }
     
-    public ResponseService<sessionStartedDTO> Login(logingDTO loginDto)
+    public ResponseService<sessionStartedDTO> Login(logingDTO loginDto,  string agentUserName, string ipAddress)
     {
         if (string.IsNullOrEmpty(loginDto.userName) || string.IsNullOrEmpty(loginDto.password)) 
             return ResponseService.Error<sessionStartedDTO>("Usuario y contraseña son requeridos");
@@ -30,6 +30,9 @@ public class LoginService :ILoginService
         
         var (token, expiresAt) = _tokenService.CreateAccessToken(userSessionDto);
         var refreshToken = _tokenService.CreateRefreshToken();
+
+        var numSessionActives = _repositorioLogin.CountRefreshTokensExistAsync(user.id);
+        
         
         
         return ResponseService.Success<sessionStartedDTO>(new sessionStartedDTO());

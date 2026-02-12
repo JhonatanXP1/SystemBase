@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace SystemBase.Repositorio;
 using Data;
 using Models;
@@ -20,4 +22,20 @@ public class LoginRepositorio : ILoginRepositorio
         var user = _db.users.FirstOrDefault(u => u.userName == userName && u.password == password);
         return user;
     }
+
+    public List<refreshTokens> ListRefreshTokensExist(int userId)
+    {
+        List<refreshTokens> listRefreshActivos = _db.refreshTokens
+            .Where(r => 
+                r.idUser == userId &&
+                r.isActive).ToList();
+        return listRefreshActivos;
+    }
+
+    public int CountRefreshTokensExist(int userId)
+    {
+        return _db.refreshTokens
+    }
+    
+    
 }
