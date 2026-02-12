@@ -4,6 +4,8 @@ using SystemBase.Mappers.IMappers;
 using SystemBase.Mappers;
 using SystemBase.Repositorio;
 using SystemBase.Repositorio.IRepositorio;
+using SystemBase.Services;
+using SystemBase.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddDbContext<AplicationDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("conexionSqlServer")));
 builder.Services.AddScoped<ILoginMapper, LoginMapper>();
 builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 

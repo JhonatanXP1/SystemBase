@@ -8,11 +8,14 @@ public class LoginService :ILoginService
 {
     private readonly ILoginRepositorio _repositorioLogin;
     private readonly ILoginMapper _loginMapper;
-    public LoginService(ILoginRepositorio repositorioLogin, ILoginMapper loginMapper)
+    private readonly ITokenService _tokenService;
+    public LoginService(ILoginRepositorio repositorioLogin, ILoginMapper loginMapper, ITokenService tokenService)
     {
         _repositorioLogin = repositorioLogin;
         _loginMapper = loginMapper;
+        _tokenService = tokenService;
     }
+    
     public ResponseService<sessionStartedDTO> Login(logingDTO loginDto)
     {
         if (string.IsNullOrEmpty(loginDto.userName) || string.IsNullOrEmpty(loginDto.password)) 
@@ -24,6 +27,9 @@ public class LoginService :ILoginService
             return ResponseService.Error<sessionStartedDTO>("No se encontró el usuario");
 
         UserSessionDTO userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
+        
+        var (token, expiresAt) = _tokenService.CreateAccessToken(userSessionDto);
+        var refreshToken = _tokenService.CreateRefreshToken();
         
         
         return ResponseService.Success<sessionStartedDTO>(new sessionStartedDTO());
