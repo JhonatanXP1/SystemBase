@@ -1,3 +1,4 @@
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace SystemBase.Repositorio;
@@ -17,24 +18,26 @@ public class LoginRepositorio : ILoginRepositorio
         _mapper = mapper;
     }
     
-    public users? LoginUser(string userName, string password) // Busca el usuario en la base de datos por su nombre de usuario y contraseña
+    public Task<users?> LoginUser(string userName, string password) // Busca el usuario en la base de datos por su nombre de usuario y contraseña
     {
-        var user = _db.users.FirstOrDefault(u => u.userName == userName && u.password == password);
-        return user;
+        return _db.users.FirstOrDefaultAsync(u => 
+            u.userName == userName &&
+            u.password == password &&
+            u.status);
     }
 
-    public List<refreshTokens> ListRefreshTokensExist(int userId)
+    public async Task<List<refreshTokens>> ListRefreshTokensExist(int userId)
     {
-        List<refreshTokens> listRefreshActivos = _db.refreshTokens
-            .Where(r => 
-                r.idUser == userId &&
-                r.isActive).ToList();
-        return listRefreshActivos;
+        return await _db.refreshTokens
+            .Where(r => r.idUser == userId && r.isActive)
+            .ToListAsync();
     }
 
-    public int CountRefreshTokensExist(int userId)
+    public Task<int> CountRefreshTokensExistAsyncron(int userId)
     {
-        return _db.refreshTokens
+        return _db.refreshTokens.CountAsync(r => 
+            r.idUser == userId && 
+            r.isActive);
     }
     
     

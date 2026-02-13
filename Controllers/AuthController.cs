@@ -21,7 +21,7 @@ public class AuthController: ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public IActionResult Login([FromBody]logingDTO loging)
+    public async Task<IActionResult> Login([FromBody]logingDTO loging)
     {
         //Identificas la IP publica.
         string? ipAddress = Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedFor) // Recuerda!!! configurar Nginx

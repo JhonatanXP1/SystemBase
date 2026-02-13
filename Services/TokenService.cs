@@ -70,4 +70,14 @@ public class TokenService :ITokenService
     
     public string CreateRefreshToken()
         => Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+
+    public string HashRefreshToken(string refreshToken)
+    {
+        byte[] claveSecret = System.Text.Encoding.UTF8.GetBytes(_configuration.GetValue<string>("Jwt:secretWord")!);
+        byte[] refreshTokenSecret = System.Text.Encoding.UTF8.GetBytes(refreshToken);
+        using (HMACSHA256 hmac = new HMACSHA256(claveSecret))
+        {
+           return Convert.ToBase64String(hmac.ComputeHash(refreshTokenSecret));
+        }
+    }
 }

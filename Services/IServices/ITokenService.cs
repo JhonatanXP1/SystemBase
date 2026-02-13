@@ -4,4 +4,5 @@ public interface ITokenService
 {
     public (string token, DateTime expiresAt) CreateAccessToken(UserSessionDTO user);
     public string CreateRefreshToken();
+    string HashRefreshToken(string refreshToken);
 }
