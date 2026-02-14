@@ -71,6 +71,7 @@ public class TokenService :ITokenService
     public string CreateRefreshToken()
         => Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
 
+    // Convierto el token del Json y lo encripto para guardarlo en base de datos.
     public string HashRefreshToken(string refreshToken)
     {
         byte[] claveSecret = System.Text.Encoding.UTF8.GetBytes(_configuration.GetValue<string>("Jwt:secretWord")!);

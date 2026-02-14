@@ -17,12 +17,12 @@ public class LoginRepositorio : ILoginRepositorio
         _db = db;
         _mapper = mapper;
     }
-    
-    public Task<users?> LoginUser(string userName, string password) // Busca el usuario en la base de datos por su nombre de usuario y contraseña
+
+    public Task<users?>
+        LoginUser(string userName) // Busca el usuario en la base de datos por su nombre de usuario y contraseña
     {
-        return _db.users.FirstOrDefaultAsync(u => 
+        return _db.users.FirstOrDefaultAsync(u =>
             u.userName == userName &&
-            u.password == password &&
             u.status);
     }
 
@@ -35,10 +35,11 @@ public class LoginRepositorio : ILoginRepositorio
 
     public Task<int> CountRefreshTokensExistAsyncron(int userId)
     {
-        return _db.refreshTokens.CountAsync(r => 
-            r.idUser == userId && 
+        return _db.refreshTokens.CountAsync(r =>
+            r.idUser == userId &&
             r.isActive);
     }
     
-    
+
+
 }

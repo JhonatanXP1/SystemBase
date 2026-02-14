@@ -5,6 +5,7 @@ using IServices;
 using Models.DTO;
 using Mappers.IMappers;
 using Repositorio.IRepositorio;
+using Isopoh.Cryptography.Argon2;
 
 public class LoginService :ILoginService
 {
@@ -12,17 +13,21 @@ public class LoginService :ILoginService
     private readonly ILoginMapper _loginMapper;
     private readonly ITokenService _tokenService;
     private readonly IConfiguration _configuration;
+    private readonly IPasswordHasher _passwordHasher;
+    
     public LoginService(
         ILoginRepositorio repositorioLogin,
         ILoginMapper loginMapper,
         ITokenService tokenService,
-        IConfiguration configuration
+        IConfiguration configuration,
+        IPasswordHasher passwordHasher
         )
     {
         _repositorioLogin = repositorioLogin;
         _loginMapper = loginMapper;
         _tokenService = tokenService;
         _configuration = configuration;
+        _passwordHasher = passwordHasher;
     }
     
     public async Task<ResponseService<sessionStartedDTO>> Login(logingDTO loginDto,  string agentUserName, string ipAddress)
@@ -30,10 +35,13 @@ public class LoginService :ILoginService
         if (string.IsNullOrEmpty(loginDto.userName) || string.IsNullOrEmpty(loginDto.password)) 
             return ResponseService.Error<sessionStartedDTO>("Usuario y contraseña son requeridos");
         
-        var user = await _repositorioLogin.LoginUser(loginDto.userName, loginDto.password);
+        var user = await _repositorioLogin.LoginUser(loginDto.userName);
         
         if (user == null) 
             return ResponseService.Error<sessionStartedDTO>("No se encontró el usuario");
+        
+        if(!_passwordHasher.Verify(loginDto.password, user.password))
+            return ResponseService.Error<sessionStartedDTO>($"Contraseña  incorrecta:{loginDto.password}");
 
         UserSessionDTO userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
         

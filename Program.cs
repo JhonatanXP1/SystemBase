@@ -25,6 +25,7 @@ builder.Services.AddScoped<ILoginMapper, LoginMapper>();
 //Servicios.
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 //Repositorios.
 builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();
