@@ -1,12 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using SystemBase.Models;
+using SystemBase.Services.IServices;
 
 namespace SystemBase.Data;
 
 public class AplicationDbContext : DbContext
 {
-    public AplicationDbContext(DbContextOptions<AplicationDbContext> options) : base(options)
+    private readonly IPasswordHasher _passwordHasher;
+    public AplicationDbContext(DbContextOptions<AplicationDbContext> options, IPasswordHasher passwordHasher) : base(options)
     {
+        _passwordHasher = passwordHasher;
     }
 
     public DbSet<users> users { get; set; }
@@ -16,6 +19,7 @@ public class AplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<users>(users =>
         {
@@ -23,7 +27,7 @@ public class AplicationDbContext : DbContext
             users.HasKey(u => u.id);
             users.Property(u => u.imageUser).HasMaxLength(500);
             users.Property(u => u.userName).IsRequired().HasMaxLength(255);
-            users.Property(u => u.password).IsRequired().HasMaxLength(255);
+            users.Property(u => u.password).IsRequired().HasMaxLength(500);
             users.Property(u => u.name).IsRequired().HasMaxLength(50);
             users.Property(u => u.app).HasMaxLength(50);
             users.Property(u => u.apm).HasMaxLength(50);
@@ -35,7 +39,7 @@ public class AplicationDbContext : DbContext
             {
                 id = 1,
                 userName = "@adminDev",
-                password = "Jhonatan11+",
+                password = _passwordHasher.Hash("Jhonatan11+"),
                 name = "Jhonatan",
                 app = "Diaz",
                 apm = "Mendez",

@@ -5,7 +5,7 @@ using IServices;
 using Models.DTO;
 using Mappers.IMappers;
 using Repositorio.IRepositorio;
-using Isopoh.Cryptography.Argon2;
+
 
 public class LoginService :ILoginService
 {
@@ -40,7 +40,7 @@ public class LoginService :ILoginService
         if (user == null) 
             return ResponseService.Error<sessionStartedDTO>("No se encontró el usuario");
         
-        if(!_passwordHasher.Verify(loginDto.password, user.password))
+        if(!_passwordHasher.Verify(loginDto.password, user.password)) // Validas Contraseña que esta Hasheada en Argoin2
             return ResponseService.Error<sessionStartedDTO>($"Contraseña  incorrecta:{loginDto.password}");
 
         UserSessionDTO userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
@@ -50,7 +50,7 @@ public class LoginService :ILoginService
 
         int numSessionActives = await _repositorioLogin.CountRefreshTokensExistAsyncron(user.id);
         
-        //Los dias que la session se mantendrá vida.
+        //Los dias que la session se mantendrá viva.
         int days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
         DateTime fechaExpi = DateTime.UtcNow.AddDays(days);
         

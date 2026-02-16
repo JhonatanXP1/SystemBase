@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using SystemBase.Data;
 using SystemBase.Mappers.IMappers;
 using SystemBase.Mappers;
@@ -17,7 +18,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AplicationDbContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("conexionSqlServer")));
+    {
+        opt.UseSqlServer(builder.Configuration.GetConnectionString("conexionSqlServer"));
+        opt.ConfigureWarnings(w =>
+            w.Ignore(RelationalEventId.PendingModelChangesWarning)); //Eliminar cuando sea productivo.
+    }
+);
+
 
 //Mappers
 builder.Services.AddScoped<ILoginMapper, LoginMapper>();
@@ -38,8 +45,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.MapControllers();
 //app.UseHttpsRedirection();
 
 app.Run();
-
