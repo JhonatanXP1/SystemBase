@@ -2,7 +2,7 @@ namespace SystemBase.Models;
 
 public enum roleCode
 {
-    Directo = 1,
+    Director = 1,
     Gerente = 2,
     Supervisor = 3,
     Coordinador = 4,

@@ -30,7 +30,19 @@ public class AuthController: ControllerBase
         
         string userAgent = Request.Headers["User-Agent"].ToString();
         
-        
-        return Ok();
+        var generarToken = await _loginService.Login(loging, userAgent, ipAddress);
+
+        if (!generarToken.Success)
+        {
+            switch (generarToken.Error)
+            {
+                case "Credenciales inválidas":
+                    return Unauthorized(generarToken.Error);
+                    break;
+                default: BadRequest(generarToken.Error);
+                    break;
+            }
+        }
+        return Ok(generarToken.Data);
     }
 }

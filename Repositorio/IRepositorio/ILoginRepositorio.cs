@@ -5,6 +5,6 @@ public interface ILoginRepositorio
     Task<users?> LoginUser(string userName);
     Task<List<refreshTokens>> ListRefreshTokensExist(int userId);
     Task<int> CountRefreshTokensExistAsyncron(int userId);
-    
-    
+    Task AddRefreshTokens(refreshTokens refreshTokens);
+
 }

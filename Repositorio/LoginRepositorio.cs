@@ -39,7 +39,10 @@ public class LoginRepositorio : ILoginRepositorio
             r.idUser == userId &&
             r.isActive);
     }
-    
 
-
+    public async Task AddRefreshTokens(refreshTokens refreshTokens)
+    {
+        await _db.AddAsync(refreshTokens);
+        await _db.SaveChangesAsync();
+    }
 }

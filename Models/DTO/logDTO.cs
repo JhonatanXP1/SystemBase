@@ -13,7 +13,7 @@ public class sessionStartedDTO
 {
     public string Token { get; set; }
     public string RefreshToken { get; set; }
-    public DateTime ExpiresIn { get; set; }
+    public DateTimeOffset ExpiresAt { get; set; }
     public UserSessionDTO User { get; set; }
 }
     

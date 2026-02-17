@@ -38,11 +38,11 @@ public class TokenService :ITokenService
     }
     
 
-    public (string token, DateTime expiresAt) CreateAccessToken(UserSessionDTO user)
+    public (string token, DateTimeOffset expiresAt) CreateAccessToken(UserSessionDTO user)
     {
         var issuer = _configuration["Jwt:Issuer"];
         var audience = _configuration["Jwt:Audience"];
-        var minutes = int.Parse(_configuration["Jwt:ExpiresInMinutes"]!);
+        var minutes = int.Parse(_configuration["Jwt:AccessTokenMinutes"]!);
         
         var privatePem = GetPrivatePem();
 
@@ -50,7 +50,7 @@ public class TokenService :ITokenService
         {
             rsa.ImportFromPem(privatePem);
             var creds = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256);
-            var expiresAt = DateTime.UtcNow.AddMinutes(minutes);
+            var expiresAt = DateTimeOffset.UtcNow.AddMinutes(minutes);
 
             var jwt = new JwtSecurityToken(
                 issuer: issuer,
@@ -58,9 +58,11 @@ public class TokenService :ITokenService
                 claims: new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.id.ToString()),
-                    new Claim(JwtRegisteredClaimNames.UniqueName, user.userName)
+                    new Claim(JwtRegisteredClaimNames.UniqueName, user.userName),
+                    new Claim("preferred_username", user.userName),
+                    new Claim(JwtRegisteredClaimNames.Name, user.name ?? user.userName)
                 },
-                expires: expiresAt,
+                expires: expiresAt.UtcDateTime,
                 signingCredentials: creds
             );
 
