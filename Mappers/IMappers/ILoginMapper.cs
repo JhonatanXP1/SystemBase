@@ -5,4 +5,5 @@ using Models;
 public interface ILoginMapper
 {
     UserSessionDTO MapUserToUserSessionDto(users user);
+    public sessionStartedDto MapTosessionStartedsessionStartedDto(sessionStarted started);
 }

@@ -33,18 +33,18 @@ public class LoginService :ILoginService
         _passwordHasher = passwordHasher;
     }
     
-    public async Task<ResponseService<sessionStartedDTO>> Login(logingDTO loginDto,  string agentUserName, string ipAddress)
+    public async Task<ResponseService<sessionStarted>> Login(logingDTO loginDto,  string agentUserName, string ipAddress)
     {
         if (string.IsNullOrEmpty(loginDto.userName) || string.IsNullOrEmpty(loginDto.password)) 
-            return ResponseService.Error<sessionStartedDTO>("Usuario y contraseña son requeridos");
+            return ResponseService.Error<sessionStarted>("Usuario y contraseña son requeridos");
         
         var user = await _repositorioLogin.LoginUser(loginDto.userName);
         Console.WriteLine(JsonSerializer.Serialize(user));
         if (user == null) 
-            return ResponseService.Error<sessionStartedDTO>("Credenciales inválidas");
+            return ResponseService.Error<sessionStarted>("Credenciales inválidas");
         
         if(!_passwordHasher.Verify(user.password, loginDto.password)) // Validas Contraseña que esta Hasheada en Argoin2
-            return ResponseService.Error<sessionStartedDTO>("Credenciales inválidas"); 
+            return ResponseService.Error<sessionStarted>("Credenciales inválidas"); 
 
         UserSessionDTO userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
         
@@ -55,13 +55,13 @@ public class LoginService :ILoginService
         
         //Los dias que la session se mantendrá viva.
         int days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
-        DateTime fechaExpi = DateTime.UtcNow.AddDays(days);
+        DateTimeOffset fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
         
         string tokenHash = _tokenService.HashRefreshToken(refreshToken);
 
         if (numSessionActives >= 3) // Si tiene 3 o mas se va cancelar uno. para mantener solo 3 credenciales activas.
         { 
-            return ResponseService.Error<sessionStartedDTO>("No implementado");
+            return ResponseService.Error<sessionStarted>("No implementado");
         }
         else
         {
@@ -77,18 +77,20 @@ public class LoginService :ILoginService
                     idUser = user.id,
                     isActive = true
                 });
-                return ResponseService.Success<sessionStartedDTO>(new sessionStartedDTO
+                return ResponseService.Success<sessionStarted>(new sessionStarted
                 {
-                    ExpiresAt =  expiresAt,
-                    RefreshToken =  refreshToken,
                     Token = token,
+                    ExpiresAt =  expiresAt,
+                    
+                    RefreshToken =  refreshToken,
+                    refreshExpiresAt =  fechaExpi,
                     User = _loginMapper.MapUserToUserSessionDto(user)
                 });
             }
             catch (DbUpdateException eUP)
             {
                 Console.WriteLine($"No se inserto RefreshTokens:\n {eUP.Message}");
-                return ResponseService.Error<sessionStartedDTO>($"No se inserto RefreshTokens:\n {eUP.Message}");
+                return ResponseService.Error<sessionStarted>($"No se inserto RefreshTokens:\n {eUP.Message}");
             }
         }
     }

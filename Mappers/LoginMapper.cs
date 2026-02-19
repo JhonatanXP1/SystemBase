@@ -16,4 +16,14 @@ public class LoginMapper : ILoginMapper
             status = user.status
         };
     }
+
+    public sessionStartedDto MapTosessionStartedsessionStartedDto(sessionStarted started)
+    {
+        return new sessionStartedDto
+        {
+            Token = started.Token,
+            ExpiresAt = started.ExpiresAt,
+            User  = started.User
+        };
+    }
 }

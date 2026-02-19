@@ -9,10 +9,20 @@ public class logingDTO
     public string? password { get; set; }
 }
 
-public class sessionStartedDTO
+
+
+public class sessionStarted
 {
     public string Token { get; set; }
+    public DateTimeOffset ExpiresAt { get; set; }
     public string RefreshToken { get; set; }
+    public DateTimeOffset refreshExpiresAt  { get; set; }
+    public UserSessionDTO User { get; set; }
+}
+
+public class sessionStartedDto
+{
+    public string Token { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
     public UserSessionDTO User { get; set; }
 }

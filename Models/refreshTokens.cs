@@ -6,7 +6,7 @@ public class refreshTokens
     public int idUser { get; set; }
     public string tokenHash { get; set; }
 
-    public DateTime expiresAt { get; set; }
+    public DateTimeOffset expiresAt { get; set; }
     public DateTimeOffset createdAt { get; set; }
 
     public string? ipAddress { get; set; }
