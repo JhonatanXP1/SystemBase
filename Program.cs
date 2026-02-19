@@ -16,6 +16,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<AplicationDbContext>(opt =>
     {
@@ -33,6 +34,7 @@ builder.Services.AddScoped<ILoginMapper, LoginMapper>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IHttpContextService, HttpContextService>();
 
 //Repositorios.
 builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();

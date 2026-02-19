@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using SystemBase.Services.IServices;
 
 namespace SystemBase.Controllers;
@@ -11,9 +12,11 @@ using SystemBase.Models.DTO;
 public class AuthController: ControllerBase
 {
     readonly ILoginService _loginService;
-    public AuthController(ILoginService loginService)
+    readonly  IHttpContextService _accessor; // Inyectamos el IHttpContextAccessor para obtener la IP y el User-Agent
+    public AuthController(ILoginService loginService, IHttpContextService accessor)
     {
         _loginService = loginService;
+        _accessor = accessor;
     }
 
     [HttpPost]
@@ -24,11 +27,8 @@ public class AuthController: ControllerBase
     public async Task<IActionResult> Login([FromBody]logingDTO loging)
     {
         //Identificas la IP publica.
-        string? ipAddress = Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedFor) // Recuerda!!! configurar Nginx
-            ? forwardedFor.FirstOrDefault()?.Split(',').FirstOrDefault()?.Trim()
-            : HttpContext.Connection.RemoteIpAddress?.ToString();
-        
-        string userAgent = Request.Headers["User-Agent"].ToString();
+        string? ipAddress = _accessor.GetClientIpAddress();
+        string userAgent = _accessor.GetUserAgent();
         
         var generarToken = await _loginService.Login(loging, userAgent, ipAddress);
 
@@ -44,5 +44,23 @@ public class AuthController: ControllerBase
             }
         }
         return Ok(generarToken.Data);
+    }
+
+    [HttpPost("refresh")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(sessionStartedDTO))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> RefreshToken([FromBody] refreshTokenDTO refreshToken)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        foreach (var claim in User.Claims)
+        {
+            Console.WriteLine($"{claim.Type} : {claim.Value}");
+        }
+        var userId = int.Parse(userIdClaim?.Value ?? "0");
+        if (userId == 0) return Unauthorized("Token inválido");
+        
+        return Ok();
     }
 }
