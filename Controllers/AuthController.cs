@@ -82,7 +82,6 @@ public class AuthController : ControllerBase
         string? ipAddress = _accessor.GetClientIpAddress();
         string userAgent = _accessor.GetUserAgent();
         
-
         return Ok();
     }
 }

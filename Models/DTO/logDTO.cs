@@ -37,15 +37,8 @@ public class UserSessionDTO
     public bool status { get; set; }
 }
 
-public class refreshTokenDTO
-{
-    [Required(ErrorMessage = "El token de actualización es obligatorio")]
-    public string RefreshToken { get; set; }
-}
-
 public class refreshTokenResponseDTO
 {
     public string Token { get; set; }
-    public string RefreshToken { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
 }
