@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
         var generarToken = _loginMapper.MapTosessionStartedsessionStartedDto(sessionStarted.Data!);
         Response.Cookies.Append(
             "refreshToken",
-            sessionStarted.Data!.RefreshToken,
+            sessionStarted.Data!.RefreshToken, //<-- Ciclo de vida 1 dia. Yo lo quiero que se logueen  minimo por cada dia.
             new CookieOptions
             {
                 HttpOnly = true,
@@ -65,7 +65,7 @@ public class AuthController : ControllerBase
                 Expires = sessionStarted.Data.refreshExpiresAt, // o DateTimeOffset
                 Path = "/Auth/refresh" // súper recomendado: solo se envía a refresh
             });
-        return Ok(generarToken);
+        return Ok(generarToken); //<-- Su ciclo de vida es de 15min
     }
 
     [HttpPost("refresh")]
@@ -81,7 +81,7 @@ public class AuthController : ControllerBase
         
         string? ipAddress = _accessor.GetClientIpAddress();
         string userAgent = _accessor.GetUserAgent();
-        Console.Write(refreshToken);
+        
 
         return Ok();
     }
