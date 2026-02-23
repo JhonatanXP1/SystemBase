@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace SystemBase.Repositorio;
 using Data;
 using Models;
+using Models.snapshot;
 using Mappers.IMappers;
 using IRepositorio;
 
@@ -45,4 +46,32 @@ public class LoginRepositorio : ILoginRepositorio
         await _db.AddAsync(refreshTokens);
         await _db.SaveChangesAsync();
     }
+
+    public Task<refreshTokens?> RefreshTokensExist(string refreshToken)
+    {
+        return _db.refreshTokens.FirstOrDefaultAsync(r =>
+            r.tokenHash == refreshToken
+        );
+    }
+
+    public Task<UserNewAccessToken?> UserClaimNeed(int userId)
+    {
+        return _db.users
+            .AsNoTracking()
+            .Where(u => u.id == userId)
+            .Select(u => new UserNewAccessToken(
+                u.id,
+                u.userName,
+                u.name
+            )).FirstOrDefaultAsync();
+    }
+
+    public async Task<bool> TryDisabledRefreshTokens(int idRefreshToken)
+    {
+        var affectedRows = await _db.refreshTokens.Where(r =>
+            r.id == idRefreshToken && r.isActive).ExecuteUpdateAsync(setters => 
+            setters.SetProperty(atr => atr.isActive, false));
+        return affectedRows >0;
+    }
+
 }

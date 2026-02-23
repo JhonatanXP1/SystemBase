@@ -1,7 +1,9 @@
 using SystemBase.Mappers.IMappers;
 using SystemBase.Models.DTO;
+using SystemBase.Models.snapshot;
 using SystemBase.Models;
 namespace SystemBase.Mappers;
+
 public class LoginMapper : ILoginMapper
 {
     public UserSessionDTO MapUserToUserSessionDto(users user)

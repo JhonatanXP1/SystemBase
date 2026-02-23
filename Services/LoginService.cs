@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using SystemBase.Models;
 
 namespace SystemBase.Services;
+
 using IServices;
 using Models.DTO;
+using Models.snapshot;
 using Mappers.IMappers;
 using Repositorio.IRepositorio;
-
 
 public class LoginService : ILoginService
 {
@@ -56,8 +57,8 @@ public class LoginService : ILoginService
 
         //Los dias que la session se mantendrá viva.
         int days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
-        DateTimeOffset fechaExpi = DateTimeOffset.Now.AddDays(days);
-        DateTimeOffset fechaExpiPolitica = DateTimeOffset.Now.Date.AddDays(1).AddSeconds(-1);
+        DateTimeOffset fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
+        DateTimeOffset fechaExpiPolitica = DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1);
 
         string tokenHash = _tokenService.HashRefreshToken(refreshToken);
 
@@ -71,7 +72,7 @@ public class LoginService : ILoginService
             {
                 await _repositorioLogin.AddRefreshTokens(new refreshTokens
                 {
-                    createdAt = DateTimeOffset.Now,
+                    createdAt = DateTimeOffset.UtcNow,
                     tokenHash = tokenHash,
                     expiresAt = fechaExpi,
                     SessionExpiresAt = fechaExpiPolitica,
@@ -84,7 +85,6 @@ public class LoginService : ILoginService
                 {
                     Token = token,
                     ExpiresAt = expiresAt,
-
                     RefreshToken = refreshToken,
                     refreshExpiresAt = fechaExpi,
                     User = _loginMapper.MapUserToUserSessionDto(user)
@@ -96,11 +96,54 @@ public class LoginService : ILoginService
                 return ResponseService.Error<sessionStarted>($"No se inserto RefreshTokens:\n {eUP.Message}");
             }
         }
-
-
     }
-    public async Task<ResponseService<refreshTokenResponseDTO>> refreshTokensService(string refreshToken, string ipAddress, string userAgent)
+
+    public async Task<ResponseService<refreshTokenResponseDTO>> refreshTokensService(string refreshToken,
+        string ipAddress, string agentUserName)
     {
-            
+        string tokenHash = _tokenService.HashRefreshToken(refreshToken);
+        var refreshTokenDb = await _repositorioLogin.RefreshTokensExist(tokenHash);
+        if (refreshTokenDb == null) return ResponseService.Error<refreshTokenResponseDTO>("Refresh token inválido");
+        if (refreshTokenDb.isActive == false)
+            return ResponseService.Error<refreshTokenResponseDTO>("Refresh token inactivo");
+        if (DateTimeOffset.UtcNow > refreshTokenDb.expiresAt)
+            return ResponseService.Error<refreshTokenResponseDTO>("Refresh token expirado");
+        if (DateTimeOffset.UtcNow > refreshTokenDb.SessionExpiresAt)
+            return ResponseService.Error<refreshTokenResponseDTO>("Sesión expirada, inicie sesión nuevamente");
+
+        var user = await _repositorioLogin.UserClaimNeed(refreshTokenDb.id);
+        if (user == null) return ResponseService.Error<refreshTokenResponseDTO>("Usuario no existe");
+
+        var (token, expiresAt) = _tokenService.CreateAccessToken(user);
+        var refreshTokenNew = _tokenService.CreateRefreshToken();
+        int days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
+        DateTimeOffset fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
+        DateTimeOffset fechaExpiPolitica = DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1);
+
+        string tokenHashNew = _tokenService.HashRefreshToken(refreshToken);
+        if (await _repositorioLogin.TryDisabledRefreshTokens(refreshTokenDb.id)) // <-- Desactivas el Refresh Activo Actual y Renuevas uno nuevo.
+        {
+            try
+            {
+                await _repositorioLogin.AddRefreshTokens(new refreshTokens
+                {
+                    createdAt = DateTimeOffset.UtcNow,
+                    tokenHash = tokenHash,
+                    expiresAt = fechaExpi,
+                    SessionExpiresAt = fechaExpiPolitica,
+                    agentUserName = agentUserName,
+                    ipAddress = ipAddress,
+                    idUser = user.id,
+                    isActive = true
+                });
+            }
+            catch (DbUpdateException eUP)
+            {
+                Console.WriteLine($"No se inserto RefreshTokens:\n {eUP.Message}");
+                return ResponseService.Error<refreshTokenResponseDTO>($"No se inserto RefreshTokens:\n {eUP.Message}");
+            }
+        }
+
+        return null;
     }
 }

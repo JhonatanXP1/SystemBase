@@ -1,23 +1,12 @@
 namespace SystemBase.Models.DTO;
 using System.ComponentModel.DataAnnotations;
-
+using Models.snapshot;
 public class logingDTO
 {
     [Required(ErrorMessage = "El nombre es obligatorio")]
     public string? userName { get; set; }
     [Required(ErrorMessage = "La contraseña es obligatoria")]
     public string? password { get; set; }
-}
-
-
-
-public class sessionStarted
-{
-    public string Token { get; set; }
-    public DateTimeOffset ExpiresAt { get; set; }
-    public string RefreshToken { get; set; }
-    public DateTimeOffset refreshExpiresAt  { get; set; }
-    public UserSessionDTO User { get; set; }
 }
 
 public class sessionStartedDto
@@ -27,7 +16,7 @@ public class sessionStartedDto
     public UserSessionDTO User { get; set; }
 }
     
-public class UserSessionDTO
+public class UserSessionDTO:IUserTokenInfo
 {
     public int id { get; set; }
     public string userName { get; set; }
@@ -42,3 +31,4 @@ public class refreshTokenResponseDTO
     public string Token { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
 }
+

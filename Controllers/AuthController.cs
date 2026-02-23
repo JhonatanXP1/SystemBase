@@ -7,7 +7,8 @@ namespace SystemBase.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using SystemBase.Models.DTO;
+using Models.DTO;
+using Models.snapshot;
 
 [Route("[controller]")]
 [ApiController]

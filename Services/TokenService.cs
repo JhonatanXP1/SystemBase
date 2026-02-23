@@ -5,7 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using SystemBase.Models.DTO;
 
 namespace SystemBase.Services;
-using SystemBase.Services.IServices;
+using IServices;
+using Models.snapshot;
 public class TokenService :ITokenService
 {
     private readonly IConfiguration _configuration;
@@ -38,7 +39,7 @@ public class TokenService :ITokenService
     }
     
 
-    public (string token, DateTimeOffset expiresAt) CreateAccessToken(UserSessionDTO user)
+    public (string token, DateTimeOffset expiresAt) CreateAccessToken(IUserTokenInfo user)
     {
         var issuer = _configuration["Jwt:Issuer"];
         var audience = _configuration["Jwt:Audience"];
@@ -60,7 +61,7 @@ public class TokenService :ITokenService
                     new Claim(JwtRegisteredClaimNames.Sub, user.id.ToString()),
                     new Claim(JwtRegisteredClaimNames.UniqueName, user.userName),
                     new Claim("preferred_username", user.userName),
-                    new Claim(JwtRegisteredClaimNames.Name, user.name ?? user.userName)
+                    new Claim(JwtRegisteredClaimNames.Name, user.name)
                 },
                 expires: expiresAt.UtcDateTime,
                 signingCredentials: creds
