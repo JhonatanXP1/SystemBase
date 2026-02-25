@@ -64,7 +64,44 @@ public class LoginService : ILoginService
 
         if (numSessionActives >= 3) // Si tiene 3 o mas se va cancelar uno. para mantener solo 3 credenciales activas.
         {
-            return ResponseService.Error<SessionStarted>("No implementado");
+            var oldRefreshTokens = await _repositorioLogin.GetOldRefreshTokens(user.id);
+            var refreshTokenOld = oldRefreshTokens.OrderBy(r => r.createdAt).FirstOrDefault()!;
+            try
+            {
+                await _repositorioLogin.DisabledRefreshTokens(refreshTokenOld.id);
+                await _repositorioLogin.AddRefreshTokens(new refreshTokens
+                {
+                    createdAt = DateTimeOffset.UtcNow,
+                    tokenHash = tokenHash,
+                    expiresAt = fechaExpi,
+                    SessionExpiresAt = fechaExpiPolitica,
+                    agentUserName = agentUserName,
+                    ipAddress = ipAddress,
+                    idUser = user.id,
+                    isActive = true
+                });
+                return ResponseService.Success<SessionStarted>(new SessionStarted
+                {
+                    Token = token,
+                    ExpiresAt = expiresAt,
+                    RefreshToken = refreshToken,
+                    refreshExpiresAt = fechaExpi,
+                    User = _loginMapper.MapUserToUserSessionDto(user)
+                });
+            }
+            catch (DbUpdateException ex)
+            {
+                var root = ex.GetBaseException(); // <- aquí vive el error real de SQL Server
+                Console.WriteLine($"DbUpdateException: {ex.Message}");
+                Console.WriteLine($"Root: {root.Message}");
+
+                if (ex.InnerException != null)
+                    Console.WriteLine($"Inner: {ex.InnerException.Message}");
+
+                return ResponseService.Error<SessionStarted>(
+                    $"Error DB: {root.Message}"
+                );
+            }
         }
         else
         {
@@ -120,15 +157,17 @@ public class LoginService : ILoginService
         DateTimeOffset fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
         DateTimeOffset fechaExpiPolitica = DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1);
 
-        string tokenHashNew = _tokenService.HashRefreshToken(refreshToken);
-        if (await _repositorioLogin.TryDisabledRefreshTokens(refreshTokenDb.id)) // <-- Desactivas el Refresh Activo Actual y Renuevas uno nuevo.
+        string tokenHashNew = _tokenService.HashRefreshToken(refreshTokenNew);
+        if (await _repositorioLogin
+                .TryDisabledRefreshTokens(refreshTokenDb
+                    .id)) // <-- Desactivas el Refresh Activo Actual y Renuevas uno nuevo.
         {
             try
             {
                 await _repositorioLogin.AddRefreshTokens(new refreshTokens
                 {
                     createdAt = DateTimeOffset.UtcNow,
-                    tokenHash = tokenHash,
+                    tokenHash = tokenHashNew,
                     expiresAt = fechaExpi,
                     SessionExpiresAt = fechaExpiPolitica,
                     agentUserName = agentUserName,
@@ -143,11 +182,12 @@ public class LoginService : ILoginService
                 return ResponseService.Error<refreshToken>($"No se inserto RefreshTokens:\n {eUP.Message}");
             }
         }
+
         return ResponseService.Success<refreshToken>(new refreshToken
         {
             Token = token,
             ExpiresAt = expiresAt,
-            RefreshToken = refreshToken,
+            RefreshToken = refreshTokenNew,
             refreshExpiresAt = fechaExpi
         });
     }

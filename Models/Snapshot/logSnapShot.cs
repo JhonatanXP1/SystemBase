@@ -9,6 +9,12 @@ public class SessionStarted:IAccessService
     public DateTimeOffset refreshExpiresAt  { get; set; }
     public UserSessionDTO User { get; set; }
 }
+
+public class OldRefreshToken
+{
+    public int id { get; set; }
+    public DateTimeOffset createdAt { get; set; }
+}
 public sealed record UserNewAccessToken(
     int id,
     string userName,

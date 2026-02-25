@@ -40,11 +40,31 @@ public class LoginRepositorio : ILoginRepositorio
             r.idUser == userId &&
             r.isActive);
     }
+    
+    public Task<List<OldRefreshToken>> GetOldRefreshTokens(int userId)
+    {
+        return _db.refreshTokens
+            .Where(r => r.idUser == userId && r.isActive)
+            .AsNoTracking()
+            .Select(r => new OldRefreshToken
+            {
+                id = r.id,
+                createdAt = r.createdAt
+            }).ToListAsync();
+    }
 
     public async Task AddRefreshTokens(refreshTokens refreshTokens)
     {
         await _db.AddAsync(refreshTokens);
         await _db.SaveChangesAsync();
+    }
+
+    public Task DisabledRefreshTokens(int idRefreshToken)
+    {
+        _db.refreshTokens.Where(r => r.id == idRefreshToken && r.isActive)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(atr => atr.isActive, false));
+        return Task.CompletedTask;
     }
 
     public Task<refreshTokens?> RefreshTokensExist(string refreshToken)
