@@ -1,7 +1,7 @@
 namespace SystemBase.Models.snapshot;
 using SystemBase.Models.DTO;
 
-public class sessionStarted:IAccessService
+public class SessionStarted:IAccessService
 {
     public string Token { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }

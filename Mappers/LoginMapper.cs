@@ -19,13 +19,22 @@ public class LoginMapper : ILoginMapper
         };
     }
 
-    public sessionStartedDto MapTosessionStartedsessionStartedDto(sessionStarted started)
+    public sessionStartedDto MapTosessionStartedsessionStartedDto(SessionStarted started)
     {
         return new sessionStartedDto
         {
             Token = started.Token,
             ExpiresAt = started.ExpiresAt,
             User  = started.User
+        };
+    }
+
+    public refreshTokenResponseDTO MapTorefreshTokenResponseDTO(refreshToken token)
+    {
+        return new refreshTokenResponseDTO
+        {
+            Token = token.Token,
+            ExpiresAt = token.ExpiresAt,
         };
     }
 }

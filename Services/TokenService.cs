@@ -50,7 +50,11 @@ public class TokenService :ITokenService
         using (RSA rsa = RSA.Create())
         {
             rsa.ImportFromPem(privatePem);
-            var creds = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256);
+            var rsaKey = new RsaSecurityKey(rsa.ExportParameters(true))
+            {
+                KeyId = "main-rsa" // opcional, pero recomendado
+            };
+            var creds = new SigningCredentials(rsaKey, SecurityAlgorithms.RsaSha256);
             var expiresAt = DateTimeOffset.UtcNow.AddMinutes(minutes);
 
             var jwt = new JwtSecurityToken(
