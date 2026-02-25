@@ -69,25 +69,6 @@ public class LoginService : ILoginService
             try
             {
                 await _repositorioLogin.DisabledRefreshTokens(refreshTokenOld.id);
-                await _repositorioLogin.AddRefreshTokens(new refreshTokens
-                {
-                    createdAt = DateTimeOffset.UtcNow,
-                    tokenHash = tokenHash,
-                    expiresAt = fechaExpi,
-                    SessionExpiresAt = fechaExpiPolitica,
-                    agentUserName = agentUserName,
-                    ipAddress = ipAddress,
-                    idUser = user.id,
-                    isActive = true
-                });
-                return ResponseService.Success<SessionStarted>(new SessionStarted
-                {
-                    Token = token,
-                    ExpiresAt = expiresAt,
-                    RefreshToken = refreshToken,
-                    refreshExpiresAt = fechaExpi,
-                    User = _loginMapper.MapUserToUserSessionDto(user)
-                });
             }
             catch (DbUpdateException ex)
             {
@@ -103,35 +84,32 @@ public class LoginService : ILoginService
                 );
             }
         }
-        else
+        try
         {
-            try
+            await _repositorioLogin.AddRefreshTokens(new refreshTokens
             {
-                await _repositorioLogin.AddRefreshTokens(new refreshTokens
-                {
-                    createdAt = DateTimeOffset.UtcNow,
-                    tokenHash = tokenHash,
-                    expiresAt = fechaExpi,
-                    SessionExpiresAt = fechaExpiPolitica,
-                    agentUserName = agentUserName,
-                    ipAddress = ipAddress,
-                    idUser = user.id,
-                    isActive = true
-                });
-                return ResponseService.Success<SessionStarted>(new SessionStarted
-                {
-                    Token = token,
-                    ExpiresAt = expiresAt,
-                    RefreshToken = refreshToken,
-                    refreshExpiresAt = fechaExpi,
-                    User = _loginMapper.MapUserToUserSessionDto(user)
-                });
-            }
-            catch (DbUpdateException eUP)
+                createdAt = DateTimeOffset.UtcNow,
+                tokenHash = tokenHash,
+                expiresAt = fechaExpi,
+                SessionExpiresAt = fechaExpiPolitica,
+                agentUserName = agentUserName,
+                ipAddress = ipAddress,
+                idUser = user.id,
+                isActive = true
+            });
+            return ResponseService.Success<SessionStarted>(new SessionStarted
             {
-                Console.WriteLine($"No se inserto RefreshTokens:\n {eUP.Message}");
-                return ResponseService.Error<SessionStarted>($"No se inserto RefreshTokens:\n {eUP.Message}");
-            }
+                Token = token,
+                ExpiresAt = expiresAt,
+                RefreshToken = refreshToken,
+                refreshExpiresAt = fechaExpi,
+                User = _loginMapper.MapUserToUserSessionDto(user)
+            });
+        }
+        catch (DbUpdateException eUP)
+        {
+            Console.WriteLine($"No se inserto RefreshTokens:\n {eUP.Message}");
+            return ResponseService.Error<SessionStarted>($"No se inserto RefreshTokens:\n {eUP.Message}");
         }
     }
 
@@ -139,6 +117,7 @@ public class LoginService : ILoginService
         string ipAddress, string agentUserName)
     {
         string tokenHash = _tokenService.HashRefreshToken(refreshToken);
+        Console.Write(tokenHash);
         var refreshTokenDb = await _repositorioLogin.RefreshTokensExist(tokenHash);
         if (refreshTokenDb == null) return ResponseService.Error<refreshToken>("Refresh token inválido");
         if (refreshTokenDb.isActive == false)
@@ -147,8 +126,8 @@ public class LoginService : ILoginService
             return ResponseService.Error<refreshToken>("Refresh token expirado");
         if (DateTimeOffset.UtcNow > refreshTokenDb.SessionExpiresAt)
             return ResponseService.Error<refreshToken>("Sesión expirada, inicie sesión nuevamente");
-
-        var user = await _repositorioLogin.UserClaimNeed(refreshTokenDb.id);
+        
+        var user = await _repositorioLogin.UserClaimNeed(refreshTokenDb.idUser);
         if (user == null) return ResponseService.Error<refreshToken>("Usuario no existe");
 
         var (token, expiresAt) = _tokenService.CreateAccessToken(user);

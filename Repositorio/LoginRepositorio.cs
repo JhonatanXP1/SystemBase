@@ -61,10 +61,9 @@ public class LoginRepositorio : ILoginRepositorio
 
     public Task DisabledRefreshTokens(int idRefreshToken)
     {
-        _db.refreshTokens.Where(r => r.id == idRefreshToken && r.isActive)
+        return _db.refreshTokens.Where(r => r.id == idRefreshToken && r.isActive)
             .ExecuteUpdateAsync(setters =>
                 setters.SetProperty(atr => atr.isActive, false));
-        return Task.CompletedTask;
     }
 
     public Task<refreshTokens?> RefreshTokensExist(string refreshToken)
