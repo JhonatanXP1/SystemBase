@@ -9,7 +9,7 @@ public interface ILoginRepositorio
     Task<int> CountRefreshTokensExistAsyncron(int userId);
     Task<List<OldRefreshToken>> GetOldRefreshTokens(int userId);
     Task DisabledRefreshTokens(int idRefreshToken);
-    
+    Task DisabledRefreshTokensAll(int idUser = 0, string refreshToken = "");
     Task AddRefreshTokens(refreshTokens hashRefreshTokens);
     Task<refreshTokens?> RefreshTokensExist(string refreshToken);
     Task<UserNewAccessToken?> UserClaimNeed(int userId);

@@ -66,6 +66,11 @@ public class LoginRepositorio : ILoginRepositorio
                 setters.SetProperty(atr => atr.isActive, false));
     }
 
+    public Task DisabledRefreshTokensAll( int idUser = 0, string refreshToken = "")
+    {
+        return null;
+    }
+
     public Task<refreshTokens?> RefreshTokensExist(string refreshToken)
     {
         return _db.refreshTokens.FirstOrDefaultAsync(r =>

@@ -108,4 +108,13 @@ public class AuthController : ControllerBase
         var accessToken = _loginMapper.MapTorefreshTokenResponseDTO(newCredenciales.Data);
         return Ok(accessToken);
     }
+
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Logout()
+    {
+        
+        return Ok();
+    }
 }
