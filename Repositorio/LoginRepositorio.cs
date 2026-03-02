@@ -1,7 +1,9 @@
 using Azure.Core;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace SystemBase.Repositorio;
+
 using Data;
 using Models;
 using Models.snapshot;
@@ -40,7 +42,7 @@ public class LoginRepositorio : ILoginRepositorio
             r.idUser == userId &&
             r.isActive);
     }
-    
+
     public Task<List<OldRefreshToken>> GetOldRefreshTokens(int userId)
     {
         return _db.refreshTokens
@@ -59,16 +61,36 @@ public class LoginRepositorio : ILoginRepositorio
         await _db.SaveChangesAsync();
     }
 
-    public Task DisabledRefreshTokens(int idRefreshToken)
+    public Task DisabledRefreshToken(int idRefreshToken)
     {
         return _db.refreshTokens.Where(r => r.id == idRefreshToken && r.isActive)
             .ExecuteUpdateAsync(setters =>
                 setters.SetProperty(atr => atr.isActive, false));
     }
 
-    public Task DisabledRefreshTokensAll( int idUser = 0, string refreshToken = "")
+    public Task DisabledRefreshTokensAll(int idUser = 0, string refreshToken = "")  
     {
-        return null;
+        var sql = @"IF @idUser > 0
+    BEGIN
+        UPDATE refreshTokens
+        SET isActive = 0
+        WHERE idUser = @idUser
+          AND isActive = 1
+    END
+    IF NULLIF(@refreshToken, '') IS NOT NULL
+    BEGIN
+        UPDATE refreshTokens
+        SET isActive = 0
+        WHERE idUser IN (
+            SELECT idUser
+            FROM refreshTokens
+            WHERE tokenHash = @refreshToken AND isActive = 1
+        )
+    END";
+
+        return _db.Database.ExecuteSqlRawAsync(sql,
+            new SqlParameter("@idUser", idUser),
+            new SqlParameter("@refreshToken", refreshToken));
     }
 
     public Task<refreshTokens?> RefreshTokensExist(string refreshToken)
@@ -93,9 +115,8 @@ public class LoginRepositorio : ILoginRepositorio
     public async Task<bool> TryDisabledRefreshTokens(int idRefreshToken)
     {
         var affectedRows = await _db.refreshTokens.Where(r =>
-            r.id == idRefreshToken && r.isActive).ExecuteUpdateAsync(setters => 
+            r.id == idRefreshToken && r.isActive).ExecuteUpdateAsync(setters =>
             setters.SetProperty(atr => atr.isActive, false));
-        return affectedRows >0;
+        return affectedRows > 0;
     }
-
 }

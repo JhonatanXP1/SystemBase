@@ -68,7 +68,7 @@ public class LoginService : ILoginService
             var refreshTokenOld = oldRefreshTokens.OrderBy(r => r.createdAt).FirstOrDefault()!;
             try
             {
-                await _repositorioLogin.DisabledRefreshTokens(refreshTokenOld.id);
+                await _repositorioLogin.DisabledRefreshToken(refreshTokenOld.id);
             }
             catch (DbUpdateException ex)
             {
@@ -117,15 +117,25 @@ public class LoginService : ILoginService
         string ipAddress, string agentUserName)
     {
         string tokenHash = _tokenService.HashRefreshToken(refreshToken);
-        Console.Write(tokenHash);
         var refreshTokenDb = await _repositorioLogin.RefreshTokensExist(tokenHash);
         if (refreshTokenDb == null) return ResponseService.Error<refreshToken>("Refresh token inválido");
+        if (refreshTokenDb.ipAddress != ipAddress || refreshTokenDb.agentUserName != agentUserName)
+        {
+            var disableds = _repositorioLogin.DisabledRefreshTokensAll(0,tokenHash);
+            return ResponseService.Error<refreshToken>("Refresh token inactivo");
+        }
         if (refreshTokenDb.isActive == false)
             return ResponseService.Error<refreshToken>("Refresh token inactivo");
         if (DateTimeOffset.UtcNow > refreshTokenDb.expiresAt)
+        {
+            await _repositorioLogin.DisabledRefreshToken(refreshTokenDb.id);
             return ResponseService.Error<refreshToken>("Refresh token expirado");
+        }
         if (DateTimeOffset.UtcNow > refreshTokenDb.SessionExpiresAt)
+        {
+            await _repositorioLogin.DisabledRefreshToken(refreshTokenDb.id);
             return ResponseService.Error<refreshToken>("Sesión expirada, inicie sesión nuevamente");
+        }
         
         var user = await _repositorioLogin.UserClaimNeed(refreshTokenDb.idUser);
         if (user == null) return ResponseService.Error<refreshToken>("Usuario no existe");
@@ -169,5 +179,10 @@ public class LoginService : ILoginService
             RefreshToken = refreshTokenNew,
             refreshExpiresAt = fechaExpi
         });
+    }
+
+    public async Task<ResponseService<bool>> Logout(string idUser)
+    {
+        
     }
 }
