@@ -109,7 +109,7 @@ public class AuthController : ControllerBase
         return Ok(accessToken);
     }
 
-    [HttpPost("logout")]
+    [HttpPost("Logout")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Logout()

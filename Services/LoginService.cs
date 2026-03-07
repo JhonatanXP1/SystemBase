@@ -183,6 +183,6 @@ public class LoginService : ILoginService
 
     public async Task<ResponseService<bool>> Logout(string idUser)
     {
-        
+        return null;
     }
 }
