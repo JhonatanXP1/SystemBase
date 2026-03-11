@@ -9,5 +9,5 @@ public class user_assignments
     public int scopeId {get;set;}
     public DateTimeOffset created {get;set;}
     public roles roles {get;set;}
-    public users users {get;set;}
+    public users users {get;set;} 
 }

@@ -7,7 +7,9 @@ namespace SystemBase.Data;
 public class AplicationDbContext : DbContext
 {
     private readonly IPasswordHasher _passwordHasher;
-    public AplicationDbContext(DbContextOptions<AplicationDbContext> options, IPasswordHasher passwordHasher) : base(options)
+
+    public AplicationDbContext(DbContextOptions<AplicationDbContext> options, IPasswordHasher passwordHasher) :
+        base(options)
     {
         _passwordHasher = passwordHasher;
     }
@@ -19,21 +21,21 @@ public class AplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<users>(users =>
+        modelBuilder.Entity<users>(entity =>
         {
             //definimos primarykey
-            users.HasKey(u => u.id);
-            users.Property(u => u.imageUser).HasMaxLength(500);
-            users.Property(u => u.userName).IsRequired().HasMaxLength(255);
-            users.Property(u => u.password).IsRequired().HasMaxLength(500);
-            users.Property(u => u.name).IsRequired().HasMaxLength(50);
-            users.Property(u => u.app).HasMaxLength(50);
-            users.Property(u => u.apm).HasMaxLength(50);
-            users.Property(u => u.created).IsRequired();
-            users.Property(u => u.status).HasDefaultValue(true);
+            entity.HasKey(u => u.id);
+            entity.Property(u => u.imageUser).HasMaxLength(500);
+            entity.Property(u => u.userName).IsRequired().HasMaxLength(255);
+            entity.Property(u => u.password).IsRequired().HasMaxLength(500);
+            entity.Property(u => u.name).IsRequired().HasMaxLength(50);
+            entity.Property(u => u.app).HasMaxLength(50);
+            entity.Property(u => u.apm).HasMaxLength(50);
+            entity.Property(u => u.created).IsRequired();
+            entity.Property(u => u.status).HasDefaultValue(true);
         });
+
         modelBuilder.Entity<users>().HasData(
             new
             {
@@ -47,27 +49,121 @@ public class AplicationDbContext : DbContext
             }
         );
 
-
-        modelBuilder.Entity<roles>(roles =>
+        /* ========================== NOMBRE A LA REGLAS DE ACCESO AL USUARIO ======================================*/
+        modelBuilder.Entity<nameRule>(entity =>
         {
-            roles.HasKey(r => r.id);
-            roles.Property(r => r.name).IsRequired().HasMaxLength(50);
+            entity.HasKey(r => r.id);
+            entity.Property(r => r.name).IsRequired().HasMaxLength(50);
+        });
+        modelBuilder.Entity<nameRule>().HasData(
+            new
+            {
+                id = 1,
+                name = "Acceso de CEO",
+            }
+        );
+
+        /* ========================== REGLAS DEFINIDAS PARA EL ACCESS TOKEN ======================================*/
+        modelBuilder.Entity<endpointAccess>(entity => { entity.HasKey(r => r.id); });
+        modelBuilder.Entity<endpointAccess>().HasData(
+            new
+            {
+                id = 1,
+                endpoint = "/auth/logout",
+                method = "POST",
+                permission = "auth.logout.self",
+                status = true
+            },
+            new
+            {
+                id = 2,
+                endpoint = "/auth/logout",
+                method = "POST",
+                permission = "auth.logout.*",
+                status = true
+            },
+            new
+            {
+                id = 3,
+                endpoint = "/auth/logout",
+                method = "POST",
+                permission = "auth.logout.subordinate",
+                status = true
+            }
+        );
+
+        /* ========================== ASIGNACION DE UNA REGLA Y LOS ACCESOS A LOS ENDPOINT PARA EL ACCESS TOKEN ======================================*/
+        modelBuilder.Entity<endpointAcces_nameRule>(entity =>
+        {
+            entity.HasKey(r => r.id);
+            entity.HasOne(r => r.endpointAccess)
+                .WithMany()
+                .HasForeignKey(r => r.idEndpointAccess)
+                .IsRequired();
+            entity.HasOne(r => r.NameRule)
+                .WithMany()
+                .HasForeignKey(r => r.idNameRule)
+                .IsRequired();
         });
 
-        modelBuilder.Entity<user_assignments>(ua =>
+        modelBuilder.Entity<endpointAcces_nameRule>().HasData(
+            new
+            {
+                id = 1,
+                idEndpointAccess = 1,
+                idNameRule = 1,
+            },
+            new
+            {
+                id = 2,
+                idEndpointAccess = 2,
+                idNameRule = 1,
+            }
+        );
+
+
+        modelBuilder.Entity<roles>(entity =>
         {
-            ua.HasKey(uax => uax.id);
-            ua.Property(uax => uax.scopeType).HasConversion<string>().IsRequired();
-            ua.Property(uax => uax.created).IsRequired();
+            entity.HasKey(r => r.id);
+            entity.Property(r => r.name).IsRequired().HasMaxLength(50);
+            entity.HasOne(r => r.endpointAccessNameRule)
+                .WithMany()
+                .HasForeignKey(r => r.idEndpointAccessNameRule);
+        });
+        modelBuilder.Entity<roles>().HasData(
+            new
+            {
+                id = 1,
+                name = "CEO",
+                created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
+                code = roleCode.Director,
+                idEndpointAccessNameRule = 1,
+            },
+            new
+            {
+                id = 2,
+                name = "Gerente de Nave",
+                created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
+                code = roleCode.Gerente,
+            }
+        );
+
+        /* ================================== ASIGNACION DE USUARIO A UN ROLE =============================================*/
+        modelBuilder.Entity<user_assignments>(entity =>
+        {
+            entity.HasKey(uax => uax.id);
+            entity.Property(uax => uax.scopeType).HasConversion<string>();
+            entity.Property(uax => uax.created).IsRequired();
             //Es para garantizar que el dato es unico pero toma en cuenta que la combinación.
-            ua.HasIndex(uax => new { uax.scopeId, uax.scopeType, uax.idUser, uax.idRole }).IsUnique();
-            ua.HasOne(uax => uax.users).WithMany()
+            entity.HasIndex(uax => new { uax.scopeId, uax.scopeType, uax.idUser, uax.idRole }).IsUnique();
+            entity.HasOne(uax => uax.users).WithMany()
                 .HasForeignKey(uax => uax.idUser).IsRequired();
             //verifica si necesitas eliminacion en cascada !! - .OnDelete(DeleteBehavior.Cascade);
-            ua.HasOne(uax => uax.roles).WithMany()
+            entity.HasOne(uax => uax.roles).WithMany()
                 .HasForeignKey(uax => uax.idRole).IsRequired();
         });
 
+        /*============================== REFRESH TOKENS =========================================*/
         modelBuilder.Entity<refreshTokens>(rT =>
         {
             rT.HasKey(rt => rt.id);
