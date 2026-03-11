@@ -12,8 +12,8 @@ using SystemBase.Data;
 namespace SystemBase.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    [Migration("20260216194833_HashPassword")]
-    partial class HashPassword
+    [Migration("20260311150535_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,122 @@ namespace SystemBase.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SystemBase.Models.endpointAcces_nameRule", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("idEndpointAccess")
+                        .HasColumnType("int");
+
+                    b.Property<int>("idNameRule")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("idEndpointAccess");
+
+                    b.HasIndex("idNameRule");
+
+                    b.ToTable("endpointAcces_nameRule");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            idEndpointAccess = 1,
+                            idNameRule = 1
+                        },
+                        new
+                        {
+                            id = 2,
+                            idEndpointAccess = 2,
+                            idNameRule = 1
+                        });
+                });
+
+            modelBuilder.Entity("SystemBase.Models.endpointAccess", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("endpoint")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("method")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("permission")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("id");
+
+                    b.ToTable("endpointAccess");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            endpoint = "/auth/logout",
+                            method = "POST",
+                            permission = "auth.logout.self",
+                            status = true
+                        },
+                        new
+                        {
+                            id = 2,
+                            endpoint = "/auth/logout",
+                            method = "POST",
+                            permission = "auth.logout.*",
+                            status = true
+                        },
+                        new
+                        {
+                            id = 3,
+                            endpoint = "/auth/logout",
+                            method = "POST",
+                            permission = "auth.logout.subordinate",
+                            status = true
+                        });
+                });
+
+            modelBuilder.Entity("SystemBase.Models.nameRule", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("nameRule");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            name = "Acceso de CEO"
+                        });
+                });
+
             modelBuilder.Entity("SystemBase.Models.refreshTokens", b =>
                 {
                     b.Property<int>("id")
@@ -33,14 +149,17 @@ namespace SystemBase.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<DateTimeOffset>("SessionExpiresAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("agentUserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("createdAt")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime>("expiresAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("expiresAt")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("idUser")
                         .HasColumnType("int");
@@ -76,6 +195,9 @@ namespace SystemBase.Migrations
                     b.Property<DateTimeOffset>("created")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int?>("idEndpointAccessNameRule")
+                        .HasColumnType("int");
+
                     b.Property<string>("name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -83,7 +205,26 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("idEndpointAccessNameRule");
+
                     b.ToTable("roles");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            code = 1,
+                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            idEndpointAccessNameRule = 1,
+                            name = "CEO"
+                        },
+                        new
+                        {
+                            id = 2,
+                            code = 2,
+                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            name = "Gerente de Nave"
+                        });
                 });
 
             modelBuilder.Entity("SystemBase.Models.user_assignments", b =>
@@ -152,8 +293,8 @@ namespace SystemBase.Migrations
 
                     b.Property<string>("password")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("status")
                         .ValueGeneratedOnAdd()
@@ -177,9 +318,28 @@ namespace SystemBase.Migrations
                             app = "Diaz",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Jhonatan",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$Pl1PoJTEO89yDi1mRBVBug$ChQ0z0pA3cPU/+yFmDT3ye5+jA2f6++FkZdjnBynfiY",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$XqPdP44Dhf7Fx6/o56X08g$+PBdv4WYvCHkLB3y90eA3Xw7RQ0ipfSFLBM8pZ0vPBY",
                             userName = "@adminDev"
                         });
+                });
+
+            modelBuilder.Entity("SystemBase.Models.endpointAcces_nameRule", b =>
+                {
+                    b.HasOne("SystemBase.Models.endpointAccess", "endpointAccess")
+                        .WithMany()
+                        .HasForeignKey("idEndpointAccess")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SystemBase.Models.nameRule", "NameRule")
+                        .WithMany()
+                        .HasForeignKey("idNameRule")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NameRule");
+
+                    b.Navigation("endpointAccess");
                 });
 
             modelBuilder.Entity("SystemBase.Models.refreshTokens", b =>
@@ -191,6 +351,15 @@ namespace SystemBase.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SystemBase.Models.roles", b =>
+                {
+                    b.HasOne("SystemBase.Models.endpointAcces_nameRule", "endpointAccessNameRule")
+                        .WithMany()
+                        .HasForeignKey("idEndpointAccessNameRule");
+
+                    b.Navigation("endpointAccessNameRule");
                 });
 
             modelBuilder.Entity("SystemBase.Models.user_assignments", b =>

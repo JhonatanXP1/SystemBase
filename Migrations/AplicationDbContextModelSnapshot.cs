@@ -315,7 +315,7 @@ namespace SystemBase.Migrations
                             app = "Diaz",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Jhonatan",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$/O+HlgoggAT+PMILYDprjw$RVI2Ek3A2G+O94WbtDV9bGgxBpRYDWgj45NNqvZJhjo",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$XqPdP44Dhf7Fx6/o56X08g$+PBdv4WYvCHkLB3y90eA3Xw7RQ0ipfSFLBM8pZ0vPBY",
                             userName = "@adminDev"
                         });
                 });
