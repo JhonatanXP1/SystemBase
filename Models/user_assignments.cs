@@ -6,7 +6,7 @@ public class user_assignments
     public int idUser {get;set;}
     public int idRole {get;set;}
     public scopeType scopeType {get;set;}
-    public int scopeId {get;set;}
+    public int? scopeId {get;set;}
     public DateTimeOffset created {get;set;}
     public roles roles {get;set;}
     public users users {get;set;} 

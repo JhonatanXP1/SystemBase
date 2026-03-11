@@ -40,5 +40,18 @@ Mientras que en la sección anterior se presentó el modelo teórico de acceso d
 |                 	|                 	|                                   	|                                             	|                                             	|                                           	|                  	|
 |                 	|                 	|                                   	|                                             	|                                             	|                                           	|                  	|
 
+```json
+{
+  "perm": {
+    "COMPANY:1": [
+      "auth.logout.self",
+      "auth.logout.subordinate"
+    ],
+    "COMPANY:2": [
+      "auth.logout.subordinate"
+    ]
+  }
+}
+```
 
-
+asi se veran la claim con el permiso

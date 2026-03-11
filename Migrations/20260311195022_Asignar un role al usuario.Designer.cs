@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SystemBase.Data;
 
@@ -11,9 +12,11 @@ using SystemBase.Data;
 namespace SystemBase.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    partial class AplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260311195022_Asignar un role al usuario")]
+    partial class Asignarunrolealusuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -326,7 +329,7 @@ namespace SystemBase.Migrations
                             app = "Diaz",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Jhonatan",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$ZnUskIpbF1AMN0PqB1eWAg$wDgDdbCTZdJP5QHiTEn/Y5cjkvb2jRKnZYKBqoe2Dfo",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$CTSileQZE8aFOpkqzdI2IA$n1LOdL1Rgbnvf7+qNUiaE2Nr1n0EXOckqZsyNJCCk+I",
                             userName = "@adminDev"
                         });
                 });

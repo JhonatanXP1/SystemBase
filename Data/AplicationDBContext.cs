@@ -160,8 +160,19 @@ public class AplicationDbContext : DbContext
                 .HasForeignKey(uax => uax.idUser).IsRequired();
             //verifica si necesitas eliminacion en cascada !! - .OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(uax => uax.roles).WithMany()
-                .HasForeignKey(uax => uax.idRole).IsRequired();
+                .HasForeignKey(uax => uax.idRole).IsRequired(); //en modo desarrollo temporramlmente no lo requiero  
         });
+        modelBuilder.Entity<user_assignments>().HasData(
+        new
+        {
+            id = 1,
+            idUser = 1,
+            idRole = 1,
+            scopeType = scopeType.COMPANY,
+            scopeId = (int?)null,
+            created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
+        }
+        );
 
         /*============================== REFRESH TOKENS =========================================*/
         modelBuilder.Entity<refreshTokens>(rT =>
