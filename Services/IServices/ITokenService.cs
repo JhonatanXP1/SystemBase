@@ -1,5 +1,7 @@
+using SystemBase.Models.Snapshot;
+
 namespace SystemBase.Services.IServices;
-using Models.snapshot;
+
 public interface ITokenService
 {
     public (string token, DateTimeOffset expiresAt) CreateAccessToken(IUserTokenInfo user);

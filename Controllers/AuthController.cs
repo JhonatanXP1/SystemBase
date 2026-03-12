@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using SystemBase.Mappers.IMappers;
+using SystemBase.Models.Snapshot;
 using SystemBase.Services.IServices;
 
 namespace SystemBase.Controllers;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Models.DTO;
-using Models.snapshot;
 
 [Route("[controller]")]
 [ApiController]

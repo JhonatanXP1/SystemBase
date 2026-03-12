@@ -93,20 +93,20 @@ public class AplicationDbContext : DbContext
         );
 
         /* ========================== ASIGNACION DE UNA REGLA Y LOS ACCESOS A LOS ENDPOINT PARA EL ACCESS TOKEN ======================================*/
-        modelBuilder.Entity<endpointAcces_nameRule>(entity =>
+        modelBuilder.Entity<EndpointAccessNameRule>(entity =>
         {
             entity.HasKey(r => r.id);
             entity.HasOne(r => r.endpointAccess)
                 .WithMany()
                 .HasForeignKey(r => r.idEndpointAccess)
                 .IsRequired();
-            entity.HasOne(r => r.NameRule)
+            entity.HasOne(r => r.nameRule)
                 .WithMany()
                 .HasForeignKey(r => r.idNameRule)
                 .IsRequired();
         });
 
-        modelBuilder.Entity<endpointAcces_nameRule>().HasData(
+        modelBuilder.Entity<EndpointAccessNameRule>().HasData(
             new
             {
                 id = 1,
@@ -154,6 +154,7 @@ public class AplicationDbContext : DbContext
             entity.HasKey(uax => uax.id);
             entity.Property(uax => uax.scopeType).HasConversion<string>();
             entity.Property(uax => uax.created).IsRequired();
+            entity.Property(uax => uax.isActive).IsRequired().HasDefaultValue(true);
             //Es para garantizar que el dato es unico pero toma en cuenta que la combinación.
             entity.HasIndex(uax => new { uax.scopeId, uax.scopeType, uax.idUser, uax.idRole }).IsUnique();
             entity.HasOne(uax => uax.users).WithMany()
@@ -163,15 +164,17 @@ public class AplicationDbContext : DbContext
                 .HasForeignKey(uax => uax.idRole).IsRequired(); //en modo desarrollo temporramlmente no lo requiero  
         });
         modelBuilder.Entity<user_assignments>().HasData(
-        new
-        {
-            id = 1,
-            idUser = 1,
-            idRole = 1,
-            scopeType = scopeType.COMPANY,
-            scopeId = (int?)null,
-            created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
-        }
+            new
+            {
+                id = 1,
+                idUser = 1,
+                codeEmployee = "N1-12",
+                idRole = 1,
+                scopeType = scopeType.COMPANY,
+                scopeId = (int?)null,
+                isActive = true,
+                created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
+            }
         );
 
         /*============================== REFRESH TOKENS =========================================*/

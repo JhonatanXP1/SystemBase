@@ -2,12 +2,12 @@ using System.Data;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using SystemBase.Models;
+using SystemBase.Models.Snapshot;
 
 namespace SystemBase.Services;
 
 using IServices;
 using Models.DTO;
-using Models.snapshot;
 using Mappers.IMappers;
 using Repositorio.IRepositorio;
 

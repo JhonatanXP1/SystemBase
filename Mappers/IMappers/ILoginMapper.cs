@@ -1,6 +1,7 @@
+using SystemBase.Models.Snapshot;
+
 namespace SystemBase.Mappers.IMappers;
 using Models.DTO;
-using Models.snapshot;
 using Models;
 
 public interface ILoginMapper

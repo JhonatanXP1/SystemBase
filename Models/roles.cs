@@ -9,5 +9,5 @@ public class roles
     public string name { get; set; }
     public int? idEndpointAccessNameRule { get; set; }
     public DateTimeOffset created { get; set; }
-    public endpointAcces_nameRule? endpointAccessNameRule { get; set; }
+    public EndpointAccessNameRule? endpointAccessNameRule { get; set; }
 }

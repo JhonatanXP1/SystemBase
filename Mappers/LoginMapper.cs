@@ -1,7 +1,8 @@
 using SystemBase.Mappers.IMappers;
 using SystemBase.Models.DTO;
-using SystemBase.Models.snapshot;
 using SystemBase.Models;
+using SystemBase.Models.Snapshot;
+
 namespace SystemBase.Mappers;
 
 public class LoginMapper : ILoginMapper

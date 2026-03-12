@@ -3,10 +3,11 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using SystemBase.Models.DTO;
+using SystemBase.Models.Snapshot;
 
 namespace SystemBase.Services;
 using IServices;
-using Models.snapshot;
+
 public class TokenService :ITokenService
 {
     private readonly IConfiguration _configuration;

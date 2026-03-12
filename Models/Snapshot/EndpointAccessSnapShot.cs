@@ -1,6 +1,1 @@
-namespace SystemBase.Models.snapshot;
-
-public class EndpointAccessSnapShot
-{
-    
-}
+namespace SystemBase.Models.Snapshot;

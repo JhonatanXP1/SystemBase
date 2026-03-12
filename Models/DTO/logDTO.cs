@@ -1,6 +1,8 @@
+using SystemBase.Models.Snapshot;
+
 namespace SystemBase.Models.DTO;
 using System.ComponentModel.DataAnnotations;
-using Models.snapshot;
+
 public class logingDTO
 {
     [Required(ErrorMessage = "El nombre es obligatorio")]

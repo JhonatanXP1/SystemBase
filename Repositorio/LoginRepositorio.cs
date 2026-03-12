@@ -1,12 +1,11 @@
-using Azure.Core;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+
+using SystemBase.Models.Snapshot;
 
 namespace SystemBase.Repositorio;
-
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Data;
 using Models;
-using Models.snapshot;
 using Mappers.IMappers;
 using IRepositorio;
 

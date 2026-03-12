@@ -1,5 +1,6 @@
-namespace SystemBase.Models.snapshot;
 using SystemBase.Models.DTO;
+
+namespace SystemBase.Models.Snapshot;
 
 public class SessionStarted:IAccessService
 {

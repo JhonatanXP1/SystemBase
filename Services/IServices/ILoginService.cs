@@ -1,7 +1,8 @@
+using SystemBase.Models.Snapshot;
+
 namespace SystemBase.Services.IServices;
 using Services;
 using Models.DTO;
-using Models.snapshot;
 
 public interface ILoginService
 {
