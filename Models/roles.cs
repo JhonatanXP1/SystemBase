@@ -6,8 +6,7 @@ public class roles
 
     //Es el tipos de Usuario predefenido por el sistema [Directo, Gerente, Supervisor, Cordinador, Empleado] Estatico. solo esos
     public roleCode code { get; set; }
-    public string name { get; set; }
-    public int? idEndpointAccessNameRule { get; set; }
+    public string name { get; set; } = string.Empty;
     public DateTimeOffset created { get; set; }
-    public EndpointAccessNameRule? endpointAccessNameRule { get; set; }
+    public ICollection<EndpointAccessNameRule> endpointAccessNameRules { get; set; } = new List<EndpointAccessNameRule>();
 }

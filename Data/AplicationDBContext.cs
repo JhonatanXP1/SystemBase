@@ -18,6 +18,9 @@ public class AplicationDbContext : DbContext
     public DbSet<roles> roles { get; set; }
     public DbSet<refreshTokens> refreshTokens { get; set; }
     public DbSet<user_assignments> user_assignments { get; set; }
+    public DbSet<nameRule> nameRules { get; set; }
+    public DbSet<endpointAccess> endpointAccess { get; set; }
+    public DbSet<EndpointAccessNameRule> endpointAccessNameRules { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -92,43 +95,10 @@ public class AplicationDbContext : DbContext
             }
         );
 
-        /* ========================== ASIGNACION DE UNA REGLA Y LOS ACCESOS A LOS ENDPOINT PARA EL ACCESS TOKEN ======================================*/
-        modelBuilder.Entity<EndpointAccessNameRule>(entity =>
-        {
-            entity.HasKey(r => r.id);
-            entity.HasOne(r => r.endpointAccess)
-                .WithMany()
-                .HasForeignKey(r => r.idEndpointAccess)
-                .IsRequired();
-            entity.HasOne(r => r.nameRule)
-                .WithMany()
-                .HasForeignKey(r => r.idNameRule)
-                .IsRequired();
-        });
-
-        modelBuilder.Entity<EndpointAccessNameRule>().HasData(
-            new
-            {
-                id = 1,
-                idEndpointAccess = 1,
-                idNameRule = 1,
-            },
-            new
-            {
-                id = 2,
-                idEndpointAccess = 2,
-                idNameRule = 1,
-            }
-        );
-
-
         modelBuilder.Entity<roles>(entity =>
         {
             entity.HasKey(r => r.id);
             entity.Property(r => r.name).IsRequired().HasMaxLength(50);
-            entity.HasOne(r => r.endpointAccessNameRule)
-                .WithMany()
-                .HasForeignKey(r => r.idEndpointAccessNameRule);
         });
         modelBuilder.Entity<roles>().HasData(
             new
@@ -137,7 +107,6 @@ public class AplicationDbContext : DbContext
                 name = "CEO",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
                 code = roleCode.Director,
-                idEndpointAccessNameRule = 1,
             },
             new
             {
@@ -145,6 +114,49 @@ public class AplicationDbContext : DbContext
                 name = "Gerente de Nave",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
                 code = roleCode.Gerente,
+            }
+        );
+
+        /* ========================== ASIGNACION DE UNA REGLA Y LOS ACCESOS A LOS ENDPOINT PARA EL ACCESS TOKEN ======================================*/
+        modelBuilder.Entity<EndpointAccessNameRule>(entity =>
+        {
+            entity.HasKey(r => r.id);
+            entity.HasOne(r => r.endpointAccess)
+                .WithMany(e => e.endpointAccessNameRules)
+                .HasForeignKey(r => r.idEndpointAccess)
+                .IsRequired();
+            entity.HasOne(r => r.nameRule)
+                .WithMany(nr => nr.endpointAccessNameRules)
+                .HasForeignKey(r => r.idNameRule)
+                .IsRequired();
+            entity.HasOne(eanr => eanr.roles)
+                .WithMany(r => r.endpointAccessNameRules)
+                .HasForeignKey(r => r.idRole)
+                .IsRequired();
+            entity.HasIndex(r => new { r.idRole, r.idEndpointAccess, r.idNameRule }).IsUnique();
+        });
+
+        modelBuilder.Entity<EndpointAccessNameRule>().HasData(
+            new
+            {
+                id = 1,
+                idRole = 1,
+                idEndpointAccess = 1,
+                idNameRule = 1,
+            },
+            new
+            {
+                id = 2,
+                idRole = 1,
+                idEndpointAccess = 2,
+                idNameRule = 1,
+            },
+            new
+            {
+                id = 3,
+                idRole = 2,
+                idEndpointAccess = 1,
+                idNameRule = 1,
             }
         );
 

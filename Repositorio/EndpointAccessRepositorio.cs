@@ -1,5 +1,5 @@
+using Microsoft.EntityFrameworkCore;
 using SystemBase.Data;
-using Microsoft.Data.SqlClient;
 using SystemBase.Repositorio.IRepositorio;
 
 namespace SystemBase.Repositorio;
@@ -8,9 +8,14 @@ public class EndpointAccessRepositorio (AplicationDbContext db):IEndpointAccessR
 {
     private readonly AplicationDbContext _db = db;
 
-    public async Task<List<string>?> GetEndpoints(string codeEmploy, int idUserAssigments)
+    public async Task<List<string>> GetEndpoints(int idUserAssigments)
     {
-        
-        return null;
+        return await (
+            from ua in _db.user_assignments
+            join ean in _db.endpointAccessNameRules on ua.idRole equals ean.idRole
+            join e in _db.endpointAccess on ean.idEndpointAccess equals e.id
+            where ua.id == idUserAssigments && ua.isActive && e.status
+            select e.permission
+        ).Distinct().ToListAsync();
     }
 }
