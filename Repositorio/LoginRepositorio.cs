@@ -20,7 +20,7 @@ public class LoginRepositorio : ILoginRepositorio
         _mapper = mapper;
     }
 
-    public Task<users?>
+    public Task<Users?>
         LoginUser(string userName) // Busca el usuario en la base de datos por su nombre de usuario y contraseña
     {
         return _db.users.FirstOrDefaultAsync(u =>

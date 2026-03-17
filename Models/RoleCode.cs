@@ -1,6 +1,6 @@
 namespace SystemBase.Models;
 
-public enum roleCode
+public enum RoleCode
 {
     Director = 1,
     Gerente = 2,

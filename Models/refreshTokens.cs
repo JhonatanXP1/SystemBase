@@ -14,5 +14,5 @@ public class refreshTokens
     public string? agentUserName { get; set; }
     public bool isActive { get; set; }
 
-    public users? User { get; set; }
+    public Users? User { get; set; }
 }

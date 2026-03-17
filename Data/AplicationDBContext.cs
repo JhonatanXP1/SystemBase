@@ -14,10 +14,10 @@ public class AplicationDbContext : DbContext
         _passwordHasher = passwordHasher;
     }
 
-    public DbSet<users> users { get; set; }
-    public DbSet<roles> roles { get; set; }
+    public DbSet<Users> users { get; set; }
+    public DbSet<Roles> roles { get; set; }
     public DbSet<refreshTokens> refreshTokens { get; set; }
-    public DbSet<user_assignments> user_assignments { get; set; }
+    public DbSet<UserAssignments> userAssignments { get; set; }
     public DbSet<nameRule> nameRules { get; set; }
     public DbSet<endpointAccess> endpointAccess { get; set; }
     public DbSet<EndpointAccessNameRule> endpointAccessNameRules { get; set; }
@@ -25,7 +25,7 @@ public class AplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<users>(entity =>
+        modelBuilder.Entity<Users>(entity =>
         {
             //definimos primarykey
             entity.HasKey(u => u.id);
@@ -39,7 +39,7 @@ public class AplicationDbContext : DbContext
             entity.Property(u => u.status).HasDefaultValue(true);
         });
 
-        modelBuilder.Entity<users>().HasData(
+        modelBuilder.Entity<Users>().HasData(
             new
             {
                 id = 1,
@@ -95,25 +95,25 @@ public class AplicationDbContext : DbContext
             }
         );
 
-        modelBuilder.Entity<roles>(entity =>
+        modelBuilder.Entity<Roles>(entity =>
         {
             entity.HasKey(r => r.id);
             entity.Property(r => r.name).IsRequired().HasMaxLength(50);
         });
-        modelBuilder.Entity<roles>().HasData(
+        modelBuilder.Entity<Roles>().HasData(
             new
             {
                 id = 1,
                 name = "CEO",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
-                code = roleCode.Director,
+                code = RoleCode.Director,
             },
             new
             {
                 id = 2,
                 name = "Gerente de Nave",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
-                code = roleCode.Gerente,
+                code = RoleCode.Gerente,
             }
         );
 
@@ -161,7 +161,7 @@ public class AplicationDbContext : DbContext
         );
 
         /* ================================== ASIGNACION DE USUARIO A UN ROLE =============================================*/
-        modelBuilder.Entity<user_assignments>(entity =>
+        modelBuilder.Entity<UserAssignments>(entity =>
         {
             entity.HasKey(uax => uax.id);
             entity.Property(uax => uax.scopeType).HasConversion<string>();
@@ -175,7 +175,7 @@ public class AplicationDbContext : DbContext
             entity.HasOne(uax => uax.roles).WithMany()
                 .HasForeignKey(uax => uax.idRole).IsRequired(); //en modo desarrollo temporramlmente no lo requiero  
         });
-        modelBuilder.Entity<user_assignments>().HasData(
+        modelBuilder.Entity<UserAssignments>().HasData(
             new
             {
                 id = 1,

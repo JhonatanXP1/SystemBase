@@ -7,7 +7,7 @@ namespace SystemBase.Mappers;
 
 public class LoginMapper : ILoginMapper
 {
-    public UserSessionDTO MapUserToUserSessionDto(users user)
+    public UserSessionDTO MapUserToUserSessionDto(Users user)
     {
         return new UserSessionDTO
         {
