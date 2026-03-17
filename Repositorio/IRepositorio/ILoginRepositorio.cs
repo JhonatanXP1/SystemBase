@@ -5,7 +5,7 @@ using Models;
 
 public interface ILoginRepositorio
 {
-    Task<users?> LoginUser(string userName);
+    Task<Users?> LoginUser(string userName);
     Task<List<refreshTokens>> ListRefreshTokensExist(int userId);
     Task<int> CountRefreshTokensExistAsyncron(int userId);
     Task<List<OldRefreshToken>> GetOldRefreshTokens(int userId);

@@ -1,9 +1,12 @@
 namespace SystemBase.Models;
 
-public class users
+public class Users
 {
-    public users()
+    public Users(string userName, string password, string name)
     {
+        this.userName = userName;
+        this.password = password;
+        this.name = name;
         status = true;
     }
     public int id { get; set; }

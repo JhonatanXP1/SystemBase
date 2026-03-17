@@ -8,5 +8,5 @@ public class EndpointAccessNameRule
     public int idRole {get;set;}
     public nameRule nameRule {get;set;} = null!;
     public endpointAccess endpointAccess {get;set;} = null!;
-    public roles roles {get;set;} = null!;
+    public Roles roles {get;set;} = null!;
 }
