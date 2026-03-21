@@ -39,6 +39,7 @@ builder.Services.AddScoped<IHttpContextService, HttpContextService>();
 //Repositorios.
 builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
