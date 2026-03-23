@@ -81,7 +81,7 @@ public class AuthController : ControllerBase
         string? ipAddress = _accessor.GetClientIpAddress();
         string userAgent = _accessor.GetUserAgent();
         
-        var newCredenciales = await _loginService.refreshTokensService(refreshToken, ipAddress, userAgent);
+        var newCredenciales = await _loginService.RefreshTokensService(refreshToken, ipAddress, userAgent);
         if (!newCredenciales.Success)
         {
             return newCredenciales.Error switch

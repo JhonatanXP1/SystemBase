@@ -46,7 +46,7 @@ public class LoginService : ILoginService
 
         if (!_passwordHasher.Verify(user.password,
                 loginDto.password)) // Validas Contraseña que esta Hasheada en Argoin2
-            return ResponseService.Error<SessionStarted>("Credenciales inválidas");
+            return ResponseService.Error<SessionStarted>("Credenciales inválidass");
 
         UserSessionDTO userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
 
@@ -84,6 +84,7 @@ public class LoginService : ILoginService
                 );
             }
         }
+
         try
         {
             await _repositorioLogin.AddRefreshTokens(new refreshTokens
@@ -113,7 +114,7 @@ public class LoginService : ILoginService
         }
     }
 
-    public async Task<ResponseService<refreshToken>> refreshTokensService(string refreshToken,
+    public async Task<ResponseService<refreshToken>> RefreshTokensService(string refreshToken,
         string ipAddress, string agentUserName)
     {
         string tokenHash = _tokenService.HashRefreshToken(refreshToken);
@@ -121,9 +122,10 @@ public class LoginService : ILoginService
         if (refreshTokenDb == null) return ResponseService.Error<refreshToken>("Refresh token inválido");
         if (refreshTokenDb.ipAddress != ipAddress || refreshTokenDb.agentUserName != agentUserName)
         {
-            var disableds = _repositorioLogin.DisabledRefreshTokensAll(0,tokenHash);
+            await _repositorioLogin.DisabledRefreshTokensAll(0, tokenHash);
             return ResponseService.Error<refreshToken>("Refresh token inactivo");
         }
+
         if (refreshTokenDb.isActive == false)
             return ResponseService.Error<refreshToken>("Refresh token inactivo");
         if (DateTimeOffset.UtcNow > refreshTokenDb.expiresAt)
@@ -131,12 +133,13 @@ public class LoginService : ILoginService
             await _repositorioLogin.DisabledRefreshToken(refreshTokenDb.id);
             return ResponseService.Error<refreshToken>("Refresh token expirado");
         }
+
         if (DateTimeOffset.UtcNow > refreshTokenDb.SessionExpiresAt)
         {
             await _repositorioLogin.DisabledRefreshToken(refreshTokenDb.id);
             return ResponseService.Error<refreshToken>("Sesión expirada, inicie sesión nuevamente");
         }
-        
+
         var user = await _repositorioLogin.UserClaimNeed(refreshTokenDb.idUser);
         if (user == null) return ResponseService.Error<refreshToken>("Usuario no existe");
 
