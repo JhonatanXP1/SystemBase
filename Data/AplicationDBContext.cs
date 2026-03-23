@@ -74,20 +74,12 @@ public class AplicationDbContext : DbContext
                 id = 1,
                 endpoint = "/auth/logout",
                 method = "POST",
-                permission = "auth.logout.self",
-                status = true
-            },
-            new
-            {
-                id = 2,
-                endpoint = "/auth/logout",
-                method = "POST",
                 permission = "auth.logout.*",
                 status = true
             },
             new
             {
-                id = 3,
+                id = 2,
                 endpoint = "/auth/logout",
                 method = "POST",
                 permission = "auth.logout.subordinate",
@@ -155,7 +147,7 @@ public class AplicationDbContext : DbContext
             {
                 id = 3,
                 idRole = 2,
-                idEndpointAccess = 1,
+                idEndpointAccess = 2,
                 idNameRule = 1,
             }
         );
