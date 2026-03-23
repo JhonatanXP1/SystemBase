@@ -40,7 +40,7 @@ public class TokenService :ITokenService
     }
     
 
-    public (string token, DateTimeOffset expiresAt) CreateAccessToken(IUserTokenInfo user)
+    public (string token, DateTimeOffset expiresAt) CreateAccessToken(IUserTokenInfo user, ITokenPermisionFromUser  permision)
     {
         var issuer = _configuration["Jwt:Issuer"];
         var audience = _configuration["Jwt:Audience"];

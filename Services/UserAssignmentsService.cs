@@ -1,14 +1,20 @@
+using System.Text.Json;
+using SystemBase.Repositorio.IRepositorio;
 using SystemBase.Services.IServices;
 
 namespace SystemBase.Services;
 
-public class UserAssignmentsService(IUserAssignments userAssignments)
+public class UserAssignmentsService(IEndpointAccessRepositorio  accessRepositorio) : IUserAssignments
 {
-    private readonly IUserAssignments _UserAssignments = userAssignments;
+    private readonly IEndpointAccessRepositorio _endpointAccessRepositorio = accessRepositorio;
 
-    bool getPermissionFromAssignate()
+    public async Task<bool> GetAllPermissionFromAssignate(int idUser)
     {
-        
+        var asignaciones = await _endpointAccessRepositorio.GetEndpoints(idUser);
+        Console.Write(JsonSerializer.Serialize(asignaciones, new JsonSerializerOptions 
+        { 
+            WriteIndented = true 
+        }));
         return true;
     }
 }

@@ -35,9 +35,11 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IHttpContextService, HttpContextService>();
+builder.Services.AddScoped<IUserAssignments, UserAssignmentsService>();
 
 //Repositorios.
 builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();
+builder.Services.AddScoped<IEndpointAccessRepositorio, EndpointAccessRepositorio>();
 
 
 var app = builder.Build();

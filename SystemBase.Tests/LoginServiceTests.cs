@@ -17,6 +17,7 @@ public class LoginServiceTests
     public Mock<ITokenService> TokenServiceMock = new();
     public Mock<IPasswordHasher> PasswordHasherMock = new();
     public Mock<IConfiguration> ConfigurationMock = new();
+    public Mock<IUserAssignments>  UserAssignmentsMock = new();
 
     private readonly LoginService _loginService;
     private readonly ITestOutputHelper _output;
@@ -29,7 +30,8 @@ public class LoginServiceTests
             LoginMapperMock.Object,
             TokenServiceMock.Object,
             ConfigurationMock.Object,
-            PasswordHasherMock.Object
+            PasswordHasherMock.Object,
+            UserAssignmentsMock.Object
         );
     }
 
@@ -103,6 +105,6 @@ public class LoginServiceTests
             .Returns(false);
 
         var caseUserPasswordNotCorrect = await _loginService.Login(loginDto, "Rider", "127.0.0.1");
-        Assert.Equal("Credenciales inválidass", caseUserPasswordNotCorrect.Error);
+        Assert.Equal("Credenciales inválidas", caseUserPasswordNotCorrect.Error);
     }
 }

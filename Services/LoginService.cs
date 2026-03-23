@@ -18,13 +18,15 @@ public class LoginService : ILoginService
     private readonly ITokenService _tokenService;
     private readonly IConfiguration _configuration;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IUserAssignments _userAssignments;
 
     public LoginService(
         ILoginRepositorio repositorioLogin,
         ILoginMapper loginMapper,
         ITokenService tokenService,
         IConfiguration configuration,
-        IPasswordHasher passwordHasher
+        IPasswordHasher passwordHasher,
+        IUserAssignments userAssignments
     )
     {
         _repositorioLogin = repositorioLogin;
@@ -32,6 +34,7 @@ public class LoginService : ILoginService
         _tokenService = tokenService;
         _configuration = configuration;
         _passwordHasher = passwordHasher;
+        _userAssignments = userAssignments;
     }
 
     public async Task<ResponseService<SessionStarted>> Login(logingDTO loginDto, string agentUserName, string ipAddress)
@@ -46,11 +49,12 @@ public class LoginService : ILoginService
 
         if (!_passwordHasher.Verify(user.password,
                 loginDto.password)) // Validas Contraseña que esta Hasheada en Argoin2
-            return ResponseService.Error<SessionStarted>("Credenciales inválidass");
-
+            return ResponseService.Error<SessionStarted>("Credenciales inválidas");
+        var listPermission = await _userAssignments.GetAllPermissionFromAssignate(user.id);
         UserSessionDTO userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
+        
 
-        var (token, expiresAt) = _tokenService.CreateAccessToken(userSessionDto);
+        var (token, expiresAt) = _tokenService.CreateAccessToken(userSessionDto , null);
         var refreshToken = _tokenService.CreateRefreshToken();
 
         int numSessionActives = await _repositorioLogin.CountRefreshTokensExistAsyncron(user.id);
@@ -143,7 +147,7 @@ public class LoginService : ILoginService
         var user = await _repositorioLogin.UserClaimNeed(refreshTokenDb.idUser);
         if (user == null) return ResponseService.Error<refreshToken>("Usuario no existe");
 
-        var (token, expiresAt) = _tokenService.CreateAccessToken(user);
+        var (token, expiresAt) = _tokenService.CreateAccessToken(user, null);
         var refreshTokenNew = _tokenService.CreateRefreshToken();
         int days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
         DateTimeOffset fechaExpi = DateTimeOffset.UtcNow.AddDays(days);

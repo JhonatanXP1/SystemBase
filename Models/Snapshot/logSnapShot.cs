@@ -37,6 +37,10 @@ public interface IUserTokenInfo
     string? name { get; }
 }
 
+public interface ITokenPermisionFromUser
+{
+    List<string> permisions { get; }
+}
 public class refreshToken():IAccessService
 {
     public string Token { get; set; }
