@@ -2,13 +2,13 @@ using SystemBase.Models.DTO;
 
 namespace SystemBase.Models.Snapshot;
 
-public class SessionStarted:IAccessService
+public class SessionStarted : IAccessService
 {
+    public UserSessionDTO User { get; set; }
     public string Token { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
     public string RefreshToken { get; set; }
-    public DateTimeOffset refreshExpiresAt  { get; set; }
-    public UserSessionDTO User { get; set; }
+    public DateTimeOffset refreshExpiresAt { get; set; }
 }
 
 public class OldRefreshToken
@@ -16,11 +16,12 @@ public class OldRefreshToken
     public int id { get; set; }
     public DateTimeOffset createdAt { get; set; }
 }
+
 public sealed record UserNewAccessToken(
     int id,
     string userName,
     string? name
-):IUserTokenInfo;
+) : IUserTokenInfo;
 
 public class refreshTokenProccess
 {
@@ -41,12 +42,13 @@ public interface ITokenPermisionFromUser
 {
     List<string> permisions { get; }
 }
-public class refreshToken():IAccessService
+
+public class refreshToken : IAccessService
 {
     public string Token { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
     public string RefreshToken { get; set; }
-    public DateTimeOffset refreshExpiresAt  { get; set; }
+    public DateTimeOffset refreshExpiresAt { get; set; }
 }
 
 public interface IAccessService
@@ -54,5 +56,5 @@ public interface IAccessService
     public string Token { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
     public string RefreshToken { get; set; }
-    public DateTimeOffset refreshExpiresAt  { get; set; }
+    public DateTimeOffset refreshExpiresAt { get; set; }
 }

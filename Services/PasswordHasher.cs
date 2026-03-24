@@ -1,10 +1,9 @@
 using System.Security.Cryptography;
 using System.Text;
+using Isopoh.Cryptography.Argon2;
 using SystemBase.Services.IServices;
 
 namespace SystemBase.Services;
-
-using Isopoh.Cryptography.Argon2;
 
 public class PasswordHasher : IPasswordHasher
 {
@@ -14,13 +13,6 @@ public class PasswordHasher : IPasswordHasher
     private const int Threads = 2;
     private const int SaltBytes = 16;
     private const int HashBytes = 32;
-
-    private byte[] GenerateSalt(int size)
-    {
-        byte[] salt = new byte[size];
-        RandomNumberGenerator.Fill(salt);
-        return salt;
-    }
 
     public string Hash(string password)
     {
@@ -47,5 +39,12 @@ public class PasswordHasher : IPasswordHasher
             return false;
 
         return Argon2.Verify(storedHash, password);
+    }
+
+    private byte[] GenerateSalt(int size)
+    {
+        var salt = new byte[size];
+        RandomNumberGenerator.Fill(salt);
+        return salt;
     }
 }

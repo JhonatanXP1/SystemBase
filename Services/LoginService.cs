@@ -1,23 +1,21 @@
-using System.Data;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using SystemBase.Mappers.IMappers;
 using SystemBase.Models;
+using SystemBase.Models.DTO;
 using SystemBase.Models.Snapshot;
+using SystemBase.Repositorio.IRepositorio;
+using SystemBase.Services.IServices;
 
 namespace SystemBase.Services;
 
-using IServices;
-using Models.DTO;
-using Mappers.IMappers;
-using Repositorio.IRepositorio;
-
 public class LoginService : ILoginService
 {
-    private readonly ILoginRepositorio _repositorioLogin;
-    private readonly ILoginMapper _loginMapper;
-    private readonly ITokenService _tokenService;
     private readonly IConfiguration _configuration;
+    private readonly ILoginMapper _loginMapper;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly ILoginRepositorio _repositorioLogin;
+    private readonly ITokenService _tokenService;
     private readonly IUserAssignments _userAssignments;
 
     public LoginService(
@@ -51,20 +49,20 @@ public class LoginService : ILoginService
                 loginDto.password)) // Validas Contraseña que esta Hasheada en Argoin2
             return ResponseService.Error<SessionStarted>("Credenciales inválidas");
         var listPermission = await _userAssignments.GetAllPermissionFromAssignate(user.id);
-        UserSessionDTO userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
-        
+        var userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
 
-        var (token, expiresAt) = _tokenService.CreateAccessToken(userSessionDto , null);
+
+        var (token, expiresAt) = _tokenService.CreateAccessToken(userSessionDto, null);
         var refreshToken = _tokenService.CreateRefreshToken();
 
-        int numSessionActives = await _repositorioLogin.CountRefreshTokensExistAsyncron(user.id);
+        var numSessionActives = await _repositorioLogin.CountRefreshTokensExistAsyncron(user.id);
 
         //Los dias que la session se mantendrá viva.
-        int days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
-        DateTimeOffset fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
+        var days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
+        var fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
         DateTimeOffset fechaExpiPolitica = DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1);
 
-        string tokenHash = _tokenService.HashRefreshToken(refreshToken);
+        var tokenHash = _tokenService.HashRefreshToken(refreshToken);
 
         if (numSessionActives >= 3) // Si tiene 3 o mas se va cancelar uno. para mantener solo 3 credenciales activas.
         {
@@ -102,7 +100,7 @@ public class LoginService : ILoginService
                 idUser = user.id,
                 isActive = true
             });
-            return ResponseService.Success<SessionStarted>(new SessionStarted
+            return ResponseService.Success(new SessionStarted
             {
                 Token = token,
                 ExpiresAt = expiresAt,
@@ -121,7 +119,7 @@ public class LoginService : ILoginService
     public async Task<ResponseService<refreshToken>> RefreshTokensService(string refreshToken,
         string ipAddress, string agentUserName)
     {
-        string tokenHash = _tokenService.HashRefreshToken(refreshToken);
+        var tokenHash = _tokenService.HashRefreshToken(refreshToken);
         var refreshTokenDb = await _repositorioLogin.RefreshTokensExist(tokenHash);
         if (refreshTokenDb == null) return ResponseService.Error<refreshToken>("Refresh token inválido");
         if (refreshTokenDb.ipAddress != ipAddress || refreshTokenDb.agentUserName != agentUserName)
@@ -130,7 +128,7 @@ public class LoginService : ILoginService
             return ResponseService.Error<refreshToken>("Refresh token inactivo");
         }
 
-        if (refreshTokenDb.isActive == false)
+        if (!refreshTokenDb.isActive)
             return ResponseService.Error<refreshToken>("Refresh token inactivo");
         if (DateTimeOffset.UtcNow > refreshTokenDb.expiresAt)
         {
@@ -149,15 +147,14 @@ public class LoginService : ILoginService
 
         var (token, expiresAt) = _tokenService.CreateAccessToken(user, null);
         var refreshTokenNew = _tokenService.CreateRefreshToken();
-        int days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
-        DateTimeOffset fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
+        var days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
+        var fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
         DateTimeOffset fechaExpiPolitica = DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1);
 
-        string tokenHashNew = _tokenService.HashRefreshToken(refreshTokenNew);
+        var tokenHashNew = _tokenService.HashRefreshToken(refreshTokenNew);
         if (await _repositorioLogin
                 .TryDisabledRefreshTokens(refreshTokenDb
                     .id)) // <-- Desactivas el Refresh Activo Actual y Renuevas uno nuevo.
-        {
             try
             {
                 await _repositorioLogin.AddRefreshTokens(new refreshTokens
@@ -177,9 +174,8 @@ public class LoginService : ILoginService
                 Console.WriteLine($"No se inserto RefreshTokens:\n {eUP.Message}");
                 return ResponseService.Error<refreshToken>($"No se inserto RefreshTokens:\n {eUP.Message}");
             }
-        }
 
-        return ResponseService.Success<refreshToken>(new refreshToken
+        return ResponseService.Success(new refreshToken
         {
             Token = token,
             ExpiresAt = expiresAt,

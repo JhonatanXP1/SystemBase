@@ -62,7 +62,7 @@ public class AplicationDbContext : DbContext
             new
             {
                 id = 1,
-                name = "Acceso de CEO",
+                name = "Acceso de CEO"
             }
         );
 
@@ -98,14 +98,14 @@ public class AplicationDbContext : DbContext
                 id = 1,
                 name = "CEO",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
-                code = RoleCode.Director,
+                code = RoleCode.Director
             },
             new
             {
                 id = 2,
                 name = "Gerente de Nave",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
-                code = RoleCode.Gerente,
+                code = RoleCode.Gerente
             }
         );
 
@@ -134,21 +134,21 @@ public class AplicationDbContext : DbContext
                 id = 1,
                 idRole = 1,
                 idEndpointAccess = 1,
-                idNameRule = 1,
+                idNameRule = 1
             },
             new
             {
                 id = 2,
                 idRole = 1,
                 idEndpointAccess = 2,
-                idNameRule = 1,
+                idNameRule = 1
             },
             new
             {
                 id = 3,
                 idRole = 2,
                 idEndpointAccess = 2,
-                idNameRule = 1,
+                idNameRule = 1
             }
         );
 

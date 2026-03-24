@@ -2,5 +2,5 @@ namespace SystemBase.Services.IServices;
 
 public interface IUserAssignments
 {
-   Task<bool> GetAllPermissionFromAssignate(int idUser);
+    Task<bool> GetAllPermissionFromAssignate(int idUser);
 }

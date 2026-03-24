@@ -4,8 +4,9 @@ public class ResponseService<T>
 {
     public bool Success { get; set; }
     public string Error { get; set; } = string.Empty;
-    public T? Data { get; set; } 
+    public T? Data { get; set; }
 }
+
 public static class ResponseService
 {
     public static ResponseService<T> Success<T>(T data)
@@ -16,6 +17,7 @@ public static class ResponseService
             Data = data
         };
     }
+
     public static ResponseService<T> Error<T>(string error)
     {
         return new ResponseService<T>

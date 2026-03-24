@@ -4,16 +4,16 @@ using SystemBase.Services.IServices;
 
 namespace SystemBase.Services;
 
-public class UserAssignmentsService(IEndpointAccessRepositorio  accessRepositorio) : IUserAssignments
+public class UserAssignmentsService(IEndpointAccessRepositorio accessRepositorio) : IUserAssignments
 {
     private readonly IEndpointAccessRepositorio _endpointAccessRepositorio = accessRepositorio;
 
     public async Task<bool> GetAllPermissionFromAssignate(int idUser)
     {
         var asignaciones = await _endpointAccessRepositorio.GetEndpoints(idUser);
-        Console.Write(JsonSerializer.Serialize(asignaciones, new JsonSerializerOptions 
-        { 
-            WriteIndented = true 
+        Console.Write(JsonSerializer.Serialize(asignaciones, new JsonSerializerOptions
+        {
+            WriteIndented = true
         }));
         return true;
     }

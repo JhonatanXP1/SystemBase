@@ -1,22 +1,20 @@
-using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using SystemBase.Mappers.IMappers;
+using SystemBase.Models.DTO;
 using SystemBase.Models.Snapshot;
 using SystemBase.Services.IServices;
 
 namespace SystemBase.Controllers;
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Models.DTO;
-
 [Route("[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
 {
-    readonly ILoginService _loginService;
-    readonly IHttpContextService _accessor; // Inyectamos el IHttpContextAccessor para obtener la IP y el User-Agent
-    readonly ILoginMapper _loginMapper;
+    private readonly IHttpContextService
+        _accessor; // Inyectamos el IHttpContextAccessor para obtener la IP y el User-Agent
+
+    private readonly ILoginMapper _loginMapper;
+    private readonly ILoginService _loginService;
 
     public AuthController(
         ILoginService loginService,
@@ -36,20 +34,18 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] logingDTO loging)
     {
         //Identificas la IP publica.
-        string? ipAddress = _accessor.GetClientIpAddress();
-        string userAgent = _accessor.GetUserAgent();
+        var ipAddress = _accessor.GetClientIpAddress();
+        var userAgent = _accessor.GetUserAgent();
 
         var sessionStarted = await _loginService.Login(loging, userAgent, ipAddress);
 
         if (!sessionStarted.Success)
-        {
             return sessionStarted.Error switch
             {
                 "Credenciales inválidas" =>
                     Unauthorized(sessionStarted.Error),
                 _ => BadRequest(sessionStarted.Error)
             };
-        }
 
         var accessToken = _loginMapper.MapTosessionStartedsessionStartedDto(sessionStarted.Data!);
         Response.Cookies.Append(
@@ -78,12 +74,11 @@ public class AuthController : ControllerBase
             string.IsNullOrWhiteSpace(refreshToken))
             return Unauthorized("Refresh token faltante");
 
-        string? ipAddress = _accessor.GetClientIpAddress();
-        string userAgent = _accessor.GetUserAgent();
-        
+        var ipAddress = _accessor.GetClientIpAddress();
+        var userAgent = _accessor.GetUserAgent();
+
         var newCredenciales = await _loginService.RefreshTokensService(refreshToken, ipAddress, userAgent);
         if (!newCredenciales.Success)
-        {
             return newCredenciales.Error switch
             {
                 "Refresh token expirado" or
@@ -93,9 +88,8 @@ public class AuthController : ControllerBase
                     => Unauthorized(newCredenciales.Error),
                 _ => BadRequest(newCredenciales.Error)
             };
-        }
         Response.Cookies.Append("refreshToken", newCredenciales.Data!
-            .RefreshToken,
+                .RefreshToken,
             new CookieOptions
             {
                 HttpOnly = true,
@@ -114,7 +108,6 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Logout()
     {
-        
         return Ok();
     }
 }

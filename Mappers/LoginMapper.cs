@@ -1,6 +1,6 @@
 using SystemBase.Mappers.IMappers;
-using SystemBase.Models.DTO;
 using SystemBase.Models;
+using SystemBase.Models.DTO;
 using SystemBase.Models.Snapshot;
 
 namespace SystemBase.Mappers;
@@ -26,7 +26,7 @@ public class LoginMapper : ILoginMapper
         {
             Token = started.Token,
             ExpiresAt = started.ExpiresAt,
-            User  = started.User
+            User = started.User
         };
     }
 
@@ -35,7 +35,7 @@ public class LoginMapper : ILoginMapper
         return new refreshTokenResponseDTO
         {
             Token = token.Token,
-            ExpiresAt = token.ExpiresAt,
+            ExpiresAt = token.ExpiresAt
         };
     }
 }

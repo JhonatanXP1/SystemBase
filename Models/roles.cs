@@ -8,5 +8,7 @@ public class Roles
     public RoleCode code { get; set; }
     public string name { get; set; } = string.Empty;
     public DateTimeOffset created { get; set; }
-    public ICollection<EndpointAccessNameRule> endpointAccessNameRules { get; set; } = new List<EndpointAccessNameRule>();
+
+    public ICollection<EndpointAccessNameRule> endpointAccessNameRules { get; set; } =
+        new List<EndpointAccessNameRule>();
 }

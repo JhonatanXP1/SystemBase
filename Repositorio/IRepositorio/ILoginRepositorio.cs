@@ -1,7 +1,7 @@
+using SystemBase.Models;
 using SystemBase.Models.Snapshot;
 
 namespace SystemBase.Repositorio.IRepositorio;
-using Models;
 
 public interface ILoginRepositorio
 {

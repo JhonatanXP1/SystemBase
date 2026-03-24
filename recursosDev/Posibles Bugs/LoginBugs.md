@@ -1,11 +1,13 @@
 ## Tabla de Bugs
+
 - [Nota sobre Refresh Token](#refresh-token-issue)
 
 <h2 id="refresh-token-issue"> 📌 Nota Técnica – Posible Inconsistencia en Refresh Token (Falta de Atomicidad)</h2>
 
 ## 📖 Descripción
 
-En el flujo de autenticación, cuando un usuario alcanza el número máximo permitido de refresh tokens activos (por ejemplo: 3), el sistema realiza las siguientes operaciones:
+En el flujo de autenticación, cuando un usuario alcanza el número máximo permitido de refresh tokens activos (por
+ejemplo: 3), el sistema realiza las siguientes operaciones:
 
 1. Desactiva el refresh token más antiguo.
 2. Inserta un nuevo refresh token.
@@ -16,7 +18,9 @@ Estas operaciones se ejecutan en comandos separados y sin una transacción expl�
 
 ## ⚠️ Riesgo Potencial
 
-Si ocurre una falla después de desactivar el token antiguo pero antes de insertar el nuevo (por ejemplo: `DbUpdateException`, timeout, deadlock, problema de red o reinicio del servicio), el sistema puede quedar en un estado parcialmente actualizado.
+Si ocurre una falla después de desactivar el token antiguo pero antes de insertar el nuevo (por ejemplo:
+`DbUpdateException`, timeout, deadlock, problema de red o reinicio del servicio), el sistema puede quedar en un estado
+parcialmente actualizado.
 
 ### Posible estado inconsistente:
 

@@ -1,13 +1,12 @@
-
-using SystemBase.Models.Snapshot;
-
-namespace SystemBase.Repositorio;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Data;
-using Models;
-using Mappers.IMappers;
-using IRepositorio;
+using SystemBase.Data;
+using SystemBase.Mappers.IMappers;
+using SystemBase.Models;
+using SystemBase.Models.Snapshot;
+using SystemBase.Repositorio.IRepositorio;
+
+namespace SystemBase.Repositorio;
 
 public class LoginRepositorio : ILoginRepositorio
 {
@@ -67,7 +66,7 @@ public class LoginRepositorio : ILoginRepositorio
                 setters.SetProperty(atr => atr.isActive, false));
     }
 
-    public Task DisabledRefreshTokensAll(int idUser = 0, string refreshToken = "")  
+    public Task DisabledRefreshTokensAll(int idUser = 0, string refreshToken = "")
     {
         var sql = @"IF @idUser > 0
     BEGIN

@@ -4,7 +4,7 @@ using SystemBase.Repositorio.IRepositorio;
 
 namespace SystemBase.Repositorio;
 
-public class EndpointAccessRepositorio (AplicationDbContext db):IEndpointAccessRepositorio
+public class EndpointAccessRepositorio(AplicationDbContext db) : IEndpointAccessRepositorio
 {
     private readonly AplicationDbContext _db = db;
 
