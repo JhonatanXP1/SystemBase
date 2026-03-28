@@ -86,11 +86,15 @@ public class AplicationDbContext : DbContext
                 status = true
             }
         );
-
+        /* ========================= ROLES DE USUARIOS =========================================================*/
         modelBuilder.Entity<Roles>(entity =>
         {
             entity.HasKey(r => r.id);
             entity.Property(r => r.name).IsRequired().HasMaxLength(50);
+            entity.HasOne(r => r.endpointAccessNameRule)
+                .WithMany(eanr => eanr.roles)
+                .HasForeignKey(r => r.idEndpointAccessNameRule)
+                .OnDelete(DeleteBehavior.Restrict);
         });
         modelBuilder.Entity<Roles>().HasData(
             new
@@ -98,14 +102,16 @@ public class AplicationDbContext : DbContext
                 id = 1,
                 name = "CEO",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
-                code = RoleCode.Director
+                code = RoleCode.Director,
+                idEndpointAccessNameRule = 1
             },
             new
             {
                 id = 2,
                 name = "Gerente de Nave",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
-                code = RoleCode.Gerente
+                code = RoleCode.Gerente,
+                idEndpointAccessNameRule = 3
             }
         );
 
@@ -121,32 +127,24 @@ public class AplicationDbContext : DbContext
                 .WithMany(nr => nr.endpointAccessNameRules)
                 .HasForeignKey(r => r.idNameRule)
                 .IsRequired();
-            entity.HasOne(eanr => eanr.roles)
-                .WithMany(r => r.endpointAccessNameRules)
-                .HasForeignKey(r => r.idRole)
-                .IsRequired();
-            entity.HasIndex(r => new { r.idRole, r.idEndpointAccess, r.idNameRule }).IsUnique();
         });
 
         modelBuilder.Entity<EndpointAccessNameRule>().HasData(
             new
             {
                 id = 1,
-                idRole = 1,
                 idEndpointAccess = 1,
                 idNameRule = 1
             },
             new
             {
                 id = 2,
-                idRole = 1,
                 idEndpointAccess = 2,
                 idNameRule = 1
             },
             new
             {
                 id = 3,
-                idRole = 2,
                 idEndpointAccess = 2,
                 idNameRule = 1
             }
@@ -156,6 +154,7 @@ public class AplicationDbContext : DbContext
         modelBuilder.Entity<UserAssignments>(entity =>
         {
             entity.HasKey(uax => uax.id);
+            entity.Property(uax => uax.codeEmployee).HasMaxLength(15);
             entity.Property(uax => uax.scopeType).HasConversion<string>();
             entity.Property(uax => uax.created).IsRequired();
             entity.Property(uax => uax.isActive).IsRequired().HasDefaultValue(true);

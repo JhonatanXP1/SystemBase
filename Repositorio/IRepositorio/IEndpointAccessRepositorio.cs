@@ -1,6 +1,8 @@
+using SystemBase.Models.Snapshot;
+
 namespace SystemBase.Repositorio.IRepositorio;
 
 public interface IEndpointAccessRepositorio
 {
-    Task<List<string>> GetEndpoints(int idUserAssigments);
+    Task<List<PermisosXAsignacion>> GetEndpoints(int idUserAssigments);
 }
