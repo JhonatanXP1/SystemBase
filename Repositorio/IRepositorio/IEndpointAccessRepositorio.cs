@@ -4,5 +4,5 @@ namespace SystemBase.Repositorio.IRepositorio;
 
 public interface IEndpointAccessRepositorio
 {
-    //Task<List<PermisosXAsignacion>> GetEndpoints(int idUserAssigments);
+    Task<List<PermisosXAsignacion>> GetEndpoints(int idUser);
 }

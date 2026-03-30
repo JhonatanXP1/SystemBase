@@ -10,11 +10,11 @@ public class UserAssignmentsService(IEndpointAccessRepositorio accessRepositorio
 
     public async Task<bool> GetAllPermissionFromAssignate(int idUser)
     {
-        //var asignaciones = await _endpointAccessRepositorio.GetEndpoints(idUser);
-        /*Console.Write(JsonSerializer.Serialize(asignaciones, new JsonSerializerOptions
+        var asignaciones = await _endpointAccessRepositorio.GetEndpoints(idUser);
+        Console.Write(JsonSerializer.Serialize(asignaciones, new JsonSerializerOptions
         {
             WriteIndented = true
-        }));*/
+        }));
         return true;
     }
 }

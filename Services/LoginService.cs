@@ -48,7 +48,7 @@ public class LoginService : ILoginService
         if (!_passwordHasher.Verify(user.password,
                 loginDto.password)) // Validas Contraseña que esta Hasheada en Argoin2
             return ResponseService.Error<SessionStarted>("Credenciales inválidas");
-        //var listPermission = await _userAssignments.GetAllPermissionFromAssignate(user.id);
+        var listPermission = await _userAssignments.GetAllPermissionFromAssignate(user.id);
         var userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
 
 

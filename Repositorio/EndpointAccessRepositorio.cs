@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SystemBase.Data;
+using SystemBase.Models;
 using SystemBase.Models.Snapshot;
 using SystemBase.Repositorio.IRepositorio;
 
@@ -9,20 +10,21 @@ public class EndpointAccessRepositorio(AplicationDbContext db) : IEndpointAccess
 {
     private readonly AplicationDbContext _db = db;
 
-    /*public async Task<List<PermisosXAsignacion>> GetEndpoints(int idUserAssigments)
+    public async Task<List<PermisosXAsignacion>> GetEndpoints(int idUser)
     {
         return await (
             from ua in _db.userAssignments
-            join ean in _db.endpointAccessNameRules on ua.idRole equals ean.idRole
-            join r in _db.nameRules on ean.idNameRule equals r.id
-            join e in _db.endpointAccess on ean.idEndpointAccess equals e.id
-            where ua.id == idUserAssigments && ua.isActive && e.status
+            join r in _db.roles on ua.idRole equals r.id
+            join nr in _db.nameRules on r.idNameRule equals nr.id
+            join eanr in _db.endpointAccessNameRules on nr.id equals eanr.idNameRule
+            join ea in _db.endpointAccess on eanr.idEndpointAccess equals ea.id
+            where ua.idUser == idUser && ua.isActive && ea.status
             select new PermisosXAsignacion
             {
-                idUserAssignaments =  ua.id,
-                permission = e.permission,
-                nameRule = r.name
+                idUserAssignaments = ua.id,
+                permission = ea.permission,
+                nameRule = nr.name
             }
         ).ToListAsync();
-    }*/
+    }
 }
