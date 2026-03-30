@@ -8,6 +8,6 @@ public class Roles
     public RoleCode code { get; set; }
     public string name { get; set; } = string.Empty;
     public DateTimeOffset created { get; set; }
-    public int? idEndpointAccessNameRule { get; set; }
-    public EndpointAccessNameRule?  endpointAccessNameRule { get; set; }
+    public int? idNameRule { get; set; }
+    public NameRule? nameRule { get; set; }
 }

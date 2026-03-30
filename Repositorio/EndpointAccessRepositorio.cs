@@ -9,7 +9,7 @@ public class EndpointAccessRepositorio(AplicationDbContext db) : IEndpointAccess
 {
     private readonly AplicationDbContext _db = db;
 
-    public async Task<List<PermisosXAsignacion>> GetEndpoints(int idUserAssigments)
+    /*public async Task<List<PermisosXAsignacion>> GetEndpoints(int idUserAssigments)
     {
         return await (
             from ua in _db.userAssignments
@@ -24,5 +24,5 @@ public class EndpointAccessRepositorio(AplicationDbContext db) : IEndpointAccess
                 nameRule = r.name
             }
         ).ToListAsync();
-    }
+    }*/
 }

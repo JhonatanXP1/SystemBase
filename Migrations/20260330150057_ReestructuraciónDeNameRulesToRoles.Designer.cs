@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SystemBase.Data;
 
@@ -11,9 +12,11 @@ using SystemBase.Data;
 namespace SystemBase.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    partial class AplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260330150057_ReestructuraciónDeNameRulesToRoles")]
+    partial class ReestructuraciónDeNameRulesToRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,13 +57,13 @@ namespace SystemBase.Migrations
                         new
                         {
                             id = 2,
-                            idEndpointAccess = 3,
+                            idEndpointAccess = 2,
                             idNameRule = 1
                         },
                         new
                         {
                             id = 3,
-                            idEndpointAccess = 6,
+                            idEndpointAccess = 2,
                             idNameRule = 1
                         });
                 });
@@ -87,11 +90,6 @@ namespace SystemBase.Migrations
                         {
                             id = 1,
                             name = "Acceso de CEO"
-                        },
-                        new
-                        {
-                            id = 2,
-                            name = "Accesos de Gerente N-1"
                         });
                 });
 
@@ -254,7 +252,7 @@ namespace SystemBase.Migrations
                             app = "Diaz",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Jhonatan",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$bhkcNveySO7GCFRIplR10g$3bIVoeiWRchUxJjRwIF2mteIepZzTzc/6VhhOhMcvV4",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$yvxlF4xWVVqh4ley186RQA$f4kL0X3xk/CpynteN4wXoU1egISB780J9EBGz/gBgiA",
                             userName = "@adminDev"
                         });
                 });
@@ -301,46 +299,6 @@ namespace SystemBase.Migrations
                             endpoint = "/auth/logout",
                             method = "POST",
                             permission = "auth.logout.subordinate",
-                            status = true
-                        },
-                        new
-                        {
-                            id = 3,
-                            endpoint = "/auth/access",
-                            method = "GET",
-                            permission = "auth.access.*",
-                            status = true
-                        },
-                        new
-                        {
-                            id = 4,
-                            endpoint = "/auth/access",
-                            method = "GET",
-                            permission = "auth.access.subordinate",
-                            status = true
-                        },
-                        new
-                        {
-                            id = 5,
-                            endpoint = "/user",
-                            method = "GET",
-                            permission = "users.read.self",
-                            status = true
-                        },
-                        new
-                        {
-                            id = 6,
-                            endpoint = "/user",
-                            method = "GET",
-                            permission = "users.read.*",
-                            status = true
-                        },
-                        new
-                        {
-                            id = 7,
-                            endpoint = "/user",
-                            method = "GET",
-                            permission = "user.read.subordinate",
                             status = true
                         });
                 });

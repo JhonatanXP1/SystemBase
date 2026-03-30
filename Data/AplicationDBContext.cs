@@ -18,7 +18,7 @@ public class AplicationDbContext : DbContext
     public DbSet<Roles> roles { get; set; }
     public DbSet<refreshTokens> refreshTokens { get; set; }
     public DbSet<UserAssignments> userAssignments { get; set; }
-    public DbSet<nameRule> nameRules { get; set; }
+    public DbSet<NameRule> nameRules { get; set; }
     public DbSet<endpointAccess> endpointAccess { get; set; }
     public DbSet<EndpointAccessNameRule> endpointAccessNameRules { get; set; }
 
@@ -53,16 +53,21 @@ public class AplicationDbContext : DbContext
         );
 
         /* ========================== NOMBRE A LA REGLAS DE ACCESO AL USUARIO ======================================*/
-        modelBuilder.Entity<nameRule>(entity =>
+        modelBuilder.Entity<NameRule>(entity =>
         {
             entity.HasKey(r => r.id);
             entity.Property(r => r.name).IsRequired().HasMaxLength(50);
         });
-        modelBuilder.Entity<nameRule>().HasData(
+        modelBuilder.Entity<NameRule>().HasData(
             new
             {
                 id = 1,
                 name = "Acceso de CEO"
+            },
+            new
+            {
+                id = 2,
+                name = "Accesos de Gerente N-1"
             }
         );
 
@@ -84,6 +89,47 @@ public class AplicationDbContext : DbContext
                 method = "POST",
                 permission = "auth.logout.subordinate",
                 status = true
+            },
+            new
+            {
+                id = 3,
+                endpoint = "/auth/access",
+                method = "GET",
+                permission = "auth.access.*",
+                status = true
+            }
+            ,
+            new
+            {
+                id = 4,
+                endpoint = "/auth/access",
+                method = "GET",
+                permission = "auth.access.subordinate",
+                status = true
+            },
+            new
+            {
+                id = 5,
+                endpoint = "/user",
+                method = "GET",
+                permission = "users.read.self",
+                status = true
+            },
+            new
+            {
+                id = 6,
+                endpoint = "/user",
+                method = "GET",
+                permission = "users.read.*",
+                status = true
+            },
+            new
+            {
+                id = 7,
+                endpoint = "/user",
+                method = "GET",
+                permission = "user.read.subordinate",
+                status = true
             }
         );
         /* ========================= ROLES DE USUARIOS =========================================================*/
@@ -91,10 +137,9 @@ public class AplicationDbContext : DbContext
         {
             entity.HasKey(r => r.id);
             entity.Property(r => r.name).IsRequired().HasMaxLength(50);
-            entity.HasOne(r => r.endpointAccessNameRule)
-                .WithMany(eanr => eanr.roles)
-                .HasForeignKey(r => r.idEndpointAccessNameRule)
-                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(r => r.nameRule)
+                .WithMany(nm => nm.roles)
+                .HasForeignKey(r => r.idNameRule);
         });
         modelBuilder.Entity<Roles>().HasData(
             new
@@ -103,15 +148,14 @@ public class AplicationDbContext : DbContext
                 name = "CEO",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
                 code = RoleCode.Director,
-                idEndpointAccessNameRule = 1
+                idNameRule = 1,
             },
             new
             {
                 id = 2,
                 name = "Gerente de Nave",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
-                code = RoleCode.Gerente,
-                idEndpointAccessNameRule = 3
+                code = RoleCode.Gerente
             }
         );
 
@@ -139,13 +183,13 @@ public class AplicationDbContext : DbContext
             new
             {
                 id = 2,
-                idEndpointAccess = 2,
-                idNameRule = 1
+                idEndpointAccess = 3,
+                idNameRule = 1,
             },
             new
             {
                 id = 3,
-                idEndpointAccess = 2,
+                idEndpointAccess = 6,
                 idNameRule = 1
             }
         );

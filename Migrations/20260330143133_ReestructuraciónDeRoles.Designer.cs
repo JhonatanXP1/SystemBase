@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SystemBase.Data;
 
@@ -11,9 +12,11 @@ using SystemBase.Data;
 namespace SystemBase.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    partial class AplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260330143133_ReestructuraciónDeRoles")]
+    partial class ReestructuraciónDeRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,44 +57,14 @@ namespace SystemBase.Migrations
                         new
                         {
                             id = 2,
-                            idEndpointAccess = 3,
+                            idEndpointAccess = 2,
                             idNameRule = 1
                         },
                         new
                         {
                             id = 3,
-                            idEndpointAccess = 6,
+                            idEndpointAccess = 2,
                             idNameRule = 1
-                        });
-                });
-
-            modelBuilder.Entity("SystemBase.Models.NameRule", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("nameRules");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            name = "Acceso de CEO"
-                        },
-                        new
-                        {
-                            id = 2,
-                            name = "Accesos de Gerente N-1"
                         });
                 });
 
@@ -109,7 +82,7 @@ namespace SystemBase.Migrations
                     b.Property<DateTimeOffset>("created")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int?>("idNameRule")
+                    b.Property<int?>("idEndpointAccessNameRule")
                         .HasColumnType("int");
 
                     b.Property<string>("name")
@@ -119,7 +92,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("idNameRule");
+                    b.HasIndex("idEndpointAccessNameRule");
 
                     b.ToTable("roles");
 
@@ -129,7 +102,7 @@ namespace SystemBase.Migrations
                             id = 1,
                             code = 1,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idNameRule = 1,
+                            idEndpointAccessNameRule = 1,
                             name = "CEO"
                         },
                         new
@@ -137,6 +110,7 @@ namespace SystemBase.Migrations
                             id = 2,
                             code = 2,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            idEndpointAccessNameRule = 3,
                             name = "Gerente de Nave"
                         });
                 });
@@ -254,7 +228,7 @@ namespace SystemBase.Migrations
                             app = "Diaz",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Jhonatan",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$bhkcNveySO7GCFRIplR10g$3bIVoeiWRchUxJjRwIF2mteIepZzTzc/6VhhOhMcvV4",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$A4/4Xk85led/dEpJySW+ag$1p/h6t0WvqqKKpKGKeI70BJ4pv/F8PhrL3ZaQFfTWac",
                             userName = "@adminDev"
                         });
                 });
@@ -302,46 +276,31 @@ namespace SystemBase.Migrations
                             method = "POST",
                             permission = "auth.logout.subordinate",
                             status = true
-                        },
+                        });
+                });
+
+            modelBuilder.Entity("SystemBase.Models.nameRule", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("nameRules");
+
+                    b.HasData(
                         new
                         {
-                            id = 3,
-                            endpoint = "/auth/access",
-                            method = "GET",
-                            permission = "auth.access.*",
-                            status = true
-                        },
-                        new
-                        {
-                            id = 4,
-                            endpoint = "/auth/access",
-                            method = "GET",
-                            permission = "auth.access.subordinate",
-                            status = true
-                        },
-                        new
-                        {
-                            id = 5,
-                            endpoint = "/user",
-                            method = "GET",
-                            permission = "users.read.self",
-                            status = true
-                        },
-                        new
-                        {
-                            id = 6,
-                            endpoint = "/user",
-                            method = "GET",
-                            permission = "users.read.*",
-                            status = true
-                        },
-                        new
-                        {
-                            id = 7,
-                            endpoint = "/user",
-                            method = "GET",
-                            permission = "user.read.subordinate",
-                            status = true
+                            id = 1,
+                            name = "Acceso de CEO"
                         });
                 });
 
@@ -393,7 +352,7 @@ namespace SystemBase.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SystemBase.Models.NameRule", "nameRule")
+                    b.HasOne("SystemBase.Models.nameRule", "nameRule")
                         .WithMany("endpointAccessNameRules")
                         .HasForeignKey("idNameRule")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -406,11 +365,12 @@ namespace SystemBase.Migrations
 
             modelBuilder.Entity("SystemBase.Models.Roles", b =>
                 {
-                    b.HasOne("SystemBase.Models.NameRule", "nameRule")
+                    b.HasOne("SystemBase.Models.EndpointAccessNameRule", "endpointAccessNameRule")
                         .WithMany("roles")
-                        .HasForeignKey("idNameRule");
+                        .HasForeignKey("idEndpointAccessNameRule")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("nameRule");
+                    b.Navigation("endpointAccessNameRule");
                 });
 
             modelBuilder.Entity("SystemBase.Models.UserAssignments", b =>
@@ -443,14 +403,17 @@ namespace SystemBase.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SystemBase.Models.NameRule", b =>
+            modelBuilder.Entity("SystemBase.Models.EndpointAccessNameRule", b =>
                 {
-                    b.Navigation("endpointAccessNameRules");
-
                     b.Navigation("roles");
                 });
 
             modelBuilder.Entity("SystemBase.Models.endpointAccess", b =>
+                {
+                    b.Navigation("endpointAccessNameRules");
+                });
+
+            modelBuilder.Entity("SystemBase.Models.nameRule", b =>
                 {
                     b.Navigation("endpointAccessNameRules");
                 });
