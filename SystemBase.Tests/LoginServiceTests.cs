@@ -45,9 +45,9 @@ public class LoginServiceTests
         };
 
         var caseStringempty = await _loginService.Login(loginDto, "Rider", "127.0.0.1");
-        Assert.Equal("Usuario y contraseña son requeridos", caseStringempty.Error);
-        Assert.True(caseStringempty.Error != "");
-        Assert.True(!caseStringempty.Success);
+        Assert.Equal("Usuario y contraseña son requeridos", caseStringempty.error);
+        Assert.True(caseStringempty.error != "");
+        Assert.True(!caseStringempty.success);
     }
 
     [Fact]
@@ -60,9 +60,9 @@ public class LoginServiceTests
         };
 
         var caseStringNull = await _loginService.Login(loginDto, "Rider", "127.0.0.1");
-        Assert.Equal("Usuario y contraseña son requeridos", caseStringNull.Error);
-        Assert.True(caseStringNull.Error != "");
-        Assert.True(!caseStringNull.Success);
+        Assert.Equal("Usuario y contraseña son requeridos", caseStringNull.error);
+        Assert.True(caseStringNull.error != "");
+        Assert.True(!caseStringNull.success);
     }
 
     [Fact]
@@ -78,9 +78,9 @@ public class LoginServiceTests
 
         var caseUserNull = await _loginService.Login(loginDto, "Rider", "127.0.0.1");
 
-        Assert.Equal("Credenciales inválidas", caseUserNull.Error);
-        Assert.True(caseUserNull.Error != "");
-        Assert.True(!caseUserNull.Success);
+        Assert.Equal("Credenciales inválidas", caseUserNull.error);
+        Assert.True(caseUserNull.error != "");
+        Assert.True(!caseUserNull.success);
     }
 
     [Fact]
@@ -105,6 +105,6 @@ public class LoginServiceTests
             .Returns(false);
 
         var caseUserPasswordNotCorrect = await _loginService.Login(loginDto, "Rider", "127.0.0.1");
-        Assert.Equal("Credenciales inválidas", caseUserPasswordNotCorrect.Error);
+        Assert.Equal("Credenciales inválidas", caseUserPasswordNotCorrect.error);
     }
 }

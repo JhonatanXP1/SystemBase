@@ -39,25 +39,25 @@ public class AuthController : ControllerBase
 
         var sessionStarted = await _loginService.Login(loging, userAgent, ipAddress);
 
-        if (!sessionStarted.Success)
-            return sessionStarted.Error switch
+        if (!sessionStarted.success)
+            return sessionStarted.error switch
             {
                 "Credenciales inválidas" =>
-                    Unauthorized(sessionStarted.Error),
-                _ => BadRequest(sessionStarted.Error)
+                    Unauthorized(sessionStarted.error),
+                _ => BadRequest(sessionStarted.error)
             };
 
-        var accessToken = _loginMapper.MapTosessionStartedsessionStartedDto(sessionStarted.Data!);
+        var accessToken = _loginMapper.MapTosessionStartedsessionStartedDto(sessionStarted.data!);
         Response.Cookies.Append(
             "refreshToken",
-            sessionStarted.Data!
+            sessionStarted.data!
                 .RefreshToken, //<-- Ciclo de vida 1 dia. Yo lo quiero que se logueen  minimo por cada dia.
             new CookieOptions
             {
                 HttpOnly = true,
                 Secure = false, // true en prod con https
                 SameSite = SameSiteMode.Lax, // o Lax / None según tu front
-                Expires = sessionStarted.Data.refreshExpiresAt, // o DateTimeOffset
+                Expires = sessionStarted.data.refreshExpiresAt, // o DateTimeOffset
                 Path = "/Auth/refresh" // súper recomendado: solo se envía a refresh
             });
         return Ok(accessToken); //<-- Su ciclo de vida es de 15min
@@ -78,28 +78,28 @@ public class AuthController : ControllerBase
         var userAgent = _accessor.GetUserAgent();
 
         var newCredenciales = await _loginService.RefreshTokensService(refreshToken, ipAddress, userAgent);
-        if (!newCredenciales.Success)
-            return newCredenciales.Error switch
+        if (!newCredenciales.success)
+            return newCredenciales.error switch
             {
                 "Refresh token expirado" or
                     "Sesión expirada, inicie sesión nuevamente" or
                     "Refresh token inválido" or
                     "Usuario no existe"
-                    => Unauthorized(newCredenciales.Error),
-                _ => BadRequest(newCredenciales.Error)
+                    => Unauthorized(newCredenciales.error),
+                _ => BadRequest(newCredenciales.error)
             };
-        Response.Cookies.Append("refreshToken", newCredenciales.Data!
+        Response.Cookies.Append("refreshToken", newCredenciales.data!
                 .RefreshToken,
             new CookieOptions
             {
                 HttpOnly = true,
                 Secure = false, // true en prod con https
                 SameSite = SameSiteMode.Lax, // o Lax / None según tu front
-                Expires = newCredenciales.Data.refreshExpiresAt, // o DateTimeOffset
+                Expires = newCredenciales.data.refreshExpiresAt, // o DateTimeOffset
                 Path = "/Auth/refresh" // súper recomendado: solo se envía a refresh
             }
         );
-        var accessToken = _loginMapper.MapTorefreshTokenResponseDTO(newCredenciales.Data);
+        var accessToken = _loginMapper.MapTorefreshTokenResponseDTO(newCredenciales.data);
         return Ok(accessToken);
     }
 

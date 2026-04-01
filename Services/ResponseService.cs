@@ -1,10 +1,11 @@
+using Serilog;
 namespace SystemBase.Services;
 
 public class ResponseService<T>
 {
-    public bool Success { get; set; }
-    public string Error { get; set; } = string.Empty;
-    public T? Data { get; set; }
+    public bool success { get; set; }
+    public string error { get; set; } = string.Empty;
+    public T? data { get; set; }
 }
 
 public static class ResponseService
@@ -13,8 +14,8 @@ public static class ResponseService
     {
         return new ResponseService<T>
         {
-            Success = true,
-            Data = data
+            success = true,
+            data = data
         };
     }
 
@@ -22,8 +23,8 @@ public static class ResponseService
     {
         return new ResponseService<T>
         {
-            Success = false,
-            Error = error
+            success = false,
+            error = error
         };
     }
 }

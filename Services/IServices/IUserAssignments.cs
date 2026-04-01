@@ -1,6 +1,8 @@
+using SystemBase.Models.Snapshot;
+
 namespace SystemBase.Services.IServices;
 
 public interface IUserAssignments
 {
-    Task<bool> GetAllPermissionFromAssignate(int idUser);
+    Task<ResponseService<List<PermisosXAsignacion>>> GetAllPermissionFromAssignate(int idUser);
 }

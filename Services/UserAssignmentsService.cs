@@ -1,4 +1,6 @@
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using SystemBase.Models.Snapshot;
 using SystemBase.Repositorio.IRepositorio;
 using SystemBase.Services.IServices;
 
@@ -8,13 +10,17 @@ public class UserAssignmentsService(IEndpointAccessRepositorio accessRepositorio
 {
     private readonly IEndpointAccessRepositorio _endpointAccessRepositorio = accessRepositorio;
 
-    public async Task<bool> GetAllPermissionFromAssignate(int idUser)
+    public async Task<ResponseService<List<PermisosXAsignacion>>> GetAllPermissionFromAssignate(int idUser)
     {
-        var asignaciones = await _endpointAccessRepositorio.GetEndpoints(idUser);
-        Console.Write(JsonSerializer.Serialize(asignaciones, new JsonSerializerOptions
+        try
         {
-            WriteIndented = true
-        }));
-        return true;
+            var asignaciones = await _endpointAccessRepositorio.GetEndpoints(idUser);
+            return ResponseService.Success(asignaciones);
+        }
+        catch (DbUpdateException expcionDbContext)
+        {
+            Console.WriteLine(expcionDbContext);
+            return ResponseService.Error<List<PermisosXAsignacion>>($"Algo ha fallado: {expcionDbContext.Message}");
+        }
     }
 }

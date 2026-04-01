@@ -48,10 +48,11 @@ public class LoginService : ILoginService
         if (!_passwordHasher.Verify(user.password,
                 loginDto.password)) // Validas Contraseña que esta Hasheada en Argoin2
             return ResponseService.Error<SessionStarted>("Credenciales inválidas");
+        
         var listPermission = await _userAssignments.GetAllPermissionFromAssignate(user.id);
+        
         var userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
-
-
+        
         var (token, expiresAt) = _tokenService.CreateAccessToken(userSessionDto, null);
         var refreshToken = _tokenService.CreateRefreshToken();
 
@@ -109,10 +110,10 @@ public class LoginService : ILoginService
                 User = _loginMapper.MapUserToUserSessionDto(user)
             });
         }
-        catch (DbUpdateException eUP)
+        catch (DbUpdateException exceptionUpdateException)
         {
-            Console.WriteLine($"No se inserto RefreshTokens:\n {eUP.Message}");
-            return ResponseService.Error<SessionStarted>($"No se inserto RefreshTokens:\n {eUP.Message}");
+            Console.WriteLine($"No se inserto RefreshTokens:\n {exceptionUpdateException.Message}");
+            return ResponseService.Error<SessionStarted>($"No se inserto RefreshTokens:\n {exceptionUpdateException.Message}");
         }
     }
 
