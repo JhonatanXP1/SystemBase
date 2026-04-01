@@ -7,6 +7,8 @@ using SystemBase.Repositorio;
 using SystemBase.Repositorio.IRepositorio;
 using SystemBase.Services;
 using SystemBase.Services.IServices;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,18 @@ builder.Services.AddDbContext<AplicationDbContext>(opt =>
     }
 );
 
+builder.Host.UseSerilog((_, lc) => lc
+    .WriteTo.File(
+        "logs/reportsError/reportErrorLog{Date}.log",
+        rollingInterval: RollingInterval.Day,
+        restrictedToMinimumLevel: LogEventLevel.Error
+    )
+    .WriteTo.Console()
+    .WriteTo.Logger(sub => sub
+        .Filter.ByIncludingOnly(e => e.Properties.ContainsKey("Live"))
+        .WriteTo.Console()
+    )
+);
 
 //Mappers
 builder.Services.AddScoped<ILoginMapper, LoginMapper>();

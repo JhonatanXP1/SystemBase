@@ -17,14 +17,16 @@ public class LoginService : ILoginService
     private readonly ILoginRepositorio _repositorioLogin;
     private readonly ITokenService _tokenService;
     private readonly IUserAssignments _userAssignments;
-
+    private readonly ILogger<LoginService> _logger;
+    
     public LoginService(
         ILoginRepositorio repositorioLogin,
         ILoginMapper loginMapper,
         ITokenService tokenService,
         IConfiguration configuration,
         IPasswordHasher passwordHasher,
-        IUserAssignments userAssignments
+        IUserAssignments userAssignments,
+        ILogger<LoginService> logger
     )
     {
         _repositorioLogin = repositorioLogin;
@@ -33,6 +35,7 @@ public class LoginService : ILoginService
         _configuration = configuration;
         _passwordHasher = passwordHasher;
         _userAssignments = userAssignments;
+        _logger = logger;
     }
 
     public async Task<ResponseService<SessionStarted>> Login(logingDTO loginDto, string agentUserName, string ipAddress)
@@ -76,15 +79,12 @@ public class LoginService : ILoginService
             catch (DbUpdateException ex)
             {
                 var root = ex.GetBaseException(); // <- aquí vive el error real de SQL Server
-                Console.WriteLine($"DbUpdateException: {ex.Message}");
-                Console.WriteLine($"Root: {root.Message}");
-
+                _logger.LogError(ex.Message);
+                _logger.LogError(root.Message);
                 if (ex.InnerException != null)
-                    Console.WriteLine($"Inner: {ex.InnerException.Message}");
+                    _logger.LogError(ex.InnerException.Message);
 
-                return ResponseService.Error<SessionStarted>(
-                    $"Error DB: {root.Message}"
-                );
+                return ResponseService.Error<SessionStarted>("Error DB");
             }
         }
 
@@ -112,8 +112,8 @@ public class LoginService : ILoginService
         }
         catch (DbUpdateException exceptionUpdateException)
         {
-            Console.WriteLine($"No se inserto RefreshTokens:\n {exceptionUpdateException.Message}");
-            return ResponseService.Error<SessionStarted>($"No se inserto RefreshTokens:\n {exceptionUpdateException.Message}");
+            _logger.LogError($"No se inserto RefreshTokens:\n {exceptionUpdateException.Message}");
+            return ResponseService.Error<SessionStarted>($"No se inserto RefreshTokens");
         }
     }
 
@@ -170,10 +170,10 @@ public class LoginService : ILoginService
                     isActive = true
                 });
             }
-            catch (DbUpdateException eUP)
+            catch (DbUpdateException updateException)
             {
-                Console.WriteLine($"No se inserto RefreshTokens:\n {eUP.Message}");
-                return ResponseService.Error<refreshToken>($"No se inserto RefreshTokens:\n {eUP.Message}");
+                _logger.LogError($"No se inserto RefreshTokens:\n {updateException.Message}");
+                return ResponseService.Error<refreshToken>($"No se inserto RefreshTokens:\n {updateException.Message}");
             }
 
         return ResponseService.Success(new refreshToken

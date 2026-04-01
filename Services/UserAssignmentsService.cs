@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using SystemBase.Models.Snapshot;
 using SystemBase.Repositorio.IRepositorio;
@@ -6,9 +5,12 @@ using SystemBase.Services.IServices;
 
 namespace SystemBase.Services;
 
-public class UserAssignmentsService(IEndpointAccessRepositorio accessRepositorio) : IUserAssignments
+public class UserAssignmentsService(
+    IEndpointAccessRepositorio accessRepositorio,
+    ILogger<UserAssignmentsService> logger) : IUserAssignments
 {
     private readonly IEndpointAccessRepositorio _endpointAccessRepositorio = accessRepositorio;
+    private readonly ILogger<UserAssignmentsService> _logger = logger;
 
     public async Task<ResponseService<List<PermisosXAsignacion>>> GetAllPermissionFromAssignate(int idUser)
     {
@@ -19,8 +21,8 @@ public class UserAssignmentsService(IEndpointAccessRepositorio accessRepositorio
         }
         catch (DbUpdateException expcionDbContext)
         {
-            Console.WriteLine(expcionDbContext);
-            return ResponseService.Error<List<PermisosXAsignacion>>($"Algo ha fallado: {expcionDbContext.Message}");
+            _logger.LogError($"Algo ha fallado: {expcionDbContext.Message}");
+            return ResponseService.Error<List<PermisosXAsignacion>>("");
         }
     }
 }
