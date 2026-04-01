@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using SystemBase.Mappers.IMappers;
 using SystemBase.Models;
@@ -18,6 +19,7 @@ public class LoginServiceTests
     public Mock<IPasswordHasher> PasswordHasherMock = new();
     public Mock<IConfiguration> ConfigurationMock = new();
     public Mock<IUserAssignments>  UserAssignmentsMock = new();
+    public Mock<ILogger<LoginService>> Logger = new();
 
     private readonly LoginService _loginService;
     private readonly ITestOutputHelper _output;
@@ -31,8 +33,9 @@ public class LoginServiceTests
             TokenServiceMock.Object,
             ConfigurationMock.Object,
             PasswordHasherMock.Object,
-            UserAssignmentsMock.Object
-        );
+            UserAssignmentsMock.Object,
+            Logger.Object
+            );
     }
 
     [Fact]
