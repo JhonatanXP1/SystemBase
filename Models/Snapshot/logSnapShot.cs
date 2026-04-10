@@ -35,13 +35,9 @@ public interface IUserTokenInfo
 {
     int id { get; }
     string userName { get; }
-    string? name { get; }
+    string? name { get; } 
 }
 
-public interface ITokenPermisionFromUser
-{
-    List<string> permisions { get; }
-}
 
 public class refreshToken : IAccessService
 {

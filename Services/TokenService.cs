@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
 using SystemBase.Models.Snapshot;
 using SystemBase.Services.IServices;
@@ -21,7 +22,7 @@ public class TokenService : ITokenService
 
 
     public (string token, DateTimeOffset expiresAt) CreateAccessToken(IUserTokenInfo user,
-        ITokenPermisionFromUser permision)
+        List<PermisosXAsignacion> permisions)
     {
         var issuer = _configuration["Jwt:Issuer"];
         var audience = _configuration["Jwt:Audience"];
@@ -38,6 +39,7 @@ public class TokenService : ITokenService
             };
             var creds = new SigningCredentials(rsaKey, SecurityAlgorithms.RsaSha256);
             var expiresAt = DateTimeOffset.UtcNow.AddMinutes(minutes);
+            var permisos = PermissionsEndPoints(permisions);
 
             var jwt = new JwtSecurityToken(
                 issuer,
@@ -47,7 +49,8 @@ public class TokenService : ITokenService
                     new Claim(JwtRegisteredClaimNames.Sub, user.id.ToString()),
                     new Claim(JwtRegisteredClaimNames.UniqueName, user.userName),
                     new Claim("preferred_username", user.userName),
-                    new Claim(JwtRegisteredClaimNames.Name, user.name)
+                    new Claim(JwtRegisteredClaimNames.Name, user.name ?? ""),
+                    new Claim("perm", JsonSerializer.Serialize(permisos), JsonClaimValueTypes.Json)
                 },
                 expires: expiresAt.UtcDateTime,
                 signingCredentials: creds
@@ -55,6 +58,25 @@ public class TokenService : ITokenService
 
             return (new JwtSecurityTokenHandler().WriteToken(jwt), expiresAt);
         }
+    }
+
+    private Dictionary<string, List<string>> PermissionsEndPoints(List<PermisosXAsignacion> noProcessPermissions)
+    {
+        var permisos = new Dictionary<string, List<string>>();
+        foreach (var item in noProcessPermissions)
+        {
+            var key = item.scopeTypeToidUserAssignaments;
+
+            if (!permisos.TryGetValue(key, out var lista))
+            {
+                lista = new List<string>();
+                permisos[key] = lista;
+            }
+
+            lista.Add(item.permission);
+        }
+
+        return permisos;
     }
 
     public string CreateRefreshToken()

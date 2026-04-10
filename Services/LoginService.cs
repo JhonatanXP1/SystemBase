@@ -18,7 +18,7 @@ public class LoginService : ILoginService
     private readonly ITokenService _tokenService;
     private readonly IUserAssignments _userAssignments;
     private readonly ILogger<LoginService> _logger;
-    
+
     public LoginService(
         ILoginRepositorio repositorioLogin,
         ILoginMapper loginMapper,
@@ -51,12 +51,18 @@ public class LoginService : ILoginService
         if (!_passwordHasher.Verify(user.password,
                 loginDto.password)) // Validas Contraseña que esta Hasheada en Argoin2
             return ResponseService.Error<SessionStarted>("Credenciales inválidas");
-        
+
+        // Se validan los accesos a los endpoints correspondientes al usuario autenticado, y posteriormente se agregan como claims en el JWT.
         var listPermission = await _userAssignments.GetAllPermissionFromAssignate(user.id);
+        if (!listPermission.success ||  listPermission.data == null)
+        {
+            _logger.LogError("Error al obtener permisos");
+            return ResponseService.Error<SessionStarted>("Error al obtener permisos");
+        }
         
         var userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
-        
-        var (token, expiresAt) = _tokenService.CreateAccessToken(userSessionDto, null);
+
+        var (token, expiresAt) = _tokenService.CreateAccessToken(userSessionDto, listPermission.data);
         var refreshToken = _tokenService.CreateRefreshToken();
 
         var numSessionActives = await _repositorioLogin.CountRefreshTokensExistAsyncron(user.id);
