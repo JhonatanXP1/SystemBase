@@ -30,4 +30,8 @@
         <Content Remove="SystemBase.Tests/**/*" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="logs\reportsError\" />
+    </ItemGroup>
+
 </Project>

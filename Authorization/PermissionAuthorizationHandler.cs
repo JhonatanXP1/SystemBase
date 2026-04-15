@@ -1,12 +1,14 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
+using SystemBase.Services;
 
 namespace SystemBase.Authorization;
 
-public class PermissionAuthorizationHandler(IHttpContextAccessor httpContextAccessor)
+public class PermissionAuthorizationHandler(IHttpContextAccessor httpContextAccessor, ILogger<PermissionAuthorizationHandler> logger)
     : AuthorizationHandler<PermissionRequirement>
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly ILogger<PermissionAuthorizationHandler> _logger = logger;
 
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
         PermissionRequirement requirement)
@@ -26,7 +28,7 @@ public class PermissionAuthorizationHandler(IHttpContextAccessor httpContextAcce
         var permClaim = context.User.FindFirst("perm")?.Value;
         if (string.IsNullOrWhiteSpace(permClaim)) { context.Fail(); return Task.CompletedTask; }
 
-        // 3. Deserializa → Dictionary<"COMPANY:1", ["auth.logout.self", ...]>
+        // 3. Deserializa → "COMPANY:1", ["auth.logout.self", ...]
         var perms = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(permClaim);
         if (perms == null || !perms.TryGetValue(activeScope!, out var scopePermissions))
         {
