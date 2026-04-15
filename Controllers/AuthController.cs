@@ -114,6 +114,20 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Logout()
     {
+        if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken) ||
+            string.IsNullOrWhiteSpace(refreshToken))
+            return Unauthorized("Refresh token faltante");
+
+        var result = await _loginService.Logout(refreshToken);
+
+        if (!result.success)
+            return Unauthorized(result.error);
+
+        Response.Cookies.Delete("refreshToken", new CookieOptions
+        {
+            Path = "/Auth/refresh"
+        });
+
         return Ok();
     }
 }

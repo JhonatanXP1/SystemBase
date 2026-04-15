@@ -10,5 +10,5 @@ public interface ILoginService
     Task<ResponseService<refreshToken>> RefreshTokensService(string refreshToken, string ipAddress,
         string agentUserName);
 
-    Task<ResponseService<bool>> Logout(string idUser);
+    Task<ResponseService<bool>> Logout(string refreshToken);
 }

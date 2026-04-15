@@ -191,8 +191,16 @@ public class LoginService : ILoginService
         });
     }
 
-    public async Task<ResponseService<bool>> Logout(string idUser)
+    public async Task<ResponseService<bool>> Logout(string refreshToken)
     {
-        return null;
+        var tokenHash = _tokenService.HashRefreshToken(refreshToken);
+        var refreshTokenDb = await _repositorioLogin.RefreshTokensExist(tokenHash);
+
+        if (refreshTokenDb == null)
+            return ResponseService.Error<bool>("Refresh token inválido");
+
+        await _repositorioLogin.DisabledRefreshToken(refreshTokenDb.id);
+
+        return ResponseService.Success(true);
     }
 }
