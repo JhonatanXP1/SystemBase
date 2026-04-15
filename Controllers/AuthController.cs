@@ -3,16 +3,16 @@ using SystemBase.Mappers.IMappers;
 using SystemBase.Models.DTO;
 using SystemBase.Models.Snapshot;
 using SystemBase.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SystemBase.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly IHttpContextService
-        _accessor; // Inyectamos el IHttpContextAccessor para obtener la IP y el User-Agent
-
+    private readonly IHttpContextService _accessor; // Inyectamos el IHttpContextAccessor para obtener la IP y el User-Agent
     private readonly ILoginMapper _loginMapper;
     private readonly ILoginService _loginService;
 
@@ -25,7 +25,8 @@ public class AuthController : ControllerBase
         _accessor = accessor;
         _loginMapper = loginMapper;
     }
-
+    
+    [AllowAnonymous] 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SessionStarted))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -62,7 +63,8 @@ public class AuthController : ControllerBase
             });
         return Ok(accessToken); //<-- Su ciclo de vida es de 15min
     }
-
+    
+    [AllowAnonymous] 
     [HttpPost("refresh")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(sessionStartedDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -103,6 +105,7 @@ public class AuthController : ControllerBase
         return Ok(accessToken);
     }
 
+    
     [HttpPost("Logout")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

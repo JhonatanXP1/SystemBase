@@ -1,5 +1,10 @@
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.IdentityModel.Tokens;
+using SystemBase.Authorization;
 using SystemBase.Data;
 using SystemBase.Mappers;
 using SystemBase.Mappers.IMappers;
@@ -14,11 +19,37 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
+
+
+// Autenticación JWT
+var publicPem = Environment.GetEnvironmentVariable("JWT_PUBLIC_KEY_PEM")
+                ?? File.ReadAllText(Path.Combine(builder.Environment.ContentRootPath,
+                    builder.Configuration["Jwt:PublicKeyPath"]!));
+using var rsa = RSA.Create();
+rsa.ImportFromPem(publicPem);
+var rsaKey = new RsaSecurityKey(rsa.ExportParameters(false));
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = rsaKey,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 builder.Services.AddDbContext<AplicationDbContext>(opt =>
     {
@@ -55,6 +86,10 @@ builder.Services.AddScoped<IUserAssignments, UserAssignmentsService>();
 builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();
 builder.Services.AddScoped<IEndpointAccessRepositorio, EndpointAccessRepositorio>();
 
+//Autorización por permisos.
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
 
 var app = builder.Build();
 
@@ -65,6 +100,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+app.UseAuthentication();  // lee el token y llena HttpContext.User
+app.UseAuthorization();
 app.MapControllers();
 //app.UseHttpsRedirection();
 
