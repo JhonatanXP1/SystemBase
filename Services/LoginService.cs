@@ -151,8 +151,16 @@ public class LoginService : ILoginService
 
         var user = await _repositorioLogin.UserClaimNeed(refreshTokenDb.idUser);
         if (user == null) return ResponseService.Error<refreshToken>("Usuario no existe");
+        
+        // Se validan los accesos a los endpoints correspondientes al usuario autenticado, y posteriormente se agregan como claims en el JWT.
+        var listPermission = await _userAssignments.GetAllPermissionFromAssignate(user.id);
+        if (!listPermission.success ||  listPermission.data == null)
+        {
+            _logger.LogError("Error al obtener permisos");
+            return ResponseService.Error<refreshToken>("Error al obtener permisos");
+        }
 
-        var (token, expiresAt) = _tokenService.CreateAccessToken(user, null);
+        var (token, expiresAt) = _tokenService.CreateAccessToken(user, listPermission.data);
         var refreshTokenNew = _tokenService.CreateRefreshToken();
         var days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
         var fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
