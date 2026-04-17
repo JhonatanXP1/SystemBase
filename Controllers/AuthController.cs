@@ -62,7 +62,7 @@ public class AuthController : ControllerBase
                 Secure = false, // true en prod con https
                 SameSite = SameSiteMode.Lax, // o Lax / None según tu front
                 Expires = sessionStarted.data.refreshExpiresAt, // o DateTimeOffset
-                Path = "/Auth/refresh" // súper recomendado: solo se envía a refresh
+                Path = "/Auth"
             });
         return Ok(accessToken); //<-- Su ciclo de vida es de 15min
     }
@@ -101,14 +101,14 @@ public class AuthController : ControllerBase
                 Secure = false, // true en prod con https
                 SameSite = SameSiteMode.Lax, // o Lax / None según tu front
                 Expires = newCredenciales.data.refreshExpiresAt, // o DateTimeOffset
-                Path = "/Auth/refresh" // súper recomendado: solo se envía a refresh
+                Path = "/Auth"
             }
         );
         var accessToken = _loginMapper.MapTorefreshTokenResponseDTO(newCredenciales.data);
         return Ok(accessToken);
     }
 
-    [RequirePermission("auth.logout.self", "auth.logout.subordinate")]
+    [RequirePermission("auth.logout.self")]
     [HttpPost("Logout")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -125,7 +125,7 @@ public class AuthController : ControllerBase
 
         Response.Cookies.Delete("refreshToken", new CookieOptions
         {
-            Path = "/Auth/refresh"
+            Path = "/Auth"
         });
 
         return Ok();
