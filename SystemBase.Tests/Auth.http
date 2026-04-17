@@ -1,0 +1,23 @@
+@token = eyJhbGciOiJSUzI1NiIsImtpZCI6Im1haW4tcnNhIiwidHlwIjoiSldUIn0.eyJzdWIiOiIxIiwidW5pcXVlX25hbWUiOiJAYWRtaW5EZXYiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJAYWRtaW5EZXYiLCJuYW1lIjoiSmhvbmF0YW4iLCJwZXJtIjp7IkNPTVBBTlk6MSI6WyJhdXRoLmxvZ291dC4qIiwiYXV0aC5hY2Nlc3MuKiIsInVzZXJzLnJlYWQuKiJdfSwiZXhwIjoxNzc2MzczNDMzLCJpc3MiOiJTeXN0ZW1CYXNlIiwiYXVkIjoiU3lzdGVtQmFzZUFQSSJ9.NYRJoIKiKGTs_neWgDdTJwkAajeqvZvvMLWtHcZiFEvND4oqLNsi17r7otIyKf5hqFDpopZhLPOQy0ro32MRAdHs_4INC42c4h0Onh4dmWgw_-qSutYB0dVRiW7Q5X7s75Y__-2ISWJe-DKZ3UrM9bsFWOL9XyMC15CPz5R4vVFacql3Ws_Qas1uOM3GC2OD8-9WhuJirLeYs6RS7HPI0ch52FaEdhIXkEaQozyPnFajODh6GU_qB547yVir1gAVe4g9sre5jlgIdjonnEIxzClpxliHdzD4yYtaqZku4c3hmJ_wHfen5H08lAIhpHLlEGoT_jd0v2EyfIyVZI0eMA
+### Login
+POST http://localhost:5259/Auth
+Content-Type: application/json
+
+{
+  "userName": "@adminDev",
+  "password": "Jhonatan11+"
+}
+
+### Refresh Token
+POST http://localhost:5259/Auth/refresh
+Content-Type: application/json
+
+{}
+
+### Logout
+POST http://localhost:5259/Auth/Logout
+Content-Type: application/json
+Authorization: Bearer {{token}}
+X-Active-Scope: COMPANY:1
+
+{}
