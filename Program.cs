@@ -23,7 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+builder.Services.AddSwaggerGen(options => // Implementacion de Bearer para facilitar el testeo de los endpoints.
 {
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.OpenApiSecurityScheme
     {
@@ -42,7 +42,6 @@ builder.Services.AddSwaggerGen(options =>
             []
         }
     });
-
     options.OperationFilter<SystemBase.Authorization.SwaggerHeaderFilter>();
 });
 builder.Services.AddHttpContextAccessor();
@@ -123,7 +122,7 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseAuthentication();  // lee el token y llena HttpContext.User
+app.UseAuthentication(); // lee el token y llena HttpContext.User
 app.UseAuthorization();
 app.MapControllers();
 //app.UseHttpsRedirection();
