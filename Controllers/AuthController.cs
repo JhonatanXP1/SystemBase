@@ -8,7 +8,7 @@ using SystemBase.Authorization;
 
 namespace SystemBase.Controllers;
 
-[Authorize]
+[Authorize] //<- va solicitar a todos el bearer
 [Route("[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
@@ -29,7 +29,7 @@ public class AuthController : ControllerBase
         _loginMapper = loginMapper;
     }
 
-    [AllowAnonymous]
+    [AllowAnonymous] // con esta bandera ya no solicita el bearer
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SessionStarted))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

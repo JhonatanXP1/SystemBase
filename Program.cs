@@ -23,7 +23,28 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.ParameterLocation.Header,
+        Description = "Ingresa el token JWT. Ejemplo: eyJhbGci..."
+    });
+
+    options.AddSecurityRequirement(doc => new Microsoft.OpenApi.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", doc, null),
+            []
+        }
+    });
+
+    options.OperationFilter<SystemBase.Authorization.SwaggerHeaderFilter>();
+});
 builder.Services.AddHttpContextAccessor();
 
 
@@ -31,6 +52,7 @@ builder.Services.AddHttpContextAccessor();
 var publicPem = Environment.GetEnvironmentVariable("JWT_PUBLIC_KEY_PEM")
                 ?? File.ReadAllText(Path.Combine(builder.Environment.ContentRootPath,
                     builder.Configuration["Jwt:PublicKeyPath"]!));
+
 using var rsa = RSA.Create();
 rsa.ImportFromPem(publicPem);
 var rsaKey = new RsaSecurityKey(rsa.ExportParameters(false));
