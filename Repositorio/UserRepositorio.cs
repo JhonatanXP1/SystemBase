@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SystemBase.Data;
+using SystemBase.Models;
 using SystemBase.Repositorio.IRepositorio;
 
 namespace SystemBase.Repositorio;
@@ -7,8 +8,12 @@ namespace SystemBase.Repositorio;
 public class UserRepositorio(AplicationDbContext db):IUserRepositorio
 {
     private readonly AplicationDbContext _db = db;
+
     public Task<string?> GetPasswordByIdAsync(int id)
     {
-        return await null;
+        return _db.users
+            .Where(u => u.id == id)
+            .Select(u => u.password)
+            .FirstOrDefaultAsync();
     }
 }
