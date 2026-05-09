@@ -20,6 +20,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins(
+            "http://localhost:4200",
+            "http://localhost:4201",
+            "https://localhost:4200"
+        )
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+        // Si no usas cookies quita AllowCredentials()
+        // Si la agregas, no puedes usar WithOrigins con wildcard
+    });
+});
+
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -121,7 +137,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseCors("AllowAngular");
 app.UseAuthentication(); // lee el token y llena HttpContext.User
 app.UseAuthorization();
 app.MapControllers();
