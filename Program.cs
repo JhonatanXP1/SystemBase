@@ -98,7 +98,7 @@ builder.Services.AddDbContext<AplicationDbContext>(opt =>
 
 builder.Host.UseSerilog((_, lc) => lc
     .WriteTo.File(
-        "logs/reportsError/reportErrorLog{Date}.log",
+        "Logs/reportsError/reportErrorLog{Date}.log",
         rollingInterval: RollingInterval.Day,
         restrictedToMinimumLevel: LogEventLevel.Error
     )
