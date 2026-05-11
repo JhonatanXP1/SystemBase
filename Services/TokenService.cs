@@ -48,8 +48,10 @@ public class TokenService : ITokenService
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.id.ToString()),
                     new Claim(JwtRegisteredClaimNames.UniqueName, user.userName),
-                    new Claim("preferred_username", user.userName),
                     new Claim(JwtRegisteredClaimNames.Name, user.name ?? ""),
+                    new Claim("app", user.app ?? ""),
+                    new Claim("apm", user.apm ?? ""),
+                    new Claim("status", user.status.ToString().ToLower()),
                     new Claim("perm", JsonSerializer.Serialize(permisos), JsonClaimValueTypes.Json)
                 },
                 expires: expiresAt.UtcDateTime,

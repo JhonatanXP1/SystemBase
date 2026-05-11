@@ -106,7 +106,10 @@ public class LoginRepositorio : ILoginRepositorio
             .Select(u => new UserNewAccessToken(
                 u.id,
                 u.userName,
-                u.name
+                u.name,
+                u.app,
+                u.apm,
+                u.status
             )).FirstOrDefaultAsync();
     }
 

@@ -25,8 +25,7 @@ public class LoginMapper : ILoginMapper
         return new sessionStartedDto
         {
             Token = started.Token,
-            ExpiresAt = started.ExpiresAt,
-            User = started.User
+            ExpiresAt = started.ExpiresAt
         };
     }
 

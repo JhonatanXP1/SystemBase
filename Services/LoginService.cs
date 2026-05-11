@@ -60,9 +60,7 @@ public class LoginService : ILoginService
             return ResponseService.Error<SessionStarted>("Error al obtener permisos");
         }
         
-        var userSessionDto = _loginMapper.MapUserToUserSessionDto(user);
-
-        var (token, expiresAt) = _tokenService.CreateAccessToken(userSessionDto, listPermission.data);
+        var (token, expiresAt) = _tokenService.CreateAccessToken(_loginMapper.MapUserToUserSessionDto(user), listPermission.data);
         var refreshToken = _tokenService.CreateRefreshToken();
 
         var numSessionActives = await _repositorioLogin.CountRefreshTokensExistAsyncron(user.id);
@@ -112,8 +110,7 @@ public class LoginService : ILoginService
                 Token = token,
                 ExpiresAt = expiresAt,
                 RefreshToken = refreshToken,
-                refreshExpiresAt = fechaExpi,
-                User = _loginMapper.MapUserToUserSessionDto(user)
+                refreshExpiresAt = fechaExpi
             });
         }
         catch (DbUpdateException exceptionUpdateException)

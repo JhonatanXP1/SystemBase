@@ -45,6 +45,24 @@ POST /Auth/Logout   → Cerrar sesión → Invalida el RefreshToken activo
 - Al renovar, se valida que la IP y el User-Agent coincidan. Si no coinciden, se invalidan **todos** los tokens del usuario.
 - Las contraseñas se almacenan con **Argon2**.
 
+### Respuesta de los endpoints de autenticación
+
+Tanto `POST /Auth` como `POST /Auth/refresh` retornan el mismo cuerpo JSON:
+
+```json
+{
+  "token": "eyJhbGci...",
+  "expiresAt": "2026-05-11T14:30:00+00:00"
+}
+```
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `token` | string | Access Token JWT firmado con RSA-SHA256. Válido por 15 minutos. Debe enviarse en el header `Authorization: Bearer <token>`. |
+| `expiresAt` | DateTimeOffset (ISO 8601) | Fecha y hora exacta de expiración del Access Token. Útil para hacer refresh proactivo antes de que expire. |
+
+El resto de la información del usuario (nombre, apellidos, permisos, estado) está disponible directamente en los claims del JWT, decodificando el payload sin necesidad de un endpoint adicional.
+
 ### Claims del JWT
 
 El Access Token incluye los siguientes claims:
@@ -53,9 +71,12 @@ El Access Token incluye los siguientes claims:
 |-------|-------------|
 | `sub` | ID del usuario |
 | `unique_name` | Nombre de usuario |
-| `preferred_username` | Nombre de usuario (alias) |
 | `name` | Nombre completo |
+| `app` | Apellido paterno |
+| `apm` | Apellido materno |
+| `status` | Estado del usuario (`"true"` / `"false"`) |
 | `perm` | Diccionario JSON de permisos por scope (ver sección siguiente) |
+| `exp` | Timestamp Unix de expiración (estándar JWT) |
 
 ---
 

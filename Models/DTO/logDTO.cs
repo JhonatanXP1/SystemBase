@@ -16,7 +16,6 @@ public class sessionStartedDto
 {
     public string Token { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
-    public UserSessionDTO User { get; set; }
 }
 
 public class UserSessionDTO : IUserTokenInfo

@@ -4,7 +4,6 @@ namespace SystemBase.Models.Snapshot;
 
 public class SessionStarted : IAccessService
 {
-    public UserSessionDTO User { get; set; }
     public string Token { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
     public string RefreshToken { get; set; }
@@ -20,7 +19,10 @@ public class OldRefreshToken
 public sealed record UserNewAccessToken(
     int id,
     string userName,
-    string? name
+    string? name,
+    string? app,
+    string? apm,
+    bool status
 ) : IUserTokenInfo;
 
 public class refreshTokenProccess
@@ -35,7 +37,10 @@ public interface IUserTokenInfo
 {
     int id { get; }
     string userName { get; }
-    string? name { get; } 
+    string? name { get; }
+    string? app { get; }
+    string? apm { get; }
+    bool status { get; }
 }
 
 
