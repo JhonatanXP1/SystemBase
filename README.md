@@ -286,3 +286,12 @@ Serilog escribe en dos destinos:
 - `app.UseHttpsRedirection()` está comentado — habilitar en producción.
 - `ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning))` — remover en producción.
 - El proxy reverso (Nginx) debe configurar el header `X-Forwarded-For` para que `HttpContextService` resuelva correctamente la IP del cliente.
+
+---
+
+## Recursos de desarrollo
+
+| Documento | Descripción |
+|-----------|-------------|
+| [Accesos por Rol](recursosDev/Documentacion/AccessForRoles.md) | Tabla teórica y sintáctica de permisos por rol y módulo, con ejemplos de claims JWT. |
+| [Posibles Bugs – Login](recursosDev/Posibles%20Bugs/LoginBugs.md) | Análisis de posible inconsistencia de atomicidad en el flujo de Refresh Token. |
