@@ -31,9 +31,8 @@ builder.Services.AddCors(options =>
                 "https://localhost:4200"
             )
             .AllowAnyMethod()
-            .AllowAnyHeader();
-        // Si no usas cookies quita AllowCredentials()
-        // Si la agregas, no puedes usar WithOrigins con wildcard
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
 });
 
