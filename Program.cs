@@ -135,6 +135,36 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.Use(async (context, next) =>
+    {
+        context.Response.Headers["Content-Security-Policy"] =
+            "default-src 'self'; " +
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+            "style-src 'self' 'unsafe-inline'; " +
+            "img-src 'self' data:; " +
+            "font-src 'self' data:; " +
+            "connect-src 'self' ws://localhost:4200 http://localhost:5259;";
+
+        await next();
+    });
+}
+else
+{
+    app.Use(async (context, next) =>
+    {
+        context.Response.Headers["Content-Security-Policy"] =
+            "default-src 'self'; " +
+            "script-src 'self'; " +
+            "style-src 'self'; " +
+            "img-src 'self' data:; " +
+            "font-src 'self'; " +
+            "connect-src 'self' https://api.midominio.com; " +
+            "object-src 'none'; " +
+            "frame-ancestors 'none';";
+
+        await next();
+    });
+    
 }
 
 app.UseCors("AllowAngular");
