@@ -62,6 +62,22 @@ public class TokenService : ITokenService
         }
     }
 
+    public string CreateRefreshToken()
+    {
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+    }
+
+    // Convierto el token del Json y lo encripto para guardarlo en base de datos.
+    public string HashRefreshToken(string refreshToken)
+    {
+        var claveSecret = Encoding.UTF8.GetBytes(_configuration.GetValue<string>("Jwt:secretWord")!);
+        var refreshTokenSecret = Encoding.UTF8.GetBytes(refreshToken);
+        using (var hmac = new HMACSHA256(claveSecret))
+        {
+            return Convert.ToBase64String(hmac.ComputeHash(refreshTokenSecret));
+        }
+    }
+
     private Dictionary<string, List<string>> PermissionsEndPoints(List<PermisosXAsignacion> noProcessPermissions)
     {
         var permisos = new Dictionary<string, List<string>>();
@@ -79,22 +95,6 @@ public class TokenService : ITokenService
         }
 
         return permisos;
-    }
-
-    public string CreateRefreshToken()
-    {
-        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
-    }
-
-    // Convierto el token del Json y lo encripto para guardarlo en base de datos.
-    public string HashRefreshToken(string refreshToken)
-    {
-        var claveSecret = Encoding.UTF8.GetBytes(_configuration.GetValue<string>("Jwt:secretWord")!);
-        var refreshTokenSecret = Encoding.UTF8.GetBytes(refreshToken);
-        using (var hmac = new HMACSHA256(claveSecret))
-        {
-            return Convert.ToBase64String(hmac.ComputeHash(refreshTokenSecret));
-        }
     }
 
     private string GetPrivatePem()

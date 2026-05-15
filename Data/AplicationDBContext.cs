@@ -148,7 +148,7 @@ public class AplicationDbContext : DbContext
                 name = "CEO",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
                 code = RoleCode.Director,
-                idNameRule = 1,
+                idNameRule = 1
             },
             new
             {
@@ -184,7 +184,7 @@ public class AplicationDbContext : DbContext
             {
                 id = 2,
                 idEndpointAccess = 3,
-                idNameRule = 1,
+                idNameRule = 1
             },
             new
             {

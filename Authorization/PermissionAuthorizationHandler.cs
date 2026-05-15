@@ -1,10 +1,11 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
-using SystemBase.Services;
 
 namespace SystemBase.Authorization;
 
-public class PermissionAuthorizationHandler(IHttpContextAccessor httpContextAccessor, ILogger<PermissionAuthorizationHandler> logger)
+public class PermissionAuthorizationHandler(
+    IHttpContextAccessor httpContextAccessor,
+    ILogger<PermissionAuthorizationHandler> logger)
     : AuthorizationHandler<PermissionRequirement>
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
@@ -14,7 +15,11 @@ public class PermissionAuthorizationHandler(IHttpContextAccessor httpContextAcce
         PermissionRequirement requirement)
     {
         var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext == null) { context.Fail(); return Task.CompletedTask; }
+        if (httpContext == null)
+        {
+            context.Fail();
+            return Task.CompletedTask;
+        }
 
         // 1. Lee X-Active-Scope del header
         if (!httpContext.Request.Headers.TryGetValue("X-Active-Scope", out var activeScope)
@@ -26,7 +31,11 @@ public class PermissionAuthorizationHandler(IHttpContextAccessor httpContextAcce
 
         // 2. Extrae el claim perm del JWT
         var permClaim = context.User.FindFirst("perm")?.Value;
-        if (string.IsNullOrWhiteSpace(permClaim)) { context.Fail(); return Task.CompletedTask; }
+        if (string.IsNullOrWhiteSpace(permClaim))
+        {
+            context.Fail();
+            return Task.CompletedTask;
+        }
 
         // 3. Deserializa → "COMPANY:1", ["auth.logout.self", ...]
         var perms = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(permClaim);
@@ -45,7 +54,7 @@ public class PermissionAuthorizationHandler(IHttpContextAccessor httpContextAcce
 
         return Task.CompletedTask;
     }
-    
+
     private static bool SatisfacePermiso(string tienes, string necesitas)
     {
         var partesT = tienes.Split('.');
@@ -53,7 +62,7 @@ public class PermissionAuthorizationHandler(IHttpContextAccessor httpContextAcce
 
         if (partesT.Length != partesN.Length) return false;
 
-        for (int i = 0; i < partesT.Length; i++)
+        for (var i = 0; i < partesT.Length; i++)
         {
             if (partesT[i] == "*") continue;
             if (partesT[i] != partesN[i]) return false;
@@ -61,5 +70,4 @@ public class PermissionAuthorizationHandler(IHttpContextAccessor httpContextAcce
 
         return true;
     }
-
 }

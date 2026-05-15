@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using SystemBase.Data;
-using SystemBase.Models;
 using SystemBase.Models.Snapshot;
 using SystemBase.Repositorio.IRepositorio;
 

@@ -1,4 +1,3 @@
-using Serilog;
 namespace SystemBase.Services;
 
 public class ResponseService<T>

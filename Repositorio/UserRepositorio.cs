@@ -1,11 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using SystemBase.Data;
-using SystemBase.Models;
 using SystemBase.Repositorio.IRepositorio;
 
 namespace SystemBase.Repositorio;
 
-public class UserRepositorio(AplicationDbContext db):IUserRepositorio
+public class UserRepositorio(AplicationDbContext db) : IUserRepositorio
 {
     private readonly AplicationDbContext _db = db;
 

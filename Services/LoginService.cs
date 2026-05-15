@@ -12,12 +12,12 @@ namespace SystemBase.Services;
 public class LoginService : ILoginService
 {
     private readonly IConfiguration _configuration;
+    private readonly ILogger<LoginService> _logger;
     private readonly ILoginMapper _loginMapper;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ILoginRepositorio _repositorioLogin;
     private readonly ITokenService _tokenService;
     private readonly IUserAssignments _userAssignments;
-    private readonly ILogger<LoginService> _logger;
 
     public LoginService(
         ILoginRepositorio repositorioLogin,
@@ -54,13 +54,14 @@ public class LoginService : ILoginService
 
         // Se validan los accesos a los endpoints correspondientes al usuario autenticado, y posteriormente se agregan como claims en el JWT.
         var listPermission = await _userAssignments.GetAllPermissionFromAssignate(user.id);
-        if (!listPermission.success ||  listPermission.data == null)
+        if (!listPermission.success || listPermission.data == null)
         {
             _logger.LogError("Error al obtener permisos");
             return ResponseService.Error<SessionStarted>("Error al obtener permisos");
         }
-        
-        var (token, expiresAt) = _tokenService.CreateAccessToken(_loginMapper.MapUserToUserSessionDto(user), listPermission.data);
+
+        var (token, expiresAt) =
+            _tokenService.CreateAccessToken(_loginMapper.MapUserToUserSessionDto(user), listPermission.data);
         var refreshToken = _tokenService.CreateRefreshToken();
 
         var numSessionActives = await _repositorioLogin.CountRefreshTokensExistAsyncron(user.id);
@@ -116,7 +117,7 @@ public class LoginService : ILoginService
         catch (DbUpdateException exceptionUpdateException)
         {
             _logger.LogError($"No se inserto RefreshTokens:\n {exceptionUpdateException.Message}");
-            return ResponseService.Error<SessionStarted>($"No se inserto RefreshTokens");
+            return ResponseService.Error<SessionStarted>("No se inserto RefreshTokens");
         }
     }
 
@@ -148,10 +149,10 @@ public class LoginService : ILoginService
 
         var user = await _repositorioLogin.UserClaimNeed(refreshTokenDb.idUser);
         if (user == null) return ResponseService.Error<refreshToken>("Usuario no existe");
-        
+
         // Se validan los accesos a los endpoints correspondientes al usuario autenticado, y posteriormente se agregan como claims en el JWT.
         var listPermission = await _userAssignments.GetAllPermissionFromAssignate(user.id);
-        if (!listPermission.success ||  listPermission.data == null)
+        if (!listPermission.success || listPermission.data == null)
         {
             _logger.LogError("Error al obtener permisos");
             return ResponseService.Error<refreshToken>("Error al obtener permisos");

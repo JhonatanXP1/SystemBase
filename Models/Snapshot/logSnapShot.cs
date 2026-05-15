@@ -1,5 +1,3 @@
-using SystemBase.Models.DTO;
-
 namespace SystemBase.Models.Snapshot;
 
 public class SessionStarted : IAccessService
@@ -42,7 +40,6 @@ public interface IUserTokenInfo
     string? apm { get; }
     bool status { get; }
 }
-
 
 public class refreshToken : IAccessService
 {

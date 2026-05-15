@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using Serilog;
+using Serilog.Events;
 using SystemBase.Authorization;
 using SystemBase.Data;
 using SystemBase.Mappers;
@@ -12,8 +15,6 @@ using SystemBase.Repositorio;
 using SystemBase.Repositorio.IRepositorio;
 using SystemBase.Services;
 using SystemBase.Services.IServices;
-using Serilog;
-using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +26,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngular", policy =>
     {
         policy.WithOrigins(
-            "http://localhost:4200",
-            "http://localhost:4201",
-            "https://localhost:4200"
-        )
-        .AllowAnyMethod()
-        .AllowAnyHeader();
+                "http://localhost:4200",
+                "http://localhost:4201",
+                "https://localhost:4200"
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader();
         // Si no usas cookies quita AllowCredentials()
         // Si la agregas, no puedes usar WithOrigins con wildcard
     });
@@ -41,24 +42,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => // Implementacion de Bearer para facilitar el testeo de los endpoints.
 {
-    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = Microsoft.OpenApi.SecuritySchemeType.Http,
+        Type = SecuritySchemeType.Http,
         Scheme = "bearer",
         BearerFormat = "JWT",
-        In = Microsoft.OpenApi.ParameterLocation.Header,
+        In = ParameterLocation.Header,
         Description = "Ingresa el token JWT. Ejemplo: eyJhbGci..."
     });
 
-    options.AddSecurityRequirement(doc => new Microsoft.OpenApi.OpenApiSecurityRequirement
+    options.AddSecurityRequirement(doc => new OpenApiSecurityRequirement
     {
         {
-            new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", doc, null),
+            new OpenApiSecuritySchemeReference("Bearer", doc),
             []
         }
     });
-    options.OperationFilter<SystemBase.Authorization.SwaggerHeaderFilter>();
+    options.OperationFilter<SwaggerHeaderFilter>();
 });
 builder.Services.AddHttpContextAccessor();
 
@@ -164,7 +165,6 @@ else
 
         await next();
     });
-    
 }
 
 app.UseCors("AllowAngular");

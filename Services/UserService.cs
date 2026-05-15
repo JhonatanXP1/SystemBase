@@ -5,8 +5,8 @@ namespace SystemBase.Services;
 
 public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> logger) : IUserService
 {
-    private readonly IUserRepositorio _userRepositorio = userRepositorio;
     private readonly ILogger<UserService> _logger = logger;
+    private readonly IUserRepositorio _userRepositorio = userRepositorio;
 
     public async Task<ResponseService<string>> GetPasswordHash(int id)
     {
