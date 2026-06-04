@@ -69,7 +69,8 @@ public class LoginService : ILoginService
         //Los dias que la session se mantendrá viva.
         var days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
         var fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
-        DateTimeOffset fechaExpiPolitica = DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1);
+        DateTimeOffset fechaExpiPolitica =
+            new DateTimeOffset(DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1), TimeSpan.Zero);
 
         var tokenHash = _tokenService.HashRefreshToken(refreshToken);
 
@@ -126,6 +127,7 @@ public class LoginService : ILoginService
     {
         var tokenHash = _tokenService.HashRefreshToken(refreshToken);
         var refreshTokenDb = await _repositorioLogin.RefreshTokensExist(tokenHash);
+
         if (refreshTokenDb == null) return ResponseService.Error<refreshToken>("Refresh token inválido");
         if (refreshTokenDb.ipAddress != ipAddress || refreshTokenDb.agentUserName != agentUserName)
         {
@@ -159,10 +161,22 @@ public class LoginService : ILoginService
         }
 
         var (token, expiresAt) = _tokenService.CreateAccessToken(user, listPermission.data);
+
+        if (DateTimeOffset.UtcNow <
+            refreshTokenDb.createdAt.AddMinutes(_configuration.GetValue<int>("Jwt:AccessTokenMinutes")))
+            return ResponseService.Success(new refreshToken
+            {
+                Token = token,
+                ExpiresAt = refreshTokenDb.createdAt.AddMinutes(_configuration.GetValue<int>("Jwt:AccessTokenMinutes")),
+                RefreshToken = refreshToken,
+                refreshExpiresAt = refreshTokenDb.expiresAt
+            });
+
         var refreshTokenNew = _tokenService.CreateRefreshToken();
         var days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
         var fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
-        DateTimeOffset fechaExpiPolitica = DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1);
+        DateTimeOffset fechaExpiPolitica =
+            new DateTimeOffset(DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1), TimeSpan.Zero);
 
         var tokenHashNew = _tokenService.HashRefreshToken(refreshTokenNew);
         if (await _repositorioLogin
