@@ -46,11 +46,22 @@ public class PermissionAuthorizationHandler(
         }
 
         // 4. Valida OR: si satisface cualquiera de los permisos requeridos (con wildcard)
-        if (requirement.permissions.Any(necesita =>
-                scopePermissions.Any(tienes => SatisfacePermiso(tienes, necesita))))
+        //    Se guardan TODOS los permisos del scope que matchearon (no solo el primero) porque
+        //    el usuario puede tener varios roles que otorguen distintos niveles de acceso al mismo
+        //    tiempo (ej. "self" y "subordinate"); el consumidor decide la precedencia.
+        var matched = scopePermissions
+            .Where(tienes => requirement.permissions.Any(necesita => SatisfacePermiso(tienes, necesita)))
+            .ToList();
+
+        if (matched.Count > 0)
+        {
+            httpContext.Items["MatchedPermissions"] = matched;
             context.Succeed(requirement);
+        }
         else
+        {
             context.Fail();
+        }
 
         return Task.CompletedTask;
     }

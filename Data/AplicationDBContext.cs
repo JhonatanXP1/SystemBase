@@ -21,6 +21,7 @@ public class AplicationDbContext : DbContext
     public DbSet<NameRule> nameRules { get; set; }
     public DbSet<endpointAccess> endpointAccess { get; set; }
     public DbSet<EndpointAccessNameRule> endpointAccessNameRules { get; set; }
+    public DbSet<ProfileAccess> profileAccess { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -223,6 +224,20 @@ public class AplicationDbContext : DbContext
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
             }
         );
+
+        /*============================== ACCESO DE ROLES A PERFILES/TABLAS ======================*/
+        modelBuilder.Entity<ProfileAccess>(entity =>
+        {
+            entity.HasKey(pa => pa.id);
+            entity.Property(pa => pa.profileTable).IsRequired().HasMaxLength(60);
+            entity.Property(pa => pa.canRead).IsRequired().HasDefaultValue(false);
+            entity.Property(pa => pa.canWrite).IsRequired().HasDefaultValue(false);
+            entity.HasIndex(pa => new { pa.idRole, pa.profileTable }).IsUnique();
+            entity.HasOne(pa => pa.roles)
+                .WithMany()
+                .HasForeignKey(pa => pa.idRole)
+                .IsRequired();
+        });
 
         /*============================== REFRESH TOKENS =========================================*/
         modelBuilder.Entity<refreshTokens>(rT =>

@@ -142,6 +142,26 @@ requerido de la forma `auth.logout.{lo-que-sea}`, por ejemplo `auth.logout.self`
 
 La lógica es **OR**: basta con que **cualquiera** de los permisos del scope activo satisfaga el permiso requerido.
 
+### Acceso a los permisos que otorgaron el acceso (`MatchedPermissions`)
+
+Cuando `PermissionAuthorizationHandler` autoriza la request, además de llamar a `context.Succeed(...)` guarda en
+`HttpContext.Items["MatchedPermissions"]` la lista de **todos** los permisos del scope activo que satisficieron el
+`[RequirePermission(...)]` (no solo el primero), porque un usuario puede tener varios roles que otorgan distintos
+niveles de acceso al mismo tiempo (ej. `self` y `subordinate` simultáneamente).
+
+El controller puede leer ese valor sin volver a parsear el JWT ni reimplementar la lógica de wildcard:
+
+```csharp
+var matched = HttpContext.Items["MatchedPermissions"] as List<string> ?? [];
+
+var scope = matched.Any(p => p.EndsWith(".*")) ? "all"
+    : matched.Any(p => p.EndsWith(".subordinate")) ? "subordinate"
+    : "self";
+```
+
+> La precedencia (`* > subordinate > self`) se decide explícitamente en el controller — no depender del orden de la
+> lista, ya que no está garantizado.
+
 ### Uso en endpoints
 
 ```csharp
