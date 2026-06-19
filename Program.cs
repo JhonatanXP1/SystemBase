@@ -118,10 +118,12 @@ builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IHttpContextService, HttpContextService>();
 builder.Services.AddScoped<IUserAssignments, UserAssignmentsService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 //Repositorios.
 builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();
 builder.Services.AddScoped<IEndpointAccessRepositorio, EndpointAccessRepositorio>();
+builder.Services.AddScoped<IUserRepositorio, UserRepositorio>();
 
 //Autorización por permisos.
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();

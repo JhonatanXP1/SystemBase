@@ -1,3 +1,4 @@
+using SystemBase.Models.Snapshot;
 using SystemBase.Repositorio.IRepositorio;
 using SystemBase.Services.IServices;
 
@@ -23,5 +24,28 @@ public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> 
                 $"Error al GetPasswordByIdAsync: \n{invalidOperationException.Message}\n");
             return ResponseService.Error<string>("");
         }
+    }
+
+    public async Task<ResponseService<List<userDashboardDTO>>> GetAllUsers(string scope)
+    {
+        if (scope != "all")
+        {
+        }
+        else
+        {
+            try
+            {
+                return ResponseService.Success(await _userRepositorio.GetAllUsers(null));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                _logger.LogError(e.Message);
+                return ResponseService.Error<List<userDashboardDTO>>("");
+            }
+
+        }
+
+        return null;
     }
 }
