@@ -9,4 +9,5 @@ public class NameRule
         new List<EndpointAccessNameRule>();
 
     public ICollection<Roles> roles { get; set; } = new List<Roles>();
+    public DateTimeOffset? deleteAt { get; set; }
 }

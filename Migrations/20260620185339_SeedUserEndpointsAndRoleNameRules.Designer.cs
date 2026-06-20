@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SystemBase.Data;
 
@@ -11,9 +12,11 @@ using SystemBase.Data;
 namespace SystemBase.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    partial class AplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260620185339_SeedUserEndpointsAndRoleNameRules")]
+    partial class SeedUserEndpointsAndRoleNameRules
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -449,38 +452,6 @@ namespace SystemBase.Migrations
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             idNameRule = 2,
                             name = "Gerente General"
-                        },
-                        new
-                        {
-                            id = 3,
-                            code = 2,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idNameRule = 2,
-                            name = "Gerente RH"
-                        },
-                        new
-                        {
-                            id = 4,
-                            code = 3,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idNameRule = 3,
-                            name = "Supervisor"
-                        },
-                        new
-                        {
-                            id = 5,
-                            code = 4,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idNameRule = 4,
-                            name = "Coordinador"
-                        },
-                        new
-                        {
-                            id = 6,
-                            code = 5,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idNameRule = 5,
-                            name = "Empleado"
                         });
                 });
 
@@ -536,189 +507,12 @@ namespace SystemBase.Migrations
                         new
                         {
                             id = 1,
-                            codeEmployee = "CEO-01",
+                            codeEmployee = "N1-12",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             idRole = 1,
                             idUser = 1,
                             isActive = true,
-                            scopeId = 1,
                             scopeType = "company"
-                        },
-                        new
-                        {
-                            id = 2,
-                            codeEmployee = "GG-01",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 2,
-                            idUser = 2,
-                            isActive = true,
-                            scopeId = 1,
-                            scopeType = "company_area"
-                        },
-                        new
-                        {
-                            id = 3,
-                            codeEmployee = "GG-02",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 2,
-                            idUser = 3,
-                            isActive = true,
-                            scopeId = 1,
-                            scopeType = "company_area"
-                        },
-                        new
-                        {
-                            id = 4,
-                            codeEmployee = "GRH-01",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 3,
-                            idUser = 4,
-                            isActive = true,
-                            scopeId = 2,
-                            scopeType = "company_area"
-                        },
-                        new
-                        {
-                            id = 5,
-                            codeEmployee = "SUP-01",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 4,
-                            idUser = 5,
-                            isActive = true,
-                            scopeId = 1,
-                            scopeType = "company_area_workdate"
-                        },
-                        new
-                        {
-                            id = 6,
-                            codeEmployee = "SUP-02",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 4,
-                            idUser = 6,
-                            isActive = true,
-                            scopeId = 2,
-                            scopeType = "company_area_workdate"
-                        },
-                        new
-                        {
-                            id = 7,
-                            codeEmployee = "COORD-01",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 5,
-                            idUser = 7,
-                            isActive = true,
-                            scopeId = 1,
-                            scopeType = "team"
-                        },
-                        new
-                        {
-                            id = 8,
-                            codeEmployee = "COORD-02",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 5,
-                            idUser = 8,
-                            isActive = true,
-                            scopeId = 2,
-                            scopeType = "team"
-                        },
-                        new
-                        {
-                            id = 10,
-                            codeEmployee = "EMP-02",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 6,
-                            idUser = 10,
-                            isActive = true,
-                            scopeId = 1,
-                            scopeType = "team"
-                        },
-                        new
-                        {
-                            id = 11,
-                            codeEmployee = "EMP-03",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 6,
-                            idUser = 11,
-                            isActive = true,
-                            scopeId = 1,
-                            scopeType = "team"
-                        },
-                        new
-                        {
-                            id = 12,
-                            codeEmployee = "EMP-04",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 6,
-                            idUser = 12,
-                            isActive = true,
-                            scopeId = 1,
-                            scopeType = "team"
-                        },
-                        new
-                        {
-                            id = 13,
-                            codeEmployee = "EMP-05",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 6,
-                            idUser = 13,
-                            isActive = true,
-                            scopeId = 1,
-                            scopeType = "team"
-                        },
-                        new
-                        {
-                            id = 14,
-                            codeEmployee = "EMP-06",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 6,
-                            idUser = 14,
-                            isActive = true,
-                            scopeId = 2,
-                            scopeType = "team"
-                        },
-                        new
-                        {
-                            id = 15,
-                            codeEmployee = "EMP-07",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 6,
-                            idUser = 15,
-                            isActive = true,
-                            scopeId = 2,
-                            scopeType = "team"
-                        },
-                        new
-                        {
-                            id = 16,
-                            codeEmployee = "EMP-08",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 6,
-                            idUser = 16,
-                            isActive = true,
-                            scopeId = 2,
-                            scopeType = "team"
-                        },
-                        new
-                        {
-                            id = 17,
-                            codeEmployee = "EMP-09",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 6,
-                            idUser = 17,
-                            isActive = true,
-                            scopeId = 2,
-                            scopeType = "team"
-                        },
-                        new
-                        {
-                            id = 18,
-                            codeEmployee = "EMP-10",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idRole = 6,
-                            idUser = 18,
-                            isActive = true,
-                            scopeId = 2,
-                            scopeType = "team"
                         });
                 });
 
@@ -776,143 +570,12 @@ namespace SystemBase.Migrations
                         new
                         {
                             id = 1,
+                            apm = "Mendez",
+                            app = "Diaz",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Lois",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$z1WZ4olhnFndxjA7LTQ7Nw$F95pZSsJdPVKNMrE3PAg5RzlqOQkzZZRPt6BbGCwdTc",
-                            userName = "@lois"
-                        },
-                        new
-                        {
-                            id = 2,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Hal",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$4tKB16eykxZFSLX7X42doQ$RKBVmfVNEGU7gKIO8WOp/JGKncmcrNxxL0UhtFCz3yw",
-                            userName = "@hal"
-                        },
-                        new
-                        {
-                            id = 3,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Francis",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$lqelEUs47hZPGkYib6p/mA$azJZtzH4858TqvM8pNG6bhITgH+u0a9XFcCNImoB26g",
-                            userName = "@francis"
-                        },
-                        new
-                        {
-                            id = 4,
-                            app = "Feldspar",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Craig",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$HkAwnaVlXokxToowzQrkjA$C02VeBBuEdB5MP8UdbvnRcdZRmHPoRxYNsFXeSr7nyA",
-                            userName = "@craig"
-                        },
-                        new
-                        {
-                            id = 5,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Malcolm",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$loOemiZkYCoXDa3RbU1+1A$NThIhzSD9oYGMTkwlFQ1+iv6tW/x/1Fa2r36ponesuY",
-                            userName = "@malcolm"
-                        },
-                        new
-                        {
-                            id = 6,
-                            app = "Kenarban",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Stevie",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$blyxXCrJPwyRhM8cdiV64Q$DXWvUBeV0F+gV9l8fjxXzbtgsf9zXENtQ0lEhL00TtY",
-                            userName = "@stevie"
-                        },
-                        new
-                        {
-                            id = 7,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Reese",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$76idAPH7NkDsLbwnx3oY/g$VIW1tyUB9AX3XE3HCV83XgMxatzR1PphDSfvCGKTqBA",
-                            userName = "@reese"
-                        },
-                        new
-                        {
-                            id = 8,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Dewey",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$rlMb0vsWl6/xwesHVINiiw$VKf8NNaLh855wGaqNgq4Vd71xa9wJJ8Wc+Ewg7L4frw",
-                            userName = "@dewey"
-                        },
-                        new
-                        {
-                            id = 10,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Lloyd",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$9a9y1EFSrNt55c5ZygRmVg$XMdYgeOWylBv072+86zRuK2dyThyydJGclf33IJPr5w",
-                            userName = "@lloyd"
-                        },
-                        new
-                        {
-                            id = 11,
-                            app = "Hooper",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Dabney",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$I/GL6lC8lpiIh/ngqBdJXQ$6C0rw+9Ll7ebMwBfkpWklZNgoozo8MWBqbQqI+oElco",
-                            userName = "@dabney"
-                        },
-                        new
-                        {
-                            id = 12,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Kevin",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$9ZDfSQsKFCB2o8t7b3kqbQ$2uULfaGr/E7vMhrJoAA+2d08zYYz/Ssg7nbSL4HdoEg",
-                            userName = "@kevin"
-                        },
-                        new
-                        {
-                            id = 13,
-                            app = "Sanders",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Cynthia",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$1RBZo0CeJKCVCgjbQCgJsw$sz6Avgerx7w6ExuHxcUjEMX5qTZVHZreOXd9weaRa3A",
-                            userName = "@cynthia"
-                        },
-                        new
-                        {
-                            id = 14,
-                            app = "Hanson",
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "David",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$CXDqql1CyY684awG+WYngg$9/TLsBiSkTgj4bsQm5UpsuHkswSYQz2sQFU5S6A8PxI",
-                            userName = "@davidh"
-                        },
-                        new
-                        {
-                            id = 15,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Chad",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$wZIW2B2oFabiplctSQPC+Q$KY3neq71wOWAUO6+pLpO5RHTB8tuFNeKhH5etB1gEwQ",
-                            userName = "@chad"
-                        },
-                        new
-                        {
-                            id = 16,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Davey",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$JBwRirhjVTlKCNa3sQLT2w$x3csI9IiBqzcQFPf+U0Ans9t7KlnLmkVla51sxAz1NM",
-                            userName = "@davey"
-                        },
-                        new
-                        {
-                            id = 17,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Zoe",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$mdDJ+zRt+0oRp8fnt59PCw$GNnr6dO+T/i4kHuOXopMfun4GGknzSVzSdkDA+oR+GY",
-                            userName = "@zoe"
-                        },
-                        new
-                        {
-                            id = 18,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            name = "Penelope",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$88PSfSImnEJpbcEFV/M/Lg$a81Shqp3ayN3pTbp9Q9On1zs6nHQsiwfBpWe08u24c8",
-                            userName = "@penelope"
+                            name = "Jhonatan",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$4Dz7niopJiq3dWHvKNFNpw$nBw17x935TrghYRZde4si8EdbVBePQKUI2hu6TFgPM8",
+                            userName = "@adminDev"
                         });
                 });
 

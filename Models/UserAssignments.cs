@@ -12,4 +12,5 @@ public class UserAssignments
     public bool isActive { get; set; }
     public Roles? roles { get; set; }
     public Users? users { get; set; }
+    public DateTimeOffset? deleteAt { get; set; }
 }

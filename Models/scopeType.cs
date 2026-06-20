@@ -2,7 +2,9 @@ namespace SystemBase.Models;
 
 public enum scopeType
 {
-    COMPANY,
-    COMPANY_AREA,
-    COMPANY_AREA_WORKDATE
+    company,
+    company_area,
+    company_area_workdate,
+    team,
+    client
 }

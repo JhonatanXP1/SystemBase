@@ -10,4 +10,5 @@ public class Roles
     public DateTimeOffset created { get; set; }
     public int? idNameRule { get; set; }
     public NameRule? nameRule { get; set; }
+    public DateTimeOffset? deleteAt { get; set; }
 }

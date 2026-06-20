@@ -7,4 +7,5 @@ public class EndpointAccessNameRule
     public int idNameRule { get; set; }
     public NameRule nameRule { get; set; } = null!;
     public endpointAccess endpointAccess { get; set; } = null!;
+    public DateTimeOffset? deleteAt { get; set; }
 }
