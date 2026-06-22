@@ -11,4 +11,6 @@ public class HierarchyFilter
     public List<int>? idsExcepcion { get; set; }
     public bool? isActive { get; set; }
     public bool? isDeleted { get; set; }
+    public int? page { get; set; }
+    public int? pageSize { get; set; }
 }

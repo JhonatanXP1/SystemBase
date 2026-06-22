@@ -29,7 +29,7 @@ public class UserController(
     
     [HttpGet]
     [RequirePermission("users.read.*", "users.read.subordinate", "users.read.self")]
-    public async Task<IActionResult> Users()
+    public async Task<IActionResult> Users( bool? isActive, bool? isDeleted ,int? page, int? pageSize)
     {
         if (!Request.Headers.TryGetValue("X-Active-Scope", out var activeScope)
             || string.IsNullOrWhiteSpace(activeScope))
@@ -42,7 +42,7 @@ public class UserController(
             : "self";
 
         Console.WriteLine($"el scope is:{scope} y  X-Active-Scope: {activeScope} y matched: {JsonSerializer.Serialize(matched)}"); 
-        var users = await _userService.GetAllUsers(scope);
+        var users = await _userService.GetAllUsers(scope, isActive, isDeleted , page, pageSize);
         return Ok(users.data); //users.data);
     }
 }

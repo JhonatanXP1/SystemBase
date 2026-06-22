@@ -119,6 +119,7 @@ builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IHttpContextService, HttpContextService>();
 builder.Services.AddScoped<IUserAssignments, UserAssignmentsService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IHierarchyValidator, HierarchyValidator>();
 
 //Repositorios.
 builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();

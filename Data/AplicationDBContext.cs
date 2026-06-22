@@ -477,7 +477,23 @@ public class AplicationDbContext : DbContext
             new
             {
                 id = 6,
-                name = "Empleado",
+                name = "Operador de producción",
+                created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
+                code = RoleCode.Empleado,
+                idNameRule = 5
+            },
+            new
+            {
+                id = 7,
+                name = "Auxiliar de almacén",
+                created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
+                code = RoleCode.Empleado,
+                idNameRule = 5
+            },
+            new
+            {
+                id = 8,
+                name = "Personal de limpieza industrial",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6)),
                 code = RoleCode.Empleado,
                 idNameRule = 5
@@ -675,7 +691,7 @@ public class AplicationDbContext : DbContext
             {
                 id = 10,
                 idUser = 10,
-                codeEmployee = "EMP-02",
+                codeEmployee = "OP-01",
                 idRole = 6,
                 scopeType = scopeType.team,
                 scopeId = (int?)1,
@@ -686,7 +702,7 @@ public class AplicationDbContext : DbContext
             {
                 id = 11,
                 idUser = 11,
-                codeEmployee = "EMP-03",
+                codeEmployee = "OP-02",
                 idRole = 6,
                 scopeType = scopeType.team,
                 scopeId = (int?)1,
@@ -697,8 +713,8 @@ public class AplicationDbContext : DbContext
             {
                 id = 12,
                 idUser = 12,
-                codeEmployee = "EMP-04",
-                idRole = 6,
+                codeEmployee = "ALM-01",
+                idRole = 7,
                 scopeType = scopeType.team,
                 scopeId = (int?)1,
                 isActive = true,
@@ -708,8 +724,8 @@ public class AplicationDbContext : DbContext
             {
                 id = 13,
                 idUser = 13,
-                codeEmployee = "EMP-05",
-                idRole = 6,
+                codeEmployee = "LIMP-01",
+                idRole = 8,
                 scopeType = scopeType.team,
                 scopeId = (int?)1,
                 isActive = true,
@@ -719,7 +735,7 @@ public class AplicationDbContext : DbContext
             {
                 id = 14,
                 idUser = 14,
-                codeEmployee = "EMP-06",
+                codeEmployee = "OP-03",
                 idRole = 6,
                 scopeType = scopeType.team,
                 scopeId = (int?)2,
@@ -730,8 +746,8 @@ public class AplicationDbContext : DbContext
             {
                 id = 15,
                 idUser = 15,
-                codeEmployee = "EMP-07",
-                idRole = 6,
+                codeEmployee = "ALM-02",
+                idRole = 7,
                 scopeType = scopeType.team,
                 scopeId = (int?)2,
                 isActive = true,
@@ -741,8 +757,8 @@ public class AplicationDbContext : DbContext
             {
                 id = 16,
                 idUser = 16,
-                codeEmployee = "EMP-08",
-                idRole = 6,
+                codeEmployee = "ALM-03",
+                idRole = 7,
                 scopeType = scopeType.team,
                 scopeId = (int?)2,
                 isActive = true,
@@ -752,8 +768,8 @@ public class AplicationDbContext : DbContext
             {
                 id = 17,
                 idUser = 17,
-                codeEmployee = "EMP-09",
-                idRole = 6,
+                codeEmployee = "LIMP-02",
+                idRole = 8,
                 scopeType = scopeType.team,
                 scopeId = (int?)2,
                 isActive = true,
@@ -763,8 +779,8 @@ public class AplicationDbContext : DbContext
             {
                 id = 18,
                 idUser = 18,
-                codeEmployee = "EMP-10",
-                idRole = 6,
+                codeEmployee = "LIMP-03",
+                idRole = 8,
                 scopeType = scopeType.team,
                 scopeId = (int?)2,
                 isActive = true,

@@ -4,10 +4,11 @@ using SystemBase.Services.IServices;
 
 namespace SystemBase.Services;
 
-public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> logger) : IUserService
+public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> logger, IHierarchyValidator hierarchyValidator) : IUserService
 {
     private readonly ILogger<UserService> _logger = logger;
     private readonly IUserRepositorio _userRepositorio = userRepositorio;
+    private readonly IHierarchyValidator _hierarchyValidator = hierarchyValidator;
 
     public async Task<ResponseService<string>> GetPasswordHash(int id)
     {
@@ -26,16 +27,19 @@ public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> 
         }
     }
 
-    public async Task<ResponseService<List<userDashboardDTO>>> GetAllUsers(string scope)
+    public async Task<ResponseService<List<userDashboardDTO>>> GetAllUsers(string scope, bool? isActive, bool? isDeleted ,int? page, int? pageSize)
     {
         if (scope != "all")
         {
+            var filter = _hierarchyValidator.GenerateFilltersBasic(null, null, 1, 10);
         }
         else
         {
             try
             {
-                return ResponseService.Success(await _userRepositorio.GetAllUsers(null));
+                var filter = _hierarchyValidator.GenerateFilltersBasic(isActive, isDeleted , page, pageSize);
+                int totalRefistros = await _userRepositorio.GetUsersCountAsync(filter);
+                return ResponseService.Success(await _userRepositorio.GetAllUsers(filter));
             }
             catch (Exception e)
             {

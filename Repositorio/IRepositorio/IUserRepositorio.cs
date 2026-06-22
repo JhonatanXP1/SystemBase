@@ -7,4 +7,6 @@ public interface IUserRepositorio
 {
     Task<string?> GetPasswordByIdAsync(int id);
     Task<List<userDashboardDTO>> GetAllUsers(HierarchyFilter? filter);
+    
+    Task<int>  GetUsersCountAsync(HierarchyFilter? filter);
 }
