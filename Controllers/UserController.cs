@@ -11,11 +11,9 @@ namespace SystemBase.Controllers;
 [Route("[controller]")]
 [ApiController]
 public class UserController(
-    IHttpContextService httpContext,
     IUserService userService
 ) : ControllerBase
 {
-    private readonly IHttpContextService _accessor = httpContext;
     private readonly IUserService _userService = userService;
 
     [HttpGet("password")]

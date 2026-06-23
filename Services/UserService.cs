@@ -1,4 +1,4 @@
-using SystemBase.Models.Snapshot;
+using SystemBase.Models.DTO;
 using SystemBase.Repositorio.IRepositorio;
 using SystemBase.Services.IServices;
 
@@ -27,7 +27,7 @@ public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> 
         }
     }
 
-    public async Task<ResponseService<List<userDashboardDTO>>> GetAllUsers(string scope, bool? isActive, bool? isDeleted ,int? page, int? pageSize)
+    public async Task<ResponseService<UsersDashboardDto>> GetAllUsers(string scope, bool? isActive, bool? isDeleted ,int? page, int? pageSize)
     {
         if (scope != "all")
         {
@@ -39,17 +39,24 @@ public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> 
             {
                 var filter = _hierarchyValidator.GenerateFilltersBasic(isActive, isDeleted , page, pageSize);
                 int totalRefistros = await _userRepositorio.GetUsersCountAsync(filter);
-                return ResponseService.Success(await _userRepositorio.GetAllUsers(filter));
+                var rows = await _userRepositorio.GetAllUsers(filter);
+                UsersDashboardDto users = new UsersDashboardDto()
+                {
+                    totalRecords =  totalRefistros,
+                    users = rows,
+                    page =  page,
+                    pageSize = pageSize
+                };
+
+                return ResponseService.Success(users);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 _logger.LogError(e.Message);
-                return ResponseService.Error<List<userDashboardDTO>>("");
+                return ResponseService.Error<UsersDashboardDto>("");
             }
-
         }
-
         return null;
     }
 }

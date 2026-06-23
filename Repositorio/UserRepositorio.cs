@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using SystemBase.Data;
 using SystemBase.Models;
-using SystemBase.Models.Snapshot;
+using SystemBase.Models.ReadModels;
 using SystemBase.Repositorio.IRepositorio;
 
 namespace SystemBase.Repositorio;
@@ -19,7 +19,13 @@ public class UserRepositorio(AplicationDbContext db) : IUserRepositorio
             .FirstOrDefaultAsync();
     }
 
-    private sealed record UserRoleRow(Users u, Roles? r);
+    // Clase con object initializer (no constructor posicional): EF Core necesita "ver a través"
+    // de la proyección para traducir los Where/OrderBy posteriores sobre x.u / x.r a SQL.
+    private sealed class UserRoleRow
+    {
+        public Users u { get; set; } = null!;
+        public Roles? r { get; set; }
+    }
 
     private IQueryable<UserRoleRow> GetQueryUniversal(HierarchyFilter? filter)
     {
@@ -28,7 +34,7 @@ public class UserRepositorio(AplicationDbContext db) : IUserRepositorio
             join ua in _db.userAssignments on u.id equals ua.idUser
             join r in _db.roles on ua.idRole equals r.id into roleGroup
             from r in roleGroup.DefaultIfEmpty()
-            select new UserRoleRow(u, r);
+            select new UserRoleRow { u = u, r = r };
         
         if (filter != null) // si viene null posiblemente sea un reporte.
         {
@@ -45,46 +51,43 @@ public class UserRepositorio(AplicationDbContext db) : IUserRepositorio
                 query = filter.isDeleted.Value ? query.Where(x => x.u.deleteAt != null) : // Está eliminado
                     query.Where(x => x.u.deleteAt == null); // No está eliminado
             }
-
-            if (filter.page.HasValue && filter.pageSize.HasValue)
-            {
-                query = query.OrderBy(x => x.u.id);
-                int offset = (filter.page.Value - 1) * filter.pageSize.Value; // Es offSet para la paginación.
-                query = query.Skip(offset).Take(filter.pageSize.Value);
-            }
-
         }
 
         return query;
     }
 
-    public async Task<List<userDashboardDTO>> GetAllUsers(HierarchyFilter? filter)
+    // La paginación se aplica aparte para que el Count pueda reutilizar los filtros sin Skip/Take.
+    private IQueryable<UserRoleRow> ApplyPaging(IQueryable<UserRoleRow> query, HierarchyFilter? filter)
     {
-        var query = GetQueryUniversal(filter);
-        return await query.Select(x => new userDashboardDTO
+        if (filter?.page is { } page && filter.pageSize is { } pageSize)
         {
-            id = x.u.id,
-            imageUser = x.u.imageUser,
-            name = x.u.name,
-            app = x.u.app,
-            apm = x.u.apm,
-            userName = x.u.userName,
-            status = x.u.status,
-            roleCode = x.r != null ? x.r.code.ToString() : null,
-            roleName = x.r != null ? x.r.name : null
-        }).ToListAsync();
+            query = query.OrderBy(x => x.u.id);
+            int offset = (page - 1) * pageSize; // Es offSet para la paginación.
+            query = query.Skip(offset).Take(pageSize);
+        }
+
+        return query;
+    }
+
+    public async Task<List<UserDashboardRow>> GetAllUsers(HierarchyFilter? filter)
+    {
+        var query = ApplyPaging(GetQueryUniversal(filter), filter);
+        return await query.Select(x => new UserDashboardRow(
+            x.u.id,
+            x.u.imageUser,
+            x.u.name,
+            x.u.app,
+            x.u.apm,
+            x.u.userName,
+            x.u.status,
+            x.r != null ? (int?)x.r.code : null,
+            x.r != null ? x.r.name : null
+        )).ToListAsync();
     }
 
     public Task<int> GetUsersCountAsync(HierarchyFilter? filter)
     {
-        if (filter != null)
-        {
-            if (filter.page.HasValue)
-                filter.page = null;
-            if (filter.pageSize.HasValue)
-                filter.pageSize = null;
-        }
-
+        // Sin ApplyPaging: cuenta todas las filas que cumplen los filtros, no solo la página.
         return GetQueryUniversal(filter).CountAsync();
     }
 }
