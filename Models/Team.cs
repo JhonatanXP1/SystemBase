@@ -1,6 +1,6 @@
 namespace SystemBase.Models;
 
-// Catálogo global de equipos (se contextualiza vía CompanyAreaWorkShiftTeam).
+// Catálogo global de equipos (se contextualiza vía CampusAreaWorkShiftTeam).
 public class Team
 {
     public int id { get; set; }

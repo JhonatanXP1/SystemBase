@@ -10,5 +10,6 @@ public class endpointAccess
 
     public ICollection<EndpointAccessNameRule> endpointAccessNameRules { get; set; } =
         new List<EndpointAccessNameRule>();
+
     public DateTimeOffset? deleteAt { get; set; }
 }

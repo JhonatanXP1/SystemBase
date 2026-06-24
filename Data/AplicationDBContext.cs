@@ -26,12 +26,13 @@ public class AplicationDbContext : DbContext
 
     // Jerarquía organizacional (scope) — catálogos + cadena de puentes.
     public DbSet<Company> companies { get; set; }
+    public DbSet<Campus> campuses { get; set; }
     public DbSet<Area> areas { get; set; }
     public DbSet<WorkShift> workShifts { get; set; }
     public DbSet<Team> teams { get; set; }
-    public DbSet<CompanyArea> companyAreas { get; set; }
-    public DbSet<CompanyAreaWorkShift> companyAreaWorkShifts { get; set; }
-    public DbSet<CompanyAreaWorkShiftTeam> companyAreaWorkShiftTeams { get; set; }
+    public DbSet<CampusArea> campusAreas { get; set; }
+    public DbSet<CampusAreaWorkShift> campusAreaWorkShifts { get; set; }
+    public DbSet<CampusAreaWorkShiftTeam> campusAreaWorkShiftTeams { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -136,6 +137,16 @@ public class AplicationDbContext : DbContext
             entity.Property(c => c.direccion).HasMaxLength(255);
             entity.Property(c => c.created).IsRequired();
         });
+        modelBuilder.Entity<Campus>(entity =>
+        {
+            entity.HasKey(c => c.id);
+            entity.Property(c => c.code).IsRequired(); // CampusCode (enum) almacenado como número
+            entity.Property(c => c.name).IsRequired().HasMaxLength(150);
+            entity.Property(c => c.direccion).HasMaxLength(255);
+            entity.Property(c => c.created).IsRequired();
+            entity.HasOne(c => c.company).WithMany()
+                .HasForeignKey(c => c.idCompany).IsRequired().OnDelete(DeleteBehavior.Restrict);
+        });
         modelBuilder.Entity<Area>(entity =>
         {
             entity.HasKey(a => a.id);
@@ -159,33 +170,33 @@ public class AplicationDbContext : DbContext
         });
 
         // Cadena de puentes (Restrict para evitar múltiples rutas de cascada en SQL Server)
-        modelBuilder.Entity<CompanyArea>(entity =>
+        modelBuilder.Entity<CampusArea>(entity =>
         {
             entity.HasKey(ca => ca.id);
             entity.Property(ca => ca.created).IsRequired();
-            entity.HasIndex(ca => new { ca.idCompany, ca.idArea }).IsUnique();
-            entity.HasOne(ca => ca.company).WithMany()
-                .HasForeignKey(ca => ca.idCompany).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(ca => new { ca.idCampus, ca.idArea }).IsUnique();
+            entity.HasOne(ca => ca.campus).WithMany()
+                .HasForeignKey(ca => ca.idCampus).IsRequired().OnDelete(DeleteBehavior.Restrict);
             entity.HasOne(ca => ca.area).WithMany()
                 .HasForeignKey(ca => ca.idArea).IsRequired().OnDelete(DeleteBehavior.Restrict);
         });
-        modelBuilder.Entity<CompanyAreaWorkShift>(entity =>
+        modelBuilder.Entity<CampusAreaWorkShift>(entity =>
         {
             entity.HasKey(x => x.id);
             entity.Property(x => x.created).IsRequired();
-            entity.HasIndex(x => new { x.idCompanyArea, x.idWorkShift }).IsUnique();
-            entity.HasOne(x => x.companyArea).WithMany()
-                .HasForeignKey(x => x.idCompanyArea).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(x => new { x.idCampusArea, x.idWorkShift }).IsUnique();
+            entity.HasOne(x => x.campusArea).WithMany()
+                .HasForeignKey(x => x.idCampusArea).IsRequired().OnDelete(DeleteBehavior.Restrict);
             entity.HasOne(x => x.workShift).WithMany()
                 .HasForeignKey(x => x.idWorkShift).IsRequired().OnDelete(DeleteBehavior.Restrict);
         });
-        modelBuilder.Entity<CompanyAreaWorkShiftTeam>(entity =>
+        modelBuilder.Entity<CampusAreaWorkShiftTeam>(entity =>
         {
             entity.HasKey(x => x.id);
             entity.Property(x => x.created).IsRequired();
-            entity.HasIndex(x => new { x.idCompanyAreaWorkShift, x.idTeam }).IsUnique();
-            entity.HasOne(x => x.companyAreaWorkShift).WithMany()
-                .HasForeignKey(x => x.idCompanyAreaWorkShift).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(x => new { x.idCampusAreaWorkShift, x.idTeam }).IsUnique();
+            entity.HasOne(x => x.campusAreaWorkShift).WithMany()
+                .HasForeignKey(x => x.idCampusAreaWorkShift).IsRequired().OnDelete(DeleteBehavior.Restrict);
             entity.HasOne(x => x.team).WithMany()
                 .HasForeignKey(x => x.idTeam).IsRequired().OnDelete(DeleteBehavior.Restrict);
         });

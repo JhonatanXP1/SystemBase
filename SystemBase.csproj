@@ -31,7 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Logs\reportsError\" />
+        <Folder Include="Logs\reportsError\"/>
     </ItemGroup>
 
 </Project>

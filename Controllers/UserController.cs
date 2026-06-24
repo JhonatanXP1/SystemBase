@@ -24,10 +24,10 @@ public class UserController(
             return Unauthorized();
         return Ok();
     }
-    
+
     [HttpGet]
     [RequirePermission("users.read.*", "users.read.subordinate", "users.read.self")]
-    public async Task<IActionResult> Users( bool? isActive, bool? isDeleted ,int? page, int? pageSize)
+    public async Task<IActionResult> Users(bool? isActive, bool? isDeleted, int? page, int? pageSize)
     {
         if (!Request.Headers.TryGetValue("X-Active-Scope", out var activeScope)
             || string.IsNullOrWhiteSpace(activeScope))
@@ -39,8 +39,9 @@ public class UserController(
             : matched.Any(p => p.EndsWith(".subordinate")) ? "subordinate"
             : "self";
 
-        Console.WriteLine($"el scope is:{scope} y  X-Active-Scope: {activeScope} y matched: {JsonSerializer.Serialize(matched)}"); 
-        var users = await _userService.GetAllUsers(scope, isActive, isDeleted , page, pageSize);
+        Console.WriteLine(
+            $"el scope is:{scope} y  X-Active-Scope: {activeScope} y matched: {JsonSerializer.Serialize(matched)}");
+        var users = await _userService.GetAllUsers(scope, isActive, isDeleted, page, pageSize);
         return Ok(users.data); //users.data);
     }
 }

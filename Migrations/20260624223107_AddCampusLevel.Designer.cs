@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SystemBase.Data;
 
@@ -11,9 +12,11 @@ using SystemBase.Data;
 namespace SystemBase.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    partial class AplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260624223107_AddCampusLevel")]
+    partial class AddCampusLevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -979,7 +982,7 @@ namespace SystemBase.Migrations
                             id = 1,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Lois",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$/5a5lcBPf66Zx8Bm+jRSFw$BYTksr+3zacao9+FeXYwwg4qJYTDINx6cwCPAKCDjt0",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$f24/wb2PqNXOxcs+nX80CA$SnNUvCn5D3DwQRVcwe3JFtb/4hvkGxc75oLwBCfujFU",
                             userName = "@lois"
                         },
                         new
@@ -987,7 +990,7 @@ namespace SystemBase.Migrations
                             id = 2,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Hal",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$RonXO4dj99/6Gax895DcSw$jDTDLXCvh45OmBf5gjz8B7UWKk9bMtPUzIbLy4P9v4A",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$t920Nb7bkwBEZcULOwJUJg$ElfQN0mbe+43Rb4g5LZVzAgBsJu7uASprKysCkPuZS4",
                             userName = "@hal"
                         },
                         new
@@ -995,7 +998,7 @@ namespace SystemBase.Migrations
                             id = 3,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Francis",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$WxRu8ovfbTxWFqj+VtSvDw$Sn2u8ziIuBvuxVGCxtY7t4fRyj+gtDGc/StuDRg6e4o",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$1VWKOfWRrNaOg3O3VEV+EA$qNQdvAFDEsCATpy8HwywRjGgDyjKH1xUks2lXCvuyYM",
                             userName = "@francis"
                         },
                         new
@@ -1004,7 +1007,7 @@ namespace SystemBase.Migrations
                             app = "Feldspar",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Craig",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$boUHtxmKuWA6PJzxfi/7OA$q3CTlQSaZvTvClNesf682X8ttywApkKUT8ycUIjMPik",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$4QNw3vCuZocQcx7zjEOyKw$0vAJhlTeYKDynVzwSEau2l5Dc+7KJYa4cSLbjvUhZK4",
                             userName = "@craig"
                         },
                         new
@@ -1012,7 +1015,7 @@ namespace SystemBase.Migrations
                             id = 5,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Malcolm",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$RM0FaY9qU/6klkJjwt9Bmg$/rFb5fnMBU9q1YvWvcdhm1JbEKeo/JsVLmAGxbHUklA",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$KR0uc21NM7HRiMhEcwF9rw$vPfVEOaPCA96DFkH175rZeQOCo6GK6kuklsd6h7B+eE",
                             userName = "@malcolm"
                         },
                         new
@@ -1021,7 +1024,7 @@ namespace SystemBase.Migrations
                             app = "Kenarban",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Stevie",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$Wa389nH/4Zxq40Hsw8JK+g$0JlRVIogT9Naf8zVX2Qutpt0UmtMkjkjNpH74cDcCcI",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$KsbT/N0yJ8scV8za8Vi0rw$D3ZXYlRUh1PEzhlsiOC7pdrY/rLiL1yxMC+xpeDUpzI",
                             userName = "@stevie"
                         },
                         new
@@ -1029,7 +1032,7 @@ namespace SystemBase.Migrations
                             id = 7,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Reese",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$wYn7jpqH/8iW4P2/QBaLxg$UjBpjrB5rlr4DLc5xT/JYI8JHUbX6lPy6QHb1khltLY",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$UPZCCB/6DdbrL0tA1dTZsw$5fK5BRP76pXXPU6VO2rkGh9o2E3TE83o5MlvXPbz4gs",
                             userName = "@reese"
                         },
                         new
@@ -1037,7 +1040,7 @@ namespace SystemBase.Migrations
                             id = 8,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Dewey",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$+fU21ZY9zQ/xBlkUSO0wrg$fLIq48jhjAv94fJEhAR8H98PkateXLhc6GPPWczjDFc",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$ll9sHNM4gX4AoVSeFrCVxQ$rL/H2gr6Dy1+Qh8pEkbMPWWDPzUaXJUa6VF1qofGKY0",
                             userName = "@dewey"
                         },
                         new
@@ -1045,7 +1048,7 @@ namespace SystemBase.Migrations
                             id = 10,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Lloyd",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$YXMY/a3tPhWoEZ0OXCt78g$QFmVek3gtJJ4uJeDe/1z6VKkVW6akBVUSrLyInoVdb4",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$JyCyQvKp1V9p1Y/7ZlUP7Q$1jl/xgtV10U6KYz49USprU4uSJssZ0LjHllwxtGo5Vo",
                             userName = "@lloyd"
                         },
                         new
@@ -1054,7 +1057,7 @@ namespace SystemBase.Migrations
                             app = "Hooper",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Dabney",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$gBQbyr7N1NkeCRu4gltHwg$w1T52kVVpU5l26VRUaiuAXxZjTUrOQcxVT0+QDkRRys",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$w86R7TsfLDvICFQSF57ZMg$wAy1Gbrx5WKCHGjdOO/ayjDZIxBe8+kA/RMg/oIGopU",
                             userName = "@dabney"
                         },
                         new
@@ -1062,7 +1065,7 @@ namespace SystemBase.Migrations
                             id = 12,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Kevin",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$aC0G7bS6RE8rtbutPVhHdw$TZp6yk3MjmjYE/ZA03NcM+IiNidT5g08i5wqQxhdKNM",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$exk5pU8JCHuHxy0IbBQCUQ$iVsNnaks5Jr9JlDkTIVq6cpa/SpjMkO+WRED6Us9jbY",
                             userName = "@kevin"
                         },
                         new
@@ -1071,7 +1074,7 @@ namespace SystemBase.Migrations
                             app = "Sanders",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Cynthia",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$Fs/8fI4DelyQPBF4ON1rzg$2KcycM3vZvfesyGCnTqMmxCrRIBBAihY2+H9nDKDZ8Y",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$JLTDtF3fcP8yQtIvkhiFFQ$qDh5RFJjXSikSV5ihSuyTKYIWqAlDN4TnOW9l7oTrEE",
                             userName = "@cynthia"
                         },
                         new
@@ -1080,7 +1083,7 @@ namespace SystemBase.Migrations
                             app = "Hanson",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "David",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$esgXzjx2fModQRJRob9Tzw$Z42IEpl2TgoblNS0vUzZ5qyZt/YHN0dAfYh49TdTUJc",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$34dx0Rw+7pcC+vCZqvmXDQ$EWQr+87x0S6JS3/mJcmFi9GY/hSH1efkvP1b5mLRPSA",
                             userName = "@davidh"
                         },
                         new
@@ -1088,7 +1091,7 @@ namespace SystemBase.Migrations
                             id = 15,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Chad",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$tJ0tMyz/TuOiFfZI+E0OfQ$rAVIZw10bLIHFDSJjsbnHujjObljHoGi++13n2ktqFY",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$N8AY2PP/ZhM1B/b/bgQ5BA$+bkzjhTQlqSYIz6tAa+OLmiWGMNWLj4FoM1pKI9FSRo",
                             userName = "@chad"
                         },
                         new
@@ -1096,7 +1099,7 @@ namespace SystemBase.Migrations
                             id = 16,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Davey",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$SlEeZc7eqtahE/yF+oJnFw$5wzFSZYHU0DkQOUo3icrHFx0MoxvZJKBO5K6a6FpZMI",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$1cTpJQJgJuNjl4/oOWvuzw$ALb+7/MFibIVrVfWZUCpaJKaX4UBZV7ZjfRU220xVug",
                             userName = "@davey"
                         },
                         new
@@ -1104,7 +1107,7 @@ namespace SystemBase.Migrations
                             id = 17,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Zoe",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$xRiuF/1vAyZNCrp4x0VbAw$xH391hUGRhKGZ6pvhPjnnWJyc7bgklOypIwbh6qX1qM",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$Qcd375fYsERcu73Gh/kVfg$SDOZ0CSWQnVFVd0vzmvqsFLdpvqHv/sjN0voAMP7o+M",
                             userName = "@zoe"
                         },
                         new
@@ -1112,7 +1115,7 @@ namespace SystemBase.Migrations
                             id = 18,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Penelope",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$bKDnnns3hRYKkFogmtV+6A$wn6KmQfrl0fQd4iorI81NsonT9r5UZ83XI851fdTtds",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$tccGTDdOrlPuBNT5DWgP5Q$wspCtQ2a3y2ktJu9h/FqMH/ftTBsbPRVcdXQwU5kyZU",
                             userName = "@penelope"
                         });
                 });

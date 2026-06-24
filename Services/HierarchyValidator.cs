@@ -21,6 +21,7 @@ public class HierarchyValidator : IHierarchyValidator
                 filter.pageSize = pageSize.Value;
             return filter;
         }
+
         return null;
     }
 }

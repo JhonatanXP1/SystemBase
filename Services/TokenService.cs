@@ -48,7 +48,8 @@ public class TokenService : ITokenService
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.id.ToString()),
                     new Claim(JwtRegisteredClaimNames.UniqueName, user.userName),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
+                    new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
+                        ClaimValueTypes.Integer64),
                     new Claim(JwtRegisteredClaimNames.Name, user.name ?? ""),
                     new Claim("app", user.app ?? ""),
                     new Claim("apm", user.apm ?? ""),

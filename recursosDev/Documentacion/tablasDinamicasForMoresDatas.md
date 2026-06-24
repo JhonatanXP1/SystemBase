@@ -8,7 +8,10 @@
 
 ## Contexto
 
-El sistema de autenticación (SystemBase) ya cuenta con `users`, `roles`, `userAssignments` y `refreshTokens`. La necesidad es extender los datos personales de un usuario según su tipo de rol — un empleado tiene campos distintos a un cliente o un proveedor — y además permitir que el cliente final defina esos campos desde la aplicación sin intervención del dev.
+El sistema de autenticación (SystemBase) ya cuenta con `users`, `roles`, `userAssignments` y `refreshTokens`. La
+necesidad es extender los datos personales de un usuario según su tipo de rol — un empleado tiene campos distintos a un
+cliente o un proveedor — y además permitir que el cliente final defina esos campos desde la aplicación sin intervención
+del dev.
 
 ---
 
@@ -16,11 +19,16 @@ El sistema de autenticación (SystemBase) ya cuenta con `users`, `roles`, `userA
 
 Se descartaron dos enfoques:
 
-**EAV global** (`datosExtras` con clave/valor sobre toda la entidad) — descartado por rendimiento: reconstruir un perfil requiere N JOINs, sin tipado real en BD y con índices ineficientes.
+**EAV global** (`datosExtras` con clave/valor sobre toda la entidad) — descartado por rendimiento: reconstruir un perfil
+requiere N JOINs, sin tipado real en BD y con índices ineficientes.
 
-**EF Core con modelos dinámicos** — descartado porque EF Core construye y cachea el `IModel` una sola vez en `OnModelCreating`. Agregar una tabla nueva en runtime requeriría forzar una reconstrucción completa via `IModelCacheKeyFactory`, que es una operación pesada con lock global. Este comportamiento no cambió en EF Core 10 (noviembre 2025) y no está previsto cambiar en EF Core 11 (noviembre 2026).
+**EF Core con modelos dinámicos** — descartado porque EF Core construye y cachea el `IModel` una sola vez en
+`OnModelCreating`. Agregar una tabla nueva en runtime requeriría forzar una reconstrucción completa via
+`IModelCacheKeyFactory`, que es una operación pesada con lock global. Este comportamiento no cambió en EF Core 10 (
+noviembre 2025) y no está previsto cambiar en EF Core 11 (noviembre 2026).
 
-**Decisión final:** tablas de perfil creadas en runtime vía DDL directo con Dapper, controladas por la tabla `profileAccess`.
+**Decisión final:** tablas de perfil creadas en runtime vía DDL directo con Dapper, controladas por la tabla
+`profileAccess`.
 
 ---
 
@@ -38,7 +46,8 @@ profileAccess (
 )
 ```
 
-Las tablas de perfil **no existen en tiempo de desarrollo** — las crea el cliente final desde la app. Cada tabla creada sigue esta estructura mínima:
+Las tablas de perfil **no existen en tiempo de desarrollo** — las crea el cliente final desde la app. Cada tabla creada
+sigue esta estructura mínima:
 
 ```sql
 CREATE TABLE [{nombreTabla}] (
@@ -62,7 +71,9 @@ roles (1) ──────────── (N) profileAccess
                         [cualquier tabla futura]
 ```
 
-`profileAccess` es una tabla de control, no una FK a otra entidad. El campo `profileTable` es un string que apunta al nombre físico de la tabla en SQL Server. Un rol puede tener múltiples filas en `profileAccess` (ej: Directivo puede leer `clienteProfile` y `empleadoProfile`).
+`profileAccess` es una tabla de control, no una FK a otra entidad. El campo `profileTable` es un string que apunta al
+nombre físico de la tabla en SQL Server. Un rol puede tener múltiples filas en `profileAccess` (ej: Directivo puede leer
+`clienteProfile` y `empleadoProfile`).
 
 ---
 
@@ -166,19 +177,24 @@ public async Task<IEnumerable<dynamic>> LeerPerfilAsync(string tabla, int idUser
 
 ## Consideraciones de seguridad
 
-El riesgo principal es SQL injection en nombres de tabla, ya que SQL Server no permite parámetros en DDL. La protección es en dos capas:
+El riesgo principal es SQL injection en nombres de tabla, ya que SQL Server no permite parámetros en DDL. La protección
+es en dos capas:
 
-**Capa 1 — Regex en creación:** el nombre solo puede contener letras, números y guión bajo. Ningún carácter especial pasa.
+**Capa 1 — Regex en creación:** el nombre solo puede contener letras, números y guión bajo. Ningún carácter especial
+pasa.
 
-**Capa 2 — Validación en consulta:** antes de cualquier SELECT, se verifica que `profileTable` existe en `profileAccess`. Si alguien intenta consultar una tabla que no está registrada, se rechaza antes de armar el SQL.
+**Capa 2 — Validación en consulta:** antes de cualquier SELECT, se verifica que `profileTable` existe en
+`profileAccess`. Si alguien intenta consultar una tabla que no está registrada, se rechaza antes de armar el SQL.
 
-Nunca usar el nombre de tabla directamente desde el request HTTP — siempre leerlo de `profileAccess` después de validar el rol.
+Nunca usar el nombre de tabla directamente desde el request HTTP — siempre leerlo de `profileAccess` después de validar
+el rol.
 
 ---
 
 ## Consideraciones operacionales
 
-Cada cliente que crea perfiles genera tablas físicas en la BD. Con muchas instituciones esto puede derivar en cientos o miles de tablas. Antes de implementar en producción considerar:
+Cada cliente que crea perfiles genera tablas físicas en la BD. Con muchas instituciones esto puede derivar en cientos o
+miles de tablas. Antes de implementar en producción considerar:
 
 - Prefijo por tenant para evitar colisiones: `inst42_clienteProfile`
 - Script de monitoreo para auditar tablas huérfanas (sin fila en `profileAccess`)
@@ -207,9 +223,9 @@ public record ColumnaDef(
 
 ## Lo que NO usar
 
-| Alternativa | Por qué no |
-|---|---|
-| EF Core migrations en runtime | `IModel` se cachea al arrancar, reconstruirlo es costoso y con lock global |
-| `IModelCacheKeyFactory` para esto | Diseñado para variantes de modelo, no para tablas completamente nuevas en runtime |
-| EAV global (clave/valor) | N JOINs por perfil, sin tipado en BD, índices ineficientes |
-| `dynamic` sin validar contra `profileAccess` | Exposición a SQL injection y acceso no autorizado a tablas |
+| Alternativa                                  | Por qué no                                                                        |
+|----------------------------------------------|-----------------------------------------------------------------------------------|
+| EF Core migrations en runtime                | `IModel` se cachea al arrancar, reconstruirlo es costoso y con lock global        |
+| `IModelCacheKeyFactory` para esto            | Diseñado para variantes de modelo, no para tablas completamente nuevas en runtime |
+| EAV global (clave/valor)                     | N JOINs por perfil, sin tipado en BD, índices ineficientes                        |
+| `dynamic` sin validar contra `profileAccess` | Exposición a SQL injection y acceso no autorizado a tablas                        |

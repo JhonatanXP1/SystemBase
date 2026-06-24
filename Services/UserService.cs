@@ -4,11 +4,14 @@ using SystemBase.Services.IServices;
 
 namespace SystemBase.Services;
 
-public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> logger, IHierarchyValidator hierarchyValidator) : IUserService
+public class UserService(
+    IUserRepositorio userRepositorio,
+    ILogger<UserService> logger,
+    IHierarchyValidator hierarchyValidator) : IUserService
 {
+    private readonly IHierarchyValidator _hierarchyValidator = hierarchyValidator;
     private readonly ILogger<UserService> _logger = logger;
     private readonly IUserRepositorio _userRepositorio = userRepositorio;
-    private readonly IHierarchyValidator _hierarchyValidator = hierarchyValidator;
 
     public async Task<ResponseService<string>> GetPasswordHash(int id)
     {
@@ -17,7 +20,7 @@ public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> 
             var password = await _userRepositorio.GetPasswordByIdAsync(id);
             if (string.IsNullOrEmpty(password))
                 return ResponseService.Error<string>("No existe la contraseña");
-            return ResponseService.Success<string>(password);
+            return ResponseService.Success(password);
         }
         catch (InvalidOperationException invalidOperationException)
         {
@@ -27,7 +30,8 @@ public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> 
         }
     }
 
-    public async Task<ResponseService<UsersDashboardDto>> GetAllUsers(string scope, bool? isActive, bool? isDeleted ,int? page, int? pageSize)
+    public async Task<ResponseService<UsersDashboardDto>> GetAllUsers(string scope, bool? isActive, bool? isDeleted,
+        int? page, int? pageSize)
     {
         if (scope != "all")
         {
@@ -37,14 +41,14 @@ public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> 
         {
             try
             {
-                var filter = _hierarchyValidator.GenerateFilltersBasic(isActive, isDeleted , page, pageSize);
-                int totalRefistros = await _userRepositorio.GetUsersCountAsync(filter);
+                var filter = _hierarchyValidator.GenerateFilltersBasic(isActive, isDeleted, page, pageSize);
+                var totalRefistros = await _userRepositorio.GetUsersCountAsync(filter);
                 var rows = await _userRepositorio.GetAllUsers(filter);
-                UsersDashboardDto users = new UsersDashboardDto()
+                var users = new UsersDashboardDto
                 {
-                    totalRecords =  totalRefistros,
+                    totalRecords = totalRefistros,
                     users = rows,
-                    page =  page,
+                    page = page,
                     pageSize = pageSize
                 };
 
@@ -57,6 +61,7 @@ public class UserService(IUserRepositorio userRepositorio, ILogger<UserService> 
                 return ResponseService.Error<UsersDashboardDto>("");
             }
         }
+
         return null;
     }
 }

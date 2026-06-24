@@ -1,6 +1,6 @@
 namespace SystemBase.Models;
 
-// Catálogo global de áreas (reutilizable entre empresas vía CompanyArea).
+// Catálogo global de áreas (reutilizable entre naves vía CampusArea).
 public class Area
 {
     public int id { get; set; }

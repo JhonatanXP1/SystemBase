@@ -69,7 +69,7 @@ public class LoginService : ILoginService
         //Los dias que la session se mantendrá viva.
         var days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
         var fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
-        DateTimeOffset fechaExpiPolitica =
+        var fechaExpiPolitica =
             new DateTimeOffset(DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1), TimeSpan.Zero);
 
         var tokenHash = _tokenService.HashRefreshToken(refreshToken);
@@ -175,7 +175,7 @@ public class LoginService : ILoginService
         var refreshTokenNew = _tokenService.CreateRefreshToken();
         var days = _configuration.GetValue<int>("Jwt:RefreshTokenDays");
         var fechaExpi = DateTimeOffset.UtcNow.AddDays(days);
-        DateTimeOffset fechaExpiPolitica =
+        var fechaExpiPolitica =
             new DateTimeOffset(DateTimeOffset.UtcNow.Date.AddDays(1).AddSeconds(-1), TimeSpan.Zero);
 
         var tokenHashNew = _tokenService.HashRefreshToken(refreshTokenNew);
