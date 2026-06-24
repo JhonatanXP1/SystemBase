@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SystemBase.Data;
 
@@ -11,9 +12,11 @@ using SystemBase.Data;
 namespace SystemBase.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    partial class AplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260624191212_AddOrganizationalScopeHierarchy")]
+    partial class AddOrganizationalScopeHierarchy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,7 +47,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("areas", (string)null);
+                    b.ToTable("areas");
                 });
 
             modelBuilder.Entity("SystemBase.Models.Company", b =>
@@ -69,7 +72,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("companies", (string)null);
+                    b.ToTable("companies");
                 });
 
             modelBuilder.Entity("SystemBase.Models.CompanyArea", b =>
@@ -96,7 +99,7 @@ namespace SystemBase.Migrations
                     b.HasIndex("idCompany", "idArea")
                         .IsUnique();
 
-                    b.ToTable("companyAreas", (string)null);
+                    b.ToTable("companyAreas");
                 });
 
             modelBuilder.Entity("SystemBase.Models.CompanyAreaWorkShift", b =>
@@ -123,7 +126,7 @@ namespace SystemBase.Migrations
                     b.HasIndex("idCompanyArea", "idWorkShift")
                         .IsUnique();
 
-                    b.ToTable("companyAreaWorkShifts", (string)null);
+                    b.ToTable("companyAreaWorkShifts");
                 });
 
             modelBuilder.Entity("SystemBase.Models.CompanyAreaWorkShiftTeam", b =>
@@ -150,7 +153,7 @@ namespace SystemBase.Migrations
                     b.HasIndex("idCompanyAreaWorkShift", "idTeam")
                         .IsUnique();
 
-                    b.ToTable("companyAreaWorkShiftTeams", (string)null);
+                    b.ToTable("companyAreaWorkShiftTeams");
                 });
 
             modelBuilder.Entity("SystemBase.Models.EndpointAccessNameRule", b =>
@@ -176,7 +179,7 @@ namespace SystemBase.Migrations
 
                     b.HasIndex("idNameRule");
 
-                    b.ToTable("endpointAccessNameRules", (string)null);
+                    b.ToTable("endpointAccessNameRules");
 
                     b.HasData(
                         new
@@ -469,7 +472,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("nameRules", (string)null);
+                    b.ToTable("nameRules");
 
                     b.HasData(
                         new
@@ -530,7 +533,7 @@ namespace SystemBase.Migrations
                     b.HasIndex("idRole", "profileTable")
                         .IsUnique();
 
-                    b.ToTable("profileAccess", (string)null);
+                    b.ToTable("profileAccess");
                 });
 
             modelBuilder.Entity("SystemBase.Models.Roles", b =>
@@ -562,7 +565,7 @@ namespace SystemBase.Migrations
 
                     b.HasIndex("idNameRule");
 
-                    b.ToTable("roles", (string)null);
+                    b.ToTable("roles");
 
                     b.HasData(
                         new
@@ -649,7 +652,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("teams", (string)null);
+                    b.ToTable("teams");
                 });
 
             modelBuilder.Entity("SystemBase.Models.UserAssignments", b =>
@@ -698,7 +701,7 @@ namespace SystemBase.Migrations
                         .IsUnique()
                         .HasFilter("[scopeId] IS NOT NULL");
 
-                    b.ToTable("userAssignments", (string)null);
+                    b.ToTable("userAssignments");
 
                     b.HasData(
                         new
@@ -938,7 +941,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("users", (string)null);
+                    b.ToTable("users");
 
                     b.HasData(
                         new
@@ -1108,7 +1111,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("workShifts", (string)null);
+                    b.ToTable("workShifts");
                 });
 
             modelBuilder.Entity("SystemBase.Models.endpointAccess", b =>
@@ -1139,7 +1142,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("endpointAccess", (string)null);
+                    b.ToTable("endpointAccess");
 
                     b.HasData(
                         new
@@ -1381,7 +1384,7 @@ namespace SystemBase.Migrations
 
                     b.HasIndex("idUser");
 
-                    b.ToTable("refreshTokens", (string)null);
+                    b.ToTable("refreshTokens");
                 });
 
             modelBuilder.Entity("SystemBase.Models.CompanyArea", b =>
