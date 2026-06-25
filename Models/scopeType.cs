@@ -4,8 +4,8 @@ public enum scopeType
 {
     company,
     campus,
-    company_area,
-    company_area_workdate,
+    campus_area,
+    campus_area_workdate,
     team,
     client
 }

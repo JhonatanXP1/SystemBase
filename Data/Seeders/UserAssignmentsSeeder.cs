@@ -25,7 +25,7 @@ public static class UserAssignmentsSeeder
                 idUser = 2,
                 codeEmployee = "GG-01",
                 idRole = 2,
-                scopeType = scopeType.company_area,
+                scopeType = scopeType.campus_area,
                 scopeId = (int?)1,
                 isActive = true,
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
@@ -36,7 +36,7 @@ public static class UserAssignmentsSeeder
                 idUser = 3,
                 codeEmployee = "GG-02",
                 idRole = 2,
-                scopeType = scopeType.company_area,
+                scopeType = scopeType.campus_area,
                 scopeId = (int?)1,
                 isActive = true,
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
@@ -47,7 +47,7 @@ public static class UserAssignmentsSeeder
                 idUser = 4,
                 codeEmployee = "GRH-01",
                 idRole = 3,
-                scopeType = scopeType.company_area,
+                scopeType = scopeType.campus_area,
                 scopeId = (int?)2,
                 isActive = true,
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
@@ -58,7 +58,7 @@ public static class UserAssignmentsSeeder
                 idUser = 5,
                 codeEmployee = "SUP-01",
                 idRole = 4,
-                scopeType = scopeType.company_area_workdate,
+                scopeType = scopeType.campus_area_workdate,
                 scopeId = (int?)1,
                 isActive = true,
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
@@ -69,7 +69,7 @@ public static class UserAssignmentsSeeder
                 idUser = 6,
                 codeEmployee = "SUP-02",
                 idRole = 4,
-                scopeType = scopeType.company_area_workdate,
+                scopeType = scopeType.campus_area_workdate,
                 scopeId = (int?)2,
                 isActive = true,
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
