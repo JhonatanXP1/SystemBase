@@ -13,6 +13,17 @@ public static class ModelBuilderSeedExtensions
         EndpointAccessSeeder.Seed(modelBuilder);
         RolesSeeder.Seed(modelBuilder);
         EndpointAccessNameRuleSeeder.Seed(modelBuilder);
+
+        // Jerarquía organizacional: catálogos + cadena de puentes (Campus*).
+        CompanySeeder.Seed(modelBuilder);
+        CampusSeeder.Seed(modelBuilder);
+        AreaSeeder.Seed(modelBuilder);
+        WorkShiftSeeder.Seed(modelBuilder);
+        TeamSeeder.Seed(modelBuilder);
+        CampusAreaSeeder.Seed(modelBuilder);
+        CampusAreaWorkShiftSeeder.Seed(modelBuilder);
+        CampusAreaWorkShiftTeamSeeder.Seed(modelBuilder);
+
         UsersSeeder.Seed(modelBuilder, passwordHasher);
         UserAssignmentsSeeder.Seed(modelBuilder);
     }
