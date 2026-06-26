@@ -13,19 +13,17 @@ namespace SystemBase.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly IHttpContextService
-        _accessor; // Inyectamos el IHttpContextAccessor para obtener la IP y el User-Agent
-
+    private readonly IRequestContext _requestContext;
     private readonly ILoginMapper _loginMapper;
     private readonly ILoginService _loginService;
 
     public AuthController(
         ILoginService loginService,
-        IHttpContextService accessor,
+        IRequestContext requestContext,
         ILoginMapper loginMapper)
     {
         _loginService = loginService;
-        _accessor = accessor;
+        _requestContext = requestContext;
         _loginMapper = loginMapper;
     }
 
@@ -37,11 +35,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Login([FromBody] logingDTO loging)
     {
-        //Identificas la IP publica.
-        var ipAddress = _accessor.GetClientIpAddress();
-        var userAgent = _accessor.GetUserAgent();
-
-        var sessionStarted = await _loginService.Login(loging, userAgent, ipAddress);
+        var sessionStarted = await _loginService.Login(loging, _requestContext.UserAgent, _requestContext.ClientIp);
 
         if (!sessionStarted.success)
             return sessionStarted.error switch
@@ -79,10 +73,7 @@ public class AuthController : ControllerBase
             string.IsNullOrWhiteSpace(refreshToken))
             return Unauthorized("Refresh token faltante");
 
-        var ipAddress = _accessor.GetClientIpAddress();
-        var userAgent = _accessor.GetUserAgent();
-
-        var newCredenciales = await _loginService.RefreshTokensService(refreshToken, ipAddress, userAgent);
+        var newCredenciales = await _loginService.RefreshTokensService(refreshToken, _requestContext.ClientIp, _requestContext.UserAgent);
         if (!newCredenciales.success)
             return newCredenciales.error switch
             {

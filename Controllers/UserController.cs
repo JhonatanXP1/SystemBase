@@ -11,16 +11,17 @@ namespace SystemBase.Controllers;
 [Route("[controller]")]
 [ApiController]
 public class UserController(
-    IUserService userService
+    IUserService userService,
+    IRequestContext requestContext
 ) : ControllerBase
 {
     private readonly IUserService _userService = userService;
+    private readonly IRequestContext _requestContext = requestContext;
 
     [HttpGet("password")]
     public async Task<IActionResult> Password()
     {
-        var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (id == null)
+        if (!_requestContext.HasUser)
             return Unauthorized();
         return Ok();
     }
@@ -29,19 +30,18 @@ public class UserController(
     [RequirePermission("users.read.*", "users.read.subordinate", "users.read.self")]
     public async Task<IActionResult> Users(bool? isActive, bool? isDeleted, int? page, int? pageSize)
     {
-        if (!Request.Headers.TryGetValue("X-Active-Scope", out var activeScope)
-            || string.IsNullOrWhiteSpace(activeScope))
+        if (string.IsNullOrWhiteSpace(_requestContext.ActiveScope))
             return BadRequest("X-Active-Scope requerido");
 
-        var matched = HttpContext.Items["MatchedPermissions"] as List<string> ?? [];
+        var matched = _requestContext.MatchedPermissions;
 
         var scope = matched.Any(p => p.EndsWith(".*")) ? "all"
             : matched.Any(p => p.EndsWith(".subordinate")) ? "subordinate"
             : "self";
 
         Console.WriteLine(
-            $"el scope is:{scope} y  X-Active-Scope: {activeScope} y matched: {JsonSerializer.Serialize(matched)}");
+            $"el scope is:{scope} y  X-Active-Scope: {_requestContext.ActiveScope} y matched: {JsonSerializer.Serialize(matched)}");
         var users = await _userService.GetAllUsers(scope, isActive, isDeleted, page, pageSize);
-        return Ok(users.data); //users.data);
+        return Ok(users.data);
     }
 }

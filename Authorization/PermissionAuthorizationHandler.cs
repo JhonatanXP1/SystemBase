@@ -1,14 +1,17 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
+using SystemBase.Services.IServices;
 
 namespace SystemBase.Authorization;
 
 public class PermissionAuthorizationHandler(
     IHttpContextAccessor httpContextAccessor,
+    IRequestContextInitializer requestContextInitializer,
     ILogger<PermissionAuthorizationHandler> logger)
     : AuthorizationHandler<PermissionRequirement>
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly IRequestContextInitializer _requestContextInitializer = requestContextInitializer;
     private readonly ILogger<PermissionAuthorizationHandler> _logger = logger;
 
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
@@ -55,7 +58,7 @@ public class PermissionAuthorizationHandler(
 
         if (matched.Count > 0)
         {
-            httpContext.Items["MatchedPermissions"] = matched;
+            _requestContextInitializer.SetMatchedPermissions(matched);
             context.Succeed(requirement);
         }
         else

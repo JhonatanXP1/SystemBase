@@ -9,6 +9,7 @@ using Serilog;
 using Serilog.Events;
 using SystemBase.Authorization;
 using SystemBase.Data;
+using SystemBase.Middleware;
 using SystemBase.Mappers;
 using SystemBase.Mappers.IMappers;
 using SystemBase.Repositorio;
@@ -116,7 +117,11 @@ builder.Services.AddScoped<ILoginMapper, LoginMapper>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-builder.Services.AddScoped<IHttpContextService, HttpContextService>();
+// RequestContext: una instancia por petición, resuelve a la MISMA por IRequestContext (lectura)
+// e IRequestContextInitializer (escritura, solo pipeline).
+builder.Services.AddScoped<RequestContext>();
+builder.Services.AddScoped<IRequestContext>(sp => sp.GetRequiredService<RequestContext>());
+builder.Services.AddScoped<IRequestContextInitializer>(sp => sp.GetRequiredService<RequestContext>());
 builder.Services.AddScoped<IUserAssignments, UserAssignmentsService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHierarchyValidator, HierarchyValidator>();
@@ -171,6 +176,7 @@ else
 
 app.UseCors("AllowAngular");
 app.UseAuthentication(); // lee el token y llena HttpContext.User
+app.UseMiddleware<RequestContextMiddleware>(); // rellena IRequestContext con claims + headers + IP/UA
 app.UseAuthorization();
 app.MapControllers();
 //app.UseHttpsRedirection();
