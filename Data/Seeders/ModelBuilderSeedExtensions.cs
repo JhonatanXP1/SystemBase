@@ -18,11 +18,11 @@ public static class ModelBuilderSeedExtensions
         CompanySeeder.Seed(modelBuilder);
         CampusSeeder.Seed(modelBuilder);
         AreaSeeder.Seed(modelBuilder);
-        WorkShiftSeeder.Seed(modelBuilder);
+        ShiftSeeder.Seed(modelBuilder);
         TeamSeeder.Seed(modelBuilder);
         CampusAreaSeeder.Seed(modelBuilder);
-        CampusAreaWorkShiftSeeder.Seed(modelBuilder);
-        CampusAreaWorkShiftTeamSeeder.Seed(modelBuilder);
+        CampusAreaShiftSeeder.Seed(modelBuilder);
+        CampusAreaShiftTeamSeeder.Seed(modelBuilder);
 
         UsersSeeder.Seed(modelBuilder, passwordHasher);
         UserAssignmentsSeeder.Seed(modelBuilder);

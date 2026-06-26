@@ -4,7 +4,7 @@ using SystemBase.Models;
 namespace SystemBase.Data.Seeders;
 
 // 4 áreas en la única sede (Matriz Puebla).
-// scopeId destino para scopeType.campus_area.
+// scopeId destino para scopeType.area.
 public static class CampusAreaSeeder
 {
     public static void Seed(ModelBuilder modelBuilder)

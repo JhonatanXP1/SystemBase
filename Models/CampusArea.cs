@@ -1,6 +1,6 @@
 namespace SystemBase.Models;
 
-// Puente N:M campus <-> area (el área cuelga de la nave física). Destino del scope `campus_area`.
+// Puente N:M campus <-> area (el área cuelga de la nave física). Destino del scope `area`.
 public class CampusArea
 {
     public int id { get; set; }

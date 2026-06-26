@@ -36,7 +36,7 @@ public static class EndpointAccessNameRuleSeeder
             new { id = 10, idEndpointAccess = 18, idNameRule = 1 },
             new { id = 11, idEndpointAccess = 20, idNameRule = 1 },
             new { id = 12, idEndpointAccess = 23, idNameRule = 1 },
-            // Gerente General (idNameRule = 2): acceso total ('*') dentro de su campus_area
+            // Gerente General (idNameRule = 2): acceso total ('*') dentro de su scope
             new { id = 13, idEndpointAccess = 1, idNameRule = 2 },
             new { id = 14, idEndpointAccess = 3, idNameRule = 2 },
             new { id = 15, idEndpointAccess = 6, idNameRule = 2 },
