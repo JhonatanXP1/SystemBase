@@ -12,7 +12,8 @@ public static class UsersSeeder
             new
             {
                 id = 1,
-                userName = "@lois",
+                imageUser ="public/profile/loise.png",
+                userName = "lois@orbita360.com",
                 password = passwordHasher.Hash("Temporal123+"),
                 name = "Lois",
                 created = new DateTimeOffset(2026, 2, 7, 0, 0, 0, TimeSpan.FromHours(-6))
@@ -36,6 +37,7 @@ public static class UsersSeeder
             new
             {
                 id = 4,
+                imageUser ="public/profile/craig.png",
                 userName = "@craig",
                 password = passwordHasher.Hash("Temporal123+"),
                 name = "Craig",
@@ -53,6 +55,7 @@ public static class UsersSeeder
             new
             {
                 id = 6,
+                imageUser ="public/profile/steve.png",
                 userName = "@stevie",
                 password = passwordHasher.Hash("Temporal123+"),
                 name = "Stevie",
@@ -62,6 +65,7 @@ public static class UsersSeeder
             new
             {
                 id = 7,
+                imageUser ="public/profile/reese.png",
                 userName = "@reese",
                 password = passwordHasher.Hash("Temporal123+"),
                 name = "Reese",
