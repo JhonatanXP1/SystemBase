@@ -30,15 +30,9 @@ public class UserService(
         }
     }
 
-    public async Task<ResponseService<UsersDashboardDto>> GetAllUsers(string scope, bool? isActive, bool? isDeleted,
+    public async Task<ResponseService<UsersDashboardDto>> GetAllUsers( bool? isActive, bool? isDeleted,
         int? page, int? pageSize)
     {
-        if (scope != "all")
-        {
-            var filter = _hierarchyValidator.GenerateFilltersBasic(null, null, 1, 10);
-        }
-        else
-        {
             try
             {
                 var filter = _hierarchyValidator.GenerateFilltersBasic(isActive, isDeleted, page, pageSize);
@@ -60,8 +54,5 @@ public class UserService(
                 _logger.LogError(e.Message);
                 return ResponseService.Error<UsersDashboardDto>("");
             }
-        }
-
-        return null;
     }
 }

@@ -3,8 +3,9 @@ using SystemBase.Services.IServices;
 
 namespace SystemBase.Services;
 
-public class HierarchyValidator : IHierarchyValidator
+public class HierarchyValidator(IRequestContext requestContext ) : IHierarchyValidator
 {
+    private readonly IRequestContext _requestContext = requestContext;
     public HierarchyFilter? GenerateFilltersBasic(bool? isActive, bool? isDeleted, int? page, int? pageSize)
     {
         if (isActive.HasValue || isDeleted.HasValue || page.HasValue || pageSize.HasValue)
@@ -21,7 +22,15 @@ public class HierarchyValidator : IHierarchyValidator
                 filter.pageSize = pageSize.Value;
             return filter;
         }
-
+        
         return null;
     }
+
+    public IQueryable<Roles> Hierarchy()
+    {
+        
+        
+        return null;
+    }
+    
 }

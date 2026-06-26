@@ -32,16 +32,8 @@ public class UserController(
     {
         if (string.IsNullOrWhiteSpace(_requestContext.ActiveScope))
             return BadRequest("X-Active-Scope requerido");
-
-        var matched = _requestContext.MatchedPermissions;
-
-        var scope = matched.Any(p => p.EndsWith(".*")) ? "all"
-            : matched.Any(p => p.EndsWith(".subordinate")) ? "subordinate"
-            : "self";
-
-        Console.WriteLine(
-            $"el scope is:{scope} y  X-Active-Scope: {_requestContext.ActiveScope} y matched: {JsonSerializer.Serialize(matched)}");
-        var users = await _userService.GetAllUsers(scope, isActive, isDeleted, page, pageSize);
+        
+        var users = await _userService.GetAllUsers(isActive, isDeleted, page, pageSize);
         return Ok(users.data);
     }
 }
