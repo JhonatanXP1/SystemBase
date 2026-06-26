@@ -44,7 +44,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("area");
+                    b.ToTable("areas");
 
                     b.HasData(
                         new
@@ -107,7 +107,7 @@ namespace SystemBase.Migrations
 
                     b.HasIndex("idCompany");
 
-                    b.ToTable("campus");
+                    b.ToTable("campuses");
 
                     b.HasData(
                         new
@@ -145,7 +145,7 @@ namespace SystemBase.Migrations
                     b.HasIndex("idCampus", "idArea")
                         .IsUnique();
 
-                    b.ToTable("campusArea");
+                    b.ToTable("campusAreas");
 
                     b.HasData(
                         new
@@ -178,7 +178,7 @@ namespace SystemBase.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SystemBase.Models.CampusAreaShift", b =>
+            modelBuilder.Entity("SystemBase.Models.CampusAreaWorkShift", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -192,17 +192,17 @@ namespace SystemBase.Migrations
                     b.Property<int>("idCampusArea")
                         .HasColumnType("int");
 
-                    b.Property<int>("idShift")
+                    b.Property<int>("idWorkShift")
                         .HasColumnType("int");
 
                     b.HasKey("id");
 
-                    b.HasIndex("idShift");
+                    b.HasIndex("idWorkShift");
 
-                    b.HasIndex("idCampusArea", "idShift")
+                    b.HasIndex("idCampusArea", "idWorkShift")
                         .IsUnique();
 
-                    b.ToTable("campusAreaShift");
+                    b.ToTable("campusAreaWorkShifts");
 
                     b.HasData(
                         new
@@ -210,39 +210,39 @@ namespace SystemBase.Migrations
                             id = 1,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             idCampusArea = 1,
-                            idShift = 1
+                            idWorkShift = 1
                         },
                         new
                         {
                             id = 2,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             idCampusArea = 1,
-                            idShift = 2
+                            idWorkShift = 2
                         },
                         new
                         {
                             id = 3,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             idCampusArea = 3,
-                            idShift = 1
+                            idWorkShift = 1
                         },
                         new
                         {
                             id = 4,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             idCampusArea = 3,
-                            idShift = 2
+                            idWorkShift = 2
                         },
                         new
                         {
                             id = 5,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             idCampusArea = 4,
-                            idShift = 1
+                            idWorkShift = 1
                         });
                 });
 
-            modelBuilder.Entity("SystemBase.Models.CampusAreaShiftTeam", b =>
+            modelBuilder.Entity("SystemBase.Models.CampusAreaWorkShiftTeam", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -253,7 +253,7 @@ namespace SystemBase.Migrations
                     b.Property<DateTimeOffset>("created")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("idCampusAreaShift")
+                    b.Property<int>("idCampusAreaWorkShift")
                         .HasColumnType("int");
 
                     b.Property<int>("idTeam")
@@ -263,59 +263,59 @@ namespace SystemBase.Migrations
 
                     b.HasIndex("idTeam");
 
-                    b.HasIndex("idCampusAreaShift", "idTeam")
+                    b.HasIndex("idCampusAreaWorkShift", "idTeam")
                         .IsUnique();
 
-                    b.ToTable("campusAreaShiftTeam");
+                    b.ToTable("campusAreaWorkShiftTeams");
 
                     b.HasData(
                         new
                         {
                             id = 1,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idCampusAreaShift = 1,
+                            idCampusAreaWorkShift = 1,
                             idTeam = 1
                         },
                         new
                         {
                             id = 2,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idCampusAreaShift = 2,
+                            idCampusAreaWorkShift = 2,
                             idTeam = 1
                         },
                         new
                         {
                             id = 3,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idCampusAreaShift = 1,
+                            idCampusAreaWorkShift = 1,
                             idTeam = 2
                         },
                         new
                         {
                             id = 4,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idCampusAreaShift = 3,
+                            idCampusAreaWorkShift = 3,
                             idTeam = 3
                         },
                         new
                         {
                             id = 5,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idCampusAreaShift = 4,
+                            idCampusAreaWorkShift = 4,
                             idTeam = 3
                         },
                         new
                         {
                             id = 6,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idCampusAreaShift = 4,
+                            idCampusAreaWorkShift = 4,
                             idTeam = 4
                         },
                         new
                         {
                             id = 7,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            idCampusAreaShift = 5,
+                            idCampusAreaWorkShift = 5,
                             idTeam = 5
                         });
                 });
@@ -342,7 +342,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("company");
+                    b.ToTable("companies");
 
                     b.HasData(
                         new
@@ -832,51 +832,6 @@ namespace SystemBase.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SystemBase.Models.Shift", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<DateTimeOffset>("created")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<TimeOnly>("hourEnd")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("hourInit")
-                        .HasColumnType("time");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("shift");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            hourEnd = new TimeOnly(14, 0, 0),
-                            hourInit = new TimeOnly(6, 0, 0),
-                            name = "Mañana"
-                        },
-                        new
-                        {
-                            id = 2,
-                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
-                            hourEnd = new TimeOnly(22, 0, 0),
-                            hourInit = new TimeOnly(14, 0, 0),
-                            name = "Tarde"
-                        });
-                });
-
             modelBuilder.Entity("SystemBase.Models.Team", b =>
                 {
                     b.Property<int>("id")
@@ -895,7 +850,7 @@ namespace SystemBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("team");
+                    b.ToTable("teams");
 
                     b.HasData(
                         new
@@ -1021,7 +976,7 @@ namespace SystemBase.Migrations
                             idUser = 4,
                             isActive = true,
                             scopeId = 2,
-                            scopeType = "area"
+                            scopeType = "campus_area"
                         },
                         new
                         {
@@ -1032,7 +987,7 @@ namespace SystemBase.Migrations
                             idUser = 5,
                             isActive = true,
                             scopeId = 3,
-                            scopeType = "area"
+                            scopeType = "campus_area"
                         },
                         new
                         {
@@ -1043,7 +998,7 @@ namespace SystemBase.Migrations
                             idUser = 6,
                             isActive = true,
                             scopeId = 4,
-                            scopeType = "area"
+                            scopeType = "campus_area"
                         },
                         new
                         {
@@ -1279,7 +1234,7 @@ namespace SystemBase.Migrations
                             id = 1,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Lois",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$jsw9b8O60DrGHaaX7yJ3uw$UryOrkrX/JkeTopUM3tJ8U32lG6UxhPZgnQKZVGTkzs",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$DxHYmpTWCY53vP1wjM6xXg$92QyVAiLlzqGvRFqHBZk4tPGLswBUVjiGazqcz98ags",
                             userName = "@lois"
                         },
                         new
@@ -1287,7 +1242,7 @@ namespace SystemBase.Migrations
                             id = 2,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Hal",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$6xt1bgtnMwwvehOAEx+KNQ$EROro1P3bBfSIG1tiJkMzRmEtyLDPP7DPLVwnlRrBw0",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$z8TWw1B8cJbEERUC/K3M5A$MMPvYB7o07E4YzekySuT874BYxlWoA+CMHiA7MVsDDk",
                             userName = "@hal"
                         },
                         new
@@ -1295,7 +1250,7 @@ namespace SystemBase.Migrations
                             id = 3,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Francis",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$CT99p5cIGjOFVg62QQ70CA$t7bdt+LtPjhLNuUeddOoWu5c/ZIcWV998llkWlL78Gc",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$FS8hC1aJ5RIAuoAkXdU0bA$F9e550P3mutYxn6HNrsk3KxpzOmxjETyEfD0Wx/In/I",
                             userName = "@francis"
                         },
                         new
@@ -1304,7 +1259,7 @@ namespace SystemBase.Migrations
                             app = "Feldspar",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Craig",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$IpmCEMxLWo0Nw7Lkp/nHtQ$4vCTMCXB5NnzZOXK+AVGAszJXjkyBrfFCa2m4NQAHEg",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$0oSuv31+d5cPErtwiwbVYQ$PxV42UGi6eB5qgRSya+0hQDcCcOKsrFzDRkUo5/gd4A",
                             userName = "@craig"
                         },
                         new
@@ -1312,7 +1267,7 @@ namespace SystemBase.Migrations
                             id = 5,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Malcolm",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$AP+YYTke/WnMYP6/lK0eQw$O2DT57WUfnx0kLosn+5Kuz1rkl6B+95GWsLx0kcoIsY",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$P1BXnEA7Ptyn828ectzNuQ$ecKMrQyiGQTzzLvrWuRnGQnBiRdlA2gQ/uiKC/4lArs",
                             userName = "@malcolm"
                         },
                         new
@@ -1321,7 +1276,7 @@ namespace SystemBase.Migrations
                             app = "Kenarban",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Stevie",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$LXqN8+J29BvuraB5mDFLCw$8NB9r4MbZSlJUSWWBQD9I/IisyFCOFWSGCzWW6P25mU",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$naihnc2yBD8La3TQQ74BSQ$uZjfTFDQ8CqPudHu1cNSgWXti+W6cDEu9W3YKXrLGRM",
                             userName = "@stevie"
                         },
                         new
@@ -1329,7 +1284,7 @@ namespace SystemBase.Migrations
                             id = 7,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Reese",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$Q3qvFC+Bi837YgOcSSMPPQ$a6fVoi5CVEyQtHmQmS7HHiZtRwEXpO6Zph6uu1WWDMU",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$AJ7eUyxe2obEI3BV+X9vug$7vVVFjDNUUlabOr+E4tC1atCcJ3GdGVIV8EwLAgKQqA",
                             userName = "@reese"
                         },
                         new
@@ -1337,7 +1292,7 @@ namespace SystemBase.Migrations
                             id = 8,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Dewey",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$TI/dFGBReb2u93WKr+rdBA$YleZk2VDO6k2qPwP9yDSHE/DHrlOCsxOk0zTSBei2/w",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$GWPTO/qXLsBIkmbpJZ3EOg$CJEiO0J/6COuZP7rpnGHfQRvcsHC5YVm4VEpAJqEDBs",
                             userName = "@dewey"
                         },
                         new
@@ -1345,7 +1300,7 @@ namespace SystemBase.Migrations
                             id = 10,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Lloyd",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$OLKE+Kf344X4BOIB0jsA9Q$z1MUU2FcVekx4RKDdxeP7LmBYv2p2ckMTuER/Pu06Os",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$ecmOymj7kfVuM4mZmMS1wg$WVuIs8Buh7l+4VMka4iFimr+oKy7TT58TP5aSEK9toA",
                             userName = "@lloyd"
                         },
                         new
@@ -1354,7 +1309,7 @@ namespace SystemBase.Migrations
                             app = "Hooper",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Dabney",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$Z9BWsDkl9xCvIuMhxO7lZw$91a5c0/Q1Fd/NvdJiaLSjt8l3A3mXAfDdxBwl7E1G8Y",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$xmg20Ecjp/fqDL467g/bkQ$X9+Q+htgLzDsQ14w/vnBW4KJNCoMB2Yx5NgbJae0UKo",
                             userName = "@dabney"
                         },
                         new
@@ -1362,7 +1317,7 @@ namespace SystemBase.Migrations
                             id = 12,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Kevin",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$JdqhGR/BeZUZ9QpOwNBlUQ$GwRCm905JXMdkszCwRDZGzRjkgKAw/Rh0i7xAYCiLAg",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$QcR3YMnoOMWr1yCmPlrZrQ$CVGgNr+dPNibfxVJS62S2DlNFWZ3/3pfmYKbgQ3Zm7k",
                             userName = "@kevin"
                         },
                         new
@@ -1371,7 +1326,7 @@ namespace SystemBase.Migrations
                             app = "Sanders",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Cynthia",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$W+Wup1MbFEl072yQksuk+w$8CDZxiwc90qw9D8jS4DzfAlsRAnwzjd4o9mum1p0IHY",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$kGhlers5G7+JolUujtHgGQ$IxvovdPzrVqlZAeIcIwgOJ2/HOcIPrGNxPLwUGHm9Bo",
                             userName = "@cynthia"
                         },
                         new
@@ -1380,7 +1335,7 @@ namespace SystemBase.Migrations
                             app = "Hanson",
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "David",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$x1DrC2HZpZBWInyGMiUH5g$QdKqW2ZZTY0m5hGQ5u9OvrALd4t75K+A3vYRcy6xDek",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$rioyZzkveIP6zQoWC8D1nQ$gqlJm0aqvCsCEh6YWRd/H7v1B2Hl9OBQD1lmOswjlMk",
                             userName = "@davidh"
                         },
                         new
@@ -1388,7 +1343,7 @@ namespace SystemBase.Migrations
                             id = 15,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Chad",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$vBUfjwqNYRoWQBmDRxsq0Q$2+HB4lfIBYSvXv5EoJ3PZ7EH2ti9NwufQ2wVWIerGyo",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$5XPs6uIjle2QHm/geZ6/Jg$3GWngPaXfWgCMg8/4omef5Iv13HkUT14wkDJUm6Nk7A",
                             userName = "@chad"
                         },
                         new
@@ -1396,7 +1351,7 @@ namespace SystemBase.Migrations
                             id = 16,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Davey",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$XU7Nu3ZGIKnpMEwPnE8KfQ$5Q4inKc44XIvzJo2zpDJKPIFgSj/i2cw9/rH6DvfxPk",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$acl4M4xVl7MX3cj5Gb4irg$+0gGCK3Yyk5e5OjLm1O8CM3w21QwHmWiz0H/xRyYzNY",
                             userName = "@davey"
                         },
                         new
@@ -1404,7 +1359,7 @@ namespace SystemBase.Migrations
                             id = 17,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Zoe",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$0o7KkZGeJPa3wybDrz+rQA$jSawj7ueTfOlQBoKmk7eIigPJjRggSTwpldzMi7qgoo",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$yS+gZMunkFZt7fFQub2OLA$fZKSa7HmR3mydTYeP0tv2uyuLIa2JXK0g2Qo2hakQJg",
                             userName = "@zoe"
                         },
                         new
@@ -1412,8 +1367,53 @@ namespace SystemBase.Migrations
                             id = 18,
                             created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
                             name = "Penelope",
-                            password = "$argon2id$v=19$m=32768,t=3,p=2$U/t6Dae9aSwoD9wdZDHIog$eNr+/BY3g9MnVbWRJDcfsR66BfcJbt/lLdEDA0GnXq4",
+                            password = "$argon2id$v=19$m=32768,t=3,p=2$TrmU/Frc4aHKFZMJc8chvg$Ed/x+s/s7Guj4hbhZeKRnWZ5xf4pLGu91tFim6qLu6Y",
                             userName = "@penelope"
+                        });
+                });
+
+            modelBuilder.Entity("SystemBase.Models.WorkShift", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<DateTimeOffset>("created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<TimeOnly>("hourEnd")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("hourInit")
+                        .HasColumnType("time");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("workShifts");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            hourEnd = new TimeOnly(14, 0, 0),
+                            hourInit = new TimeOnly(6, 0, 0),
+                            name = "Mañana"
+                        },
+                        new
+                        {
+                            id = 2,
+                            created = new DateTimeOffset(new DateTime(2026, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, -6, 0, 0, 0)),
+                            hourEnd = new TimeOnly(22, 0, 0),
+                            hourInit = new TimeOnly(14, 0, 0),
+                            name = "Tarde"
                         });
                 });
 
@@ -1720,7 +1720,7 @@ namespace SystemBase.Migrations
                     b.Navigation("campus");
                 });
 
-            modelBuilder.Entity("SystemBase.Models.CampusAreaShift", b =>
+            modelBuilder.Entity("SystemBase.Models.CampusAreaWorkShift", b =>
                 {
                     b.HasOne("SystemBase.Models.CampusArea", "campusArea")
                         .WithMany()
@@ -1728,22 +1728,22 @@ namespace SystemBase.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SystemBase.Models.Shift", "shift")
+                    b.HasOne("SystemBase.Models.WorkShift", "workShift")
                         .WithMany()
-                        .HasForeignKey("idShift")
+                        .HasForeignKey("idWorkShift")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("campusArea");
 
-                    b.Navigation("shift");
+                    b.Navigation("workShift");
                 });
 
-            modelBuilder.Entity("SystemBase.Models.CampusAreaShiftTeam", b =>
+            modelBuilder.Entity("SystemBase.Models.CampusAreaWorkShiftTeam", b =>
                 {
-                    b.HasOne("SystemBase.Models.CampusAreaShift", "campusAreaShift")
+                    b.HasOne("SystemBase.Models.CampusAreaWorkShift", "campusAreaWorkShift")
                         .WithMany()
-                        .HasForeignKey("idCampusAreaShift")
+                        .HasForeignKey("idCampusAreaWorkShift")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1753,7 +1753,7 @@ namespace SystemBase.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("campusAreaShift");
+                    b.Navigation("campusAreaWorkShift");
 
                     b.Navigation("team");
                 });

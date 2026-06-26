@@ -24,15 +24,15 @@ public class AplicationDbContext : DbContext
     public DbSet<EndpointAccessNameRule> endpointAccessNameRules { get; set; }
     public DbSet<ProfileAccess> profileAccess { get; set; }
 
-    // Jerarquía organizacional (scope) — catálogos + cadena de puentes. Tablas en singular.
-    public DbSet<Company> company { get; set; }
-    public DbSet<Campus> campus { get; set; }
-    public DbSet<Area> area { get; set; }
-    public DbSet<Shift> shift { get; set; }
-    public DbSet<Team> team { get; set; }
-    public DbSet<CampusArea> campusArea { get; set; }
-    public DbSet<CampusAreaShift> campusAreaShift { get; set; }
-    public DbSet<CampusAreaShiftTeam> campusAreaShiftTeam { get; set; }
+    // Jerarquía organizacional (scope) — catálogos + cadena de puentes.
+    public DbSet<Company> companies { get; set; }
+    public DbSet<Campus> campuses { get; set; }
+    public DbSet<Area> areas { get; set; }
+    public DbSet<WorkShift> workShifts { get; set; }
+    public DbSet<Team> teams { get; set; }
+    public DbSet<CampusArea> campusAreas { get; set; }
+    public DbSet<CampusAreaWorkShift> campusAreaWorkShifts { get; set; }
+    public DbSet<CampusAreaWorkShiftTeam> campusAreaWorkShiftTeams { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -154,13 +154,13 @@ public class AplicationDbContext : DbContext
             entity.Property(a => a.code).HasMaxLength(50);
             entity.Property(a => a.created).IsRequired();
         });
-        modelBuilder.Entity<Shift>(entity =>
+        modelBuilder.Entity<WorkShift>(entity =>
         {
-            entity.HasKey(s => s.id);
-            entity.Property(s => s.name).IsRequired().HasMaxLength(150);
-            entity.Property(s => s.hourInit).IsRequired();
-            entity.Property(s => s.hourEnd).IsRequired();
-            entity.Property(s => s.created).IsRequired();
+            entity.HasKey(w => w.id);
+            entity.Property(w => w.name).IsRequired().HasMaxLength(150);
+            entity.Property(w => w.hourInit).IsRequired();
+            entity.Property(w => w.hourEnd).IsRequired();
+            entity.Property(w => w.created).IsRequired();
         });
         modelBuilder.Entity<Team>(entity =>
         {
@@ -180,23 +180,23 @@ public class AplicationDbContext : DbContext
             entity.HasOne(ca => ca.area).WithMany()
                 .HasForeignKey(ca => ca.idArea).IsRequired().OnDelete(DeleteBehavior.Restrict);
         });
-        modelBuilder.Entity<CampusAreaShift>(entity =>
+        modelBuilder.Entity<CampusAreaWorkShift>(entity =>
         {
             entity.HasKey(x => x.id);
             entity.Property(x => x.created).IsRequired();
-            entity.HasIndex(x => new { x.idCampusArea, x.idShift }).IsUnique();
+            entity.HasIndex(x => new { x.idCampusArea, x.idWorkShift }).IsUnique();
             entity.HasOne(x => x.campusArea).WithMany()
                 .HasForeignKey(x => x.idCampusArea).IsRequired().OnDelete(DeleteBehavior.Restrict);
-            entity.HasOne(x => x.shift).WithMany()
-                .HasForeignKey(x => x.idShift).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(x => x.workShift).WithMany()
+                .HasForeignKey(x => x.idWorkShift).IsRequired().OnDelete(DeleteBehavior.Restrict);
         });
-        modelBuilder.Entity<CampusAreaShiftTeam>(entity =>
+        modelBuilder.Entity<CampusAreaWorkShiftTeam>(entity =>
         {
             entity.HasKey(x => x.id);
             entity.Property(x => x.created).IsRequired();
-            entity.HasIndex(x => new { x.idCampusAreaShift, x.idTeam }).IsUnique();
-            entity.HasOne(x => x.campusAreaShift).WithMany()
-                .HasForeignKey(x => x.idCampusAreaShift).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(x => new { x.idCampusAreaWorkShift, x.idTeam }).IsUnique();
+            entity.HasOne(x => x.campusAreaWorkShift).WithMany()
+                .HasForeignKey(x => x.idCampusAreaWorkShift).IsRequired().OnDelete(DeleteBehavior.Restrict);
             entity.HasOne(x => x.team).WithMany()
                 .HasForeignKey(x => x.idTeam).IsRequired().OnDelete(DeleteBehavior.Restrict);
         });

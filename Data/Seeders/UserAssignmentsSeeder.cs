@@ -19,11 +19,11 @@ public static class UserAssignmentsSeeder
             new { id = 3, idUser = 3, codeEmployee = "GG-02", idRole = 2, scopeType = scopeType.campus, scopeId = (int?)1, isActive = true, created },
 
             // Gerente RH — ancla al área RH
-            new { id = 4, idUser = 4, codeEmployee = "GRH-01", idRole = 3, scopeType = scopeType.area, scopeId = (int?)2, isActive = true, created },
+            new { id = 4, idUser = 4, codeEmployee = "GRH-01", idRole = 3, scopeType = scopeType.campus_area, scopeId = (int?)2, isActive = true, created },
 
             // Supervisores — Malcolm Almacén, Stevie Limpieza (ya no son supervisores de turno)
-            new { id = 5, idUser = 5, codeEmployee = "SUP-01", idRole = 4, scopeType = scopeType.area, scopeId = (int?)3, isActive = true, created },
-            new { id = 6, idUser = 6, codeEmployee = "SUP-02", idRole = 4, scopeType = scopeType.area, scopeId = (int?)4, isActive = true, created },
+            new { id = 5, idUser = 5, codeEmployee = "SUP-01", idRole = 4, scopeType = scopeType.campus_area, scopeId = (int?)3, isActive = true, created },
+            new { id = 6, idUser = 6, codeEmployee = "SUP-02", idRole = 4, scopeType = scopeType.campus_area, scopeId = (int?)4, isActive = true, created },
 
             // Coordinador Reese — toda Producción (anclas 1, 2, 3)
             new { id = 7, idUser = 7, codeEmployee = "COORD-01", idRole = 5, scopeType = scopeType.team, scopeId = (int?)1, isActive = true, created },

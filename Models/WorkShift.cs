@@ -1,7 +1,7 @@
 namespace SystemBase.Models;
 
-// Catálogo global de turnos (reutilizable entre áreas vía CampusAreaShift).
-public class Shift
+// Catálogo global de turnos (reutilizable entre áreas vía CampusAreaWorkShift).
+public class WorkShift
 {
     public int id { get; set; }
     public string name { get; set; } = null!;
