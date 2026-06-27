@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Login([FromBody] logingDTO loging)
     {
-        var sessionStarted = await _loginService.Login(loging, _requestContext.UserAgent, _requestContext.ClientIp);
+        var sessionStarted = await _loginService.Login(loging, _requestContext.userAgent, _requestContext.clientIp);
 
         if (!sessionStarted.success)
             return sessionStarted.error switch
@@ -73,7 +73,7 @@ public class AuthController : ControllerBase
             string.IsNullOrWhiteSpace(refreshToken))
             return Unauthorized("Refresh token faltante");
 
-        var newCredenciales = await _loginService.RefreshTokensService(refreshToken, _requestContext.ClientIp, _requestContext.UserAgent);
+        var newCredenciales = await _loginService.RefreshTokensService(refreshToken, _requestContext.clientIp, _requestContext.userAgent);
         if (!newCredenciales.success)
             return newCredenciales.error switch
             {

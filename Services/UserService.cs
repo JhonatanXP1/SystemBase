@@ -36,6 +36,7 @@ public class UserService(
             try
             {
                 var filter = _hierarchyValidator.GenerateFilltersBasic(isActive, isDeleted, page, pageSize);
+                var gerarquia = await _hierarchyValidator.Hierarchy();
                 var totalRefistros = await _userRepositorio.GetUsersCountAsync(filter);
                 var rows = await _userRepositorio.GetAllUsers(filter);
                 var users = new UsersDashboardDto

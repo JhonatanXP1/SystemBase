@@ -6,14 +6,16 @@ namespace SystemBase.Services;
 // como por IRequestContextInitializer (escritura) — ambas resuelven a la MISMA instancia por petición.
 public class RequestContext : IRequestContext, IRequestContextInitializer
 {
-    public int? UserId { get; private set; }
-    public string? UserName { get; private set; }
-    public string? ActiveScope { get; private set; }
-    public IReadOnlyList<string> MatchedPermissions { get; private set; } = [];
-    public string ClientIp { get; private set; } = "";
-    public string UserAgent { get; private set; } = "";
-    public string RequestId { get; private set; } = "";
-    public bool HasUser => UserId.HasValue;
+
+    public int? userId { get; private set; }
+    public string? userName { get; private set; }
+    public string? scopeName { get; private set; } 
+    public int? scopeId {get; private set;}
+    public IReadOnlyList<string> matchedPermissions { get; private set; } = [];
+    public string clientIp { get; private set; } = "";
+    public string userAgent { get; private set; } = "";
+    public string requestId { get; private set; } = "";
+    public bool hasUser => userId.HasValue;
 
     public void Initialize(
         int? userId,
@@ -23,16 +25,26 @@ public class RequestContext : IRequestContext, IRequestContextInitializer
         string userAgent,
         string requestId)
     {
-        UserId = userId;
-        UserName = userName;
-        ActiveScope = activeScope;
-        ClientIp = clientIp;
-        UserAgent = userAgent;
-        RequestId = requestId;
+        this.userId = userId;
+        this.userName = userName;
+        this.clientIp = clientIp;
+        this.userAgent = userAgent;
+        this.requestId = requestId;
+
+        if (!String.IsNullOrEmpty(activeScope))
+        {
+            string[] partScope = activeScope.Split(":");
+            if (partScope.Length == 2)
+            {
+                scopeName =  partScope[0] ;
+                scopeId = int.Parse(partScope[1]);
+            }
+                
+        }
     }
 
     public void SetMatchedPermissions(IReadOnlyList<string> matched)
     {
-        MatchedPermissions = matched;
+        matchedPermissions = matched;
     }
 }

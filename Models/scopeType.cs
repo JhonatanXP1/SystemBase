@@ -1,6 +1,6 @@
 namespace SystemBase.Models;
 
-public enum scopeType
+public enum ScopeType
 {
     company,
     campus,

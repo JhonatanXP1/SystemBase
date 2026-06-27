@@ -4,12 +4,13 @@ namespace SystemBase.Services.IServices;
 // READ-ONLY para servicios y controllers. La pipeline (middleware + auth handler) rellena vía IRequestContextInitializer.
 public interface IRequestContext
 {
-    int? UserId { get; }
-    string? UserName { get; }
-    string? ActiveScope { get; }
-    IReadOnlyList<string> MatchedPermissions { get; }
-    string ClientIp { get; }
-    string UserAgent { get; }
-    string RequestId { get; }
-    bool HasUser { get; }
+    int? userId { get; }
+    string? userName { get; }
+    string? scopeName { get; }
+    int? scopeId { get; }
+    IReadOnlyList<string> matchedPermissions { get; }
+    string clientIp { get; }
+    string userAgent { get; }
+    string requestId { get; }
+    bool hasUser { get; }
 }

@@ -130,6 +130,7 @@ builder.Services.AddScoped<IHierarchyValidator, HierarchyValidator>();
 builder.Services.AddScoped<ILoginRepositorio, LoginRepositorio>();
 builder.Services.AddScoped<IEndpointAccessRepositorio, EndpointAccessRepositorio>();
 builder.Services.AddScoped<IUserRepositorio, UserRepositorio>();
+builder.Services.AddScoped<IHierarchyRepositorio, HierarchyRepositorio>();
 
 //Autorización por permisos.
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
