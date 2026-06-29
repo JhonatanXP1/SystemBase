@@ -20,7 +20,7 @@ public class EndpointAccessRepositorio(AplicationDbContext db) : IEndpointAccess
             where ua.idUser == idUser && ua.isActive && ea.status
             select new PermisosXAsignacion
             {
-                scopeTypeToidUserAssignaments = $"{ua.scopeType}:{ua.id}",
+                scopeTypeToidUserAssignaments = $"{ua.scopeType}:{ua.scopeId}",
                 permission = ea.permission
             }
         ).ToListAsync();

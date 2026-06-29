@@ -34,7 +34,11 @@ public class UserController(
             return BadRequest("X-Active-Scope requerido");
         if (!_requestContext.hasUser || _requestContext.scopeId == 0 || _requestContext.scopeId == null ||
             _requestContext.scopeName == null)
+        {
+            Console.WriteLine($"\n aaaaa {_requestContext.hasUser} || {_requestContext.scopeId} \n");
             return BadRequest();
+        }
+            
         
         var users = await _userService.GetAllUsers(isActive, isDeleted, page, pageSize);
         return Ok(users.data);

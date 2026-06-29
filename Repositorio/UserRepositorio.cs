@@ -51,8 +51,11 @@ public class UserRepositorio(AplicationDbContext db) : IUserRepositorio
 
         if (filter != null) // si viene null posiblemente sea un reporte.
         {
+            // Jerarquía: solo subordinados (code mayor). Sin nivel resuelto = sin acceso → nadie.
             if (filter.levelRole.HasValue)
                 query = query.Where(x => x.r != null && (int)x.r.code > filter.levelRole.Value);
+            else
+                query = query.Where(_ => false);
 
             if (filter.idsExcepcion is { Count: > 0 })
                 query = query.Where(x => !filter.idsExcepcion.Contains(x.u.id));

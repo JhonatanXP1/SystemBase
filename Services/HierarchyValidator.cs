@@ -11,30 +11,20 @@ public class HierarchyValidator(
 {
     private readonly IRequestContext _requestContext = requestContext;
     private readonly IHierarchyRepositorio _hierarchyRepositorio = hierarchyRepositorio;
-    public HierarchyFilter? GenerateFilltersBasic(bool? isActive, bool? isDeleted, int? page, int? pageSize)
+    public async Task<HierarchyFilter?> GenerateFilltersBasic(bool? isActive, bool? isDeleted, int? page, int? pageSize)
     {
-        if (isActive.HasValue || isDeleted.HasValue || page.HasValue || pageSize.HasValue)
+        // Código del rol del solicitante en su scope activo. null = sin acceso → el repo no devolverá usuarios.
+        var code = await _hierarchyRepositorio.GetFilterHierarchy(
+            _requestContext.userId, _requestContext.scopeName ?? "", _requestContext.scopeId);
+
+        return new HierarchyFilter(null)
         {
-            var filter = new HierarchyFilter(null);
-
-            if (isActive.HasValue)
-                filter.isActive = isActive;
-            if (isDeleted.HasValue)
-                filter.isDeleted = isDeleted;
-            if (page.HasValue)
-                filter.page = page.Value;
-            if (pageSize.HasValue)
-                filter.pageSize = pageSize.Value;
-            return filter;
-        }
-        
-        return null;
+            levelRole = (int?)code,
+            isActive = isActive,
+            isDeleted = isDeleted,
+            page = page,
+            pageSize = pageSize
+        };
     }
 
-    public async Task <IQueryable<Roles>> Hierarchy()
-    {
-        var  x = await _hierarchyRepositorio.GetFilterHierarchy(_requestContext.userId, _requestContext.scopeName ?? "", _requestContext.scopeId);
-        return null;
-    }
-    
 }

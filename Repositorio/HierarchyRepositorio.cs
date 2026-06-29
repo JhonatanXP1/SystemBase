@@ -11,20 +11,21 @@ public class HierarchyRepositorio(AplicationDbContext dbContext):IHierarchyRepos
 {
     private readonly AplicationDbContext _db = dbContext;
 
-    public async Task<IQueryable<Roles>> GetFilterHierarchy(int? idUser, string scopeName, int? scopeId)
+    // Devuelve el código del rol del solicitante en el scope dado, o null si no tiene asignación
+    // (o falta el usuario / el scope es inválido). El null significa "sin acceso".
+    public async Task<RoleCode?> GetFilterHierarchy(int? idUser, string scopeName, int? scopeId)
     {
-        var scope = Enum.Parse<ScopeType>(scopeName);
+        if (idUser is null || !Enum.TryParse<ScopeType>(scopeName, out var scope))
+            return null;
 
-        var code = await (
+        // Se castea a RoleCode? para distinguir "no encontrado" (null) de un código real.
+        return await (
             from ua in _db.userAssignments
             join r in _db.roles on ua.idRole equals r.id
             where ua.idUser == idUser
                   && ua.scopeId == scopeId
                   && ua.scopeType == scope
-            select r.code
+            select (RoleCode?)r.code
         ).FirstOrDefaultAsync();
-        
-        Console.WriteLine($"{code}");
-        return _db.roles.Where(r => r.code > code);
     }
 }

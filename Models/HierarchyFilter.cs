@@ -2,12 +2,14 @@ namespace SystemBase.Models;
 
 public class HierarchyFilter
 {
-    public HierarchyFilter(List<int>? idsExcepcion)
+    public HierarchyFilter (List<int>? idsExcepcion)
     {
         this.idsExcepcion = idsExcepcion;
     }
 
-    public int? levelRole { get; set; } = 0;
+    // null = nivel no resuelto / sin acceso.
+    // Un valor = solo se ven roles con code mayor (subordinados).
+    public int? levelRole { get; set; }
     public List<int>? idsExcepcion { get; set; }
     public bool? isActive { get; set; }
     public bool? isDeleted { get; set; }

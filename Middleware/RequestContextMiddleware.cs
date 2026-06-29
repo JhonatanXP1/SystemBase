@@ -33,6 +33,16 @@ public class RequestContextMiddleware
 
         var userAgent = httpContext.Request.Headers["User-Agent"].ToString();
         var requestId = Guid.NewGuid().ToString("N")[..12]; // 12 chars suficiente para correlación
+        
+        Console.WriteLine($"\n" +
+                          $"SubClaim: {subClaim} \n" +
+                          $"Id: {userId} \n" +
+                          $"{userName} \n" +
+                          $"{activeScope} \n" +
+                          $" {ip} \n" +
+                          $"{userAgent} \n" +
+                          $"{requestId}\n"+
+                          $"\n");
 
         initializer.Initialize(userId, userName, activeScope, ip ?? "", userAgent, requestId);
 
