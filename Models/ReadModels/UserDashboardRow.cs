@@ -9,5 +9,6 @@ public sealed record UserDashboardRow(
     string? app,
     string? apm,
     string userName,
-    bool status
+    bool status,
+    int? totalAsig 
     );

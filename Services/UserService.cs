@@ -4,6 +4,11 @@ using SystemBase.Services.IServices;
 
 namespace SystemBase.Services;
 
+public enum endpointUsers
+{
+    _=0,
+    assignment = 1,
+}
 public class UserService(
     IUserRepositorio userRepositorio,
     ILogger<UserService> logger,
@@ -36,8 +41,8 @@ public class UserService(
             try
             {
                 var filter = await _hierarchyValidator.GenerateFilltersBasic(isActive, isDeleted, page, pageSize);
-                var totalRefistros = await _userRepositorio.GetUsersCountAsync(filter);
-                var rows = await _userRepositorio.GetAllUsers(filter);
+                var totalRefistros = await _userRepositorio.GetUsersCountAsync(filter, default(endpointUsers));
+                var rows = await _userRepositorio.GetAllUsers(filter, default(endpointUsers));
                 var users = new UsersDashboardDto
                 {
                     totalRecords = totalRefistros,

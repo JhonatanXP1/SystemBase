@@ -1,14 +1,23 @@
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using SystemBase.Data;
 using SystemBase.Models;
 using SystemBase.Models.ReadModels;
 using SystemBase.Repositorio.IRepositorio;
+using SystemBase.Services;
 
 namespace SystemBase.Repositorio;
 
 public class UserRepositorio(AplicationDbContext db) : IUserRepositorio
 {
     private readonly AplicationDbContext _db = db;
+    // FROM + JOINs compartidos por el SELECT de datos y el COUNT.
+    // INNER JOIN userAssignments (usuarios sin asignación quedan fuera) + LEFT JOIN roles.
+    private const string FromAndJoins = """
+                                        FROM users AS u
+                                        INNER JOIN userAssignments AS ua ON u.id = ua.idUser
+                                        LEFT  JOIN roles          AS r  ON ua.idRole = r.id
+                                        """;
 
     public Task<string?> GetPasswordByIdAsync(int id)
     {
@@ -18,82 +27,114 @@ public class UserRepositorio(AplicationDbContext db) : IUserRepositorio
             .FirstOrDefaultAsync();
     }
 
-    public async Task<List<UserDashboardRow>> GetAllUsers(HierarchyFilter? filter)
+    public async Task<List<UserDashboardRow>> GetAllUsers(HierarchyFilter? filter, endpointUsers typeQuery) // 
     {
-        var query = ApplyPaging(GetQueryUniversal(filter), filter);
-        return await query.OrderBy(x => x.u.id)
-            .ThenBy(x => x.u.name)
-            .ThenBy(x => x.u.app)
-            .ThenBy(x => x.u.apm)
-            .Select(x => new UserDashboardRow(
-            x.u.id,
-            x.u.imageUser,
-            x.u.name,
-            x.u.app,
-            x.u.apm,
-            x.u.userName,
-            x.u.status
-        )).ToListAsync();
-    }
+        var parameters = new List<object>();
+        var where = BuildWhere(filter, parameters);
 
-    public Task<int> GetUsersCountAsync(HierarchyFilter? filter)
-    {
-        // Sin ApplyPaging: cuenta todas las filas que cumplen los filtros, no solo la página.
-        return GetQueryUniversal(filter).CountAsync();
-    }
+        // Los alias deben coincidir con los nombres del record UserDashboardRow
+        // para que SqlQueryRaw mapee columna -> propiedad.
+        var sql = new StringBuilder();
+        sql.Append("""
+                   SELECT u.id        AS id,
+                          u.imageUser AS imageUser,
+                          u.name      AS name,
+                          u.app       AS app,
+                          u.apm       AS apm,
+                          u.userName  AS userName,
+                          u.status    AS status
+                   """);
+        // totalAsig debe existir SIEMPRE como columna: el record lo espera y SqlQueryRaw
+        // mapea por nombre. En el branch sin totales lo mandamos NULL para no romper el mapeo.
+        sql.Append((int)typeQuery == 0
+            ? ", COUNT(ua.id) AS totalAsig"
+            : ", CAST(NULL AS int) AS totalAsig");
+        sql.Append('\n').Append(FromAndJoins);
+        sql.Append(where);
 
-    private IQueryable<UserRoleRow> GetQueryUniversal(HierarchyFilter? filter)
-    {
-        var query =
-            from u in _db.users.AsNoTracking()
-            join ua in _db.userAssignments on u.id equals ua.idUser
-            join r in _db.roles on ua.idRole equals r.id into roleGroup
-            from r in roleGroup.DefaultIfEmpty()
-            select new UserRoleRow { u = u, r = r };
+        if ((int)typeQuery == 0)
+            sql.Append("\nGROUP BY u.id, u.imageUser, u.name, u.app, u.apm, u.userName, u.status");
 
-        if (filter != null) // si viene null posiblemente sea un reporte.
-        {
-            // Jerarquía: solo subordinados (code mayor). Sin nivel resuelto = sin acceso → nadie.
-            if (filter.levelRole.HasValue)
-                query = query.Where(x =>
-                    (x.r != null && (int)x.r.code > filter.levelRole.Value)   // subordinados (con rol)
-                    || (filter.haveRole && x.r == null));
-            else
-                query = query.Where(_ => false);
+        sql.Append("\nORDER BY u.id, u.name, u.app, u.apm");
 
-            if (filter.idsExcepcion is { Count: > 0 })
-                query = query.Where(x => !filter.idsExcepcion.Contains(x.u.id));
-            if (filter.isActive.HasValue)
-                query = query.Where(x => x.u.status == filter.isActive.Value);
-
-            if (filter.isDeleted.HasValue)
-                query = filter.isDeleted.Value
-                    ? query.Where(x => x.u.deleteAt != null)
-                    : // Está eliminado
-                    query.Where(x => x.u.deleteAt == null); // No está eliminado
-        }
-
-        return query;
-    }
-
-    // La paginación se aplica aparte para que el Count pueda reutilizar los filtros sin Skip/Take.
-    private IQueryable<UserRoleRow> ApplyPaging(IQueryable<UserRoleRow> query, HierarchyFilter? filter)
-    {
+        // Paginación SQL Server: OFFSET/FETCH (necesita ORDER BY, ya presente). Valores parametrizados.
         if (filter?.page is { } page && filter.pageSize is { } pageSize)
         {
-            query = query.OrderBy(x => x.u.id);
-            var offset = (page - 1) * pageSize; // Es offSet para la paginación.
-            query = query.Skip(offset).Take(pageSize);
+            sql.Append($"\nOFFSET {{{parameters.Count}}} ROWS FETCH NEXT {{{parameters.Count + 1}}} ROWS ONLY");
+            parameters.Add((page - 1) * pageSize); // offset
+            parameters.Add(pageSize);
         }
 
-        return query;
+        return await _db.Database
+            .SqlQueryRaw<UserDashboardRow>(sql.ToString(), parameters.ToArray())
+            .ToListAsync();
     }
 
-    // Clase con object initializer (no constructor posicional): EF Core necesita "ver a través"
-    // de la proyección para traducir los Where/OrderBy posteriores sobre x.u / x.r a SQL.
-    private sealed class UserRoleRow
+    public async Task<int> GetUsersCountAsync(HierarchyFilter? filter, endpointUsers typeQuery)
     {
-        public Users u { get; set; } = null!;
-        public Roles? r { get; set; }
+        // Sin paginación: cuenta todas las filas que cumplen los filtros, no solo la página.
+        var parameters = new List<object>();
+        var where = BuildWhere(filter, parameters);
+        string count = "COUNT(*)";
+
+        if ((int)typeQuery == 0)
+        {
+            count = "COUNT( DISTINCT u.id)";
+        }
+
+        var sql = $"SELECT {count} AS Value\n" + FromAndJoins + where;
+
+        return await _db.Database
+            .SqlQueryRaw<int>(sql, parameters.ToArray())
+            .FirstAsync();
+    }
+
+    // Construye el WHERE dinámico y va agregando los valores a 'parameters' como {0},{1},...
+    // filter == null => reporte: sin filtros (todas las filas).
+    private static string BuildWhere(HierarchyFilter? filter, List<object> parameters)
+    {
+        if (filter is null)
+            return string.Empty;
+
+        var conditions = new List<string>();
+
+        // Jerarquía: solo subordinados (code mayor). Sin nivel resuelto = sin acceso => nadie.
+        if (filter.levelRole.HasValue)
+        {
+            // (subordinado con rol) OR (flag activo Y sin rol)
+            var subordinados = $"(r.id IS NOT NULL AND r.code > {{{parameters.Count}}})";
+            parameters.Add(filter.levelRole.Value);
+
+            conditions.Add(filter.haveRole
+                ? $"({subordinados} OR r.id IS NULL)"
+                : subordinados);
+        }
+        else
+        {
+            conditions.Add("1 = 0"); // nadie
+        }
+
+        if (filter.idsExcepcion is { Count: > 0 })
+        {
+            var placeholders = string.Join(", ",
+                filter.idsExcepcion.Select((_, i) => $"{{{parameters.Count + i}}}"));
+            parameters.AddRange(filter.idsExcepcion.Cast<object>());
+            conditions.Add($"u.id NOT IN ({placeholders})");
+        }
+
+        if (filter.isActive.HasValue)
+        {
+            conditions.Add($"u.status = {{{parameters.Count}}}");
+            parameters.Add(filter.isActive.Value);
+        }
+
+        if (filter.isDeleted.HasValue)
+            conditions.Add(filter.isDeleted.Value
+                ? "u.deleteAt IS NOT NULL" // está eliminado
+                : "u.deleteAt IS NULL"); // no está eliminado
+
+        return conditions.Count > 0
+            ? "\nWHERE " + string.Join("\n  AND ", conditions)
+            : string.Empty;
     }
 }
