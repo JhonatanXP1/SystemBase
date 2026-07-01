@@ -21,16 +21,18 @@ public class UserRepositorio(AplicationDbContext db) : IUserRepositorio
     public async Task<List<UserDashboardRow>> GetAllUsers(HierarchyFilter? filter)
     {
         var query = ApplyPaging(GetQueryUniversal(filter), filter);
-        return await query.Select(x => new UserDashboardRow(
+        return await query.OrderBy(x => x.u.id)
+            .ThenBy(x => x.u.name)
+            .ThenBy(x => x.u.app)
+            .ThenBy(x => x.u.apm)
+            .Select(x => new UserDashboardRow(
             x.u.id,
             x.u.imageUser,
             x.u.name,
             x.u.app,
             x.u.apm,
             x.u.userName,
-            x.u.status,
-            x.r != null ? (int?)x.r.code : null,
-            x.r != null ? x.r.name : null
+            x.u.status
         )).ToListAsync();
     }
 
@@ -53,7 +55,9 @@ public class UserRepositorio(AplicationDbContext db) : IUserRepositorio
         {
             // Jerarquía: solo subordinados (code mayor). Sin nivel resuelto = sin acceso → nadie.
             if (filter.levelRole.HasValue)
-                query = query.Where(x => x.r != null && (int)x.r.code > filter.levelRole.Value);
+                query = query.Where(x =>
+                    (x.r != null && (int)x.r.code > filter.levelRole.Value)   // subordinados (con rol)
+                    || (filter.haveRole && x.r == null));
             else
                 query = query.Where(_ => false);
 

@@ -13,6 +13,7 @@ public class HierarchyFilter
     public List<int>? idsExcepcion { get; set; }
     public bool? isActive { get; set; }
     public bool? isDeleted { get; set; }
+    public bool haveRole { get; set; } = false; // Es para controlar si se mostraran usuarios que tiene o no un role.
     public int? page { get; set; }
     public int? pageSize { get; set; }
 }

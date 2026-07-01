@@ -9,6 +9,5 @@ public sealed record UserDashboardRow(
     string? app,
     string? apm,
     string userName,
-    bool status,
-    int? roleCode,
-    string? roleName);
+    bool status
+    );
