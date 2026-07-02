@@ -10,6 +10,11 @@ public class HierarchyFilter
     // null = nivel no resuelto / sin acceso.
     // Un valor = solo se ven roles con code mayor (subordinados).
     public int? levelRole { get; set; }
+
+    // Scope del solicitante (rama de asignación). Con estos dos se filtra "hacia abajo":
+    // solo se ven usuarios cuyo nodo de scope cuelga de (scopeType, scopeId).
+    public string? scopeType { get; set; }
+    public int? scopeId { get; set; }
     public List<int>? idsExcepcion { get; set; }
     public bool? isActive { get; set; }
     public bool? isDeleted { get; set; }

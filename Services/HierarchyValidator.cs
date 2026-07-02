@@ -20,6 +20,8 @@ public class HierarchyValidator(
         return new HierarchyFilter(null)
         {
             levelRole = (int?)code,
+            scopeType = _requestContext.scopeName,
+            scopeId = _requestContext.scopeId,
             isActive = isActive,
             isDeleted = isDeleted,
             page = page,
